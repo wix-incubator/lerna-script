@@ -3,11 +3,11 @@ module.exports = (console, process) => (tasks, task) => {
     console.log(getAvailableTaskRunners(tasks));
     process.exit(0);
   } else if (!isTaskPresent(tasks, task)) {
-    console.error(`Unable to find tasks runner "${tasksRunnerName}"`);
+    console.error(`Unable to find task "${task}"`);
     console.error(getAvailableTaskRunners(tasks));
     process.exit(1);
   } else {
-    Promise.resolve().then(tasks[task]);
+    return Promise.resolve().then(tasks[task]);
   }
 };
 
@@ -20,5 +20,5 @@ function isTaskPresent(tasks, task) {
 }
 
 function getAvailableTaskRunners(tasks) {
-  return `Available tasks runners: "${Object.keys(tasks).join('", "')}"`;
+  return `Available tasks: "${Object.keys(tasks).join('", "')}"`;
 }
