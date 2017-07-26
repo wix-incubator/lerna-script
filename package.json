@@ -1,0 +1,13 @@
+{
+  "name": "lerna-script-modules",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "test": "lerna run test",
+    "lerna": "lerna"
+  },
+  "devDependencies": {
+    "lerna": "^2.0.0"
+  }
+}
