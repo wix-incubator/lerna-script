@@ -2,7 +2,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
   taskRunner = require('../lib/task-runner'),
   sinon = require('sinon');
 
-describe.only('task-runner', () => {
+describe('task-runner', () => {
 
   it('should run provided script', () => {
     const {runTask} = setupMocks();
