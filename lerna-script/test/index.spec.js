@@ -3,7 +3,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
   {empty} = require('octopus-test-utils'),
   index = require('..');
 
-describe.only('index', () => {
+describe('index', () => {
 
   describe('packages', () => {
 

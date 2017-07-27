@@ -1,6 +1,5 @@
 const Repository = require('lerna/lib/Repository'),
-  PackageUtilities = require('lerna/lib/PackageUtilities'),
-  async = require('async');
+  PackageUtilities = require('lerna/lib/PackageUtilities');
 
 module.exports.packages = loadPackages;
 module.exports.iter = {forEach, parallel, batched};
@@ -23,13 +22,7 @@ function batched(lernaPackages, taskFn) {
     .catch(done);
 
   return new Promise((resolve, reject) => {
-    PackageUtilities.runParallelBatches(batchedPackages, lernaTaskFn, 4, err => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
+    PackageUtilities.runParallelBatches(batchedPackages, lernaTaskFn, 4, err => err ? reject(err): resolve());
   });
 }
 

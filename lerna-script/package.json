@@ -1,7 +1,7 @@
 {
   "name": "lerna-script",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "lerna extension for custom scripts",
   "main": "index.js",
   "bin": {
     "lerna-script": "./bin/cli.js"
@@ -9,18 +9,18 @@
   "scripts": {
     "test": "mocha"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["lerna", "script"],
+  "author": "vilius@wix.com",
+  "license": "BSD",
+
   "devDependencies": {
-    "async": "^2.5.0",
-    "chai": "^4.1.0",
-    "lerna": "^2.0.0",
-    "mocha": "^3.4.2",
-    "octopus-test-utils": "0.0.10",
-    "shelljs": "^0.7.8",
-    "sinon": "^2.4.0",
-    "sinon-chai": "^2.12.0"
+    "chai": "~4.1.0",
+    "lerna": "~2.0.0",
+    "mocha": "~3.4.2",
+    "octopus-test-utils": "~0.0.10",
+    "shelljs": "~0.7.8",
+    "sinon": "~2.4.0",
+    "sinon-chai": "~2.12.0"
   },
   "peerDependencies": {
     "lerna": ">=2.0.0"
