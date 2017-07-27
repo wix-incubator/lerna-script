@@ -1,6 +1,6 @@
 # lerna-script
 
-*Experimental* - it's not near ready - and can still be abandoned - use at your own risk!
+**Experimental** - it's not near ready - and can still be abandoned - use at your own risk!
 
 [Lerna](https://lernajs.io/) is a nice tool to manage JavaScript projects with multiple packages, but sometimes you need 
 more than it provides. Fret not - [lerna-script](https://www.npmjs.com/package/lerna-script) to the rescue. It allows 
@@ -46,8 +46,7 @@ module.exports.syncNvmRc = () => {
 
 What happened here:
  - you created `lerna.js` where each export is a task referenced by export name you can execute via `lerna-script [export]`;
- - you used functions from `lerna-script` which are just thin wrappers around [lerna](https://github.com/lerna/lerna/) 
- api;
+ - you used functions from `lerna-script` which are just thin wrappers around [lerna api](https://github.com/lerna/lerna/tree/master/src);
  - you created task to sync root `.nvmrc` to all modules so that all of them have same node version defined.
 
 To see available function please check-out [lerna-script](./lerna-script), for pre-cooked tasks check-out [presets](./presets).
