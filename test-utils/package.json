@@ -1,0 +1,27 @@
+{
+  "name": "lerna-script-test-utils",
+  "version": "0.0.1",
+  "description": "test utils for lerna-script modules",
+  "author": "vilius@wix.com",
+  "license": "BSD",
+  "homepage": "https://github.com/wix/lerna-script/tree/master/test-utils",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/lerna-script/tree/master/test-utils"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "fs-extra": "3.0.1",
+    "bluebird": "3.5.0"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "mocha": "3.4.1"
+  }
+}
