@@ -2,7 +2,8 @@
   "lerna": "2.0.0",
   "packages": [
     "lerna-script",
-    "test-utils"
+    "test-utils",
+    "presets/*"
   ],
   "version": "0.0.3"
 }

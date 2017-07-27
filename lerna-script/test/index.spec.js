@@ -16,6 +16,19 @@ describe('index', () => {
     });
   });
 
+  describe('rootPackage', () => {
+
+    it('should return a root package', () => {
+      return aLernaProject().within(() => {
+        const rootPackage = index.rootPackage();
+
+        expect(rootPackage.name).to.equal('root');
+        expect(rootPackage.location).to.equal(process.cwd());
+      });
+    });
+  });
+
+
   describe('iter.forEach', () => {
 
     it('should iterate through available packages', () => {
@@ -66,10 +79,25 @@ describe('index', () => {
     });
   });
 
+  describe.only('exec.command', () => {
+
+    it('should execute command in package cwd', () => {
+      return aLernaProject().within(() => {
+        const lernaPackage = index.packages().pop();
+
+        return index.exec.command(lernaPackage)('pwd').then(stdout => {
+          expect(stdout).to.equal(lernaPackage.location + '\n');
+        })
+      });
+    });
+  });
+
+
   function aLernaProject() {
     return empty()
-      .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["**"], "version": "0.0.0"})
-      .module('a', module => module.packageJson({version: '1.0.0'}))
+      .addFile('package.json', {"name": "root", version: "1.0.0"})
+      .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["nested/**"], "version": "0.0.0"})
+      .module('nested/a', module => module.packageJson({version: '1.0.0'}))
       .module('nested/b', module => module.packageJson({name: 'b', version: '1.0.1', dependencies: {'a': '~1.0.0'}}));
   }
 });
