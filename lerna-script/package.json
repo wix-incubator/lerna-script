@@ -24,8 +24,7 @@
     "chai": "~4.1.0",
     "lerna": "~2.0.0",
     "mocha": "~3.4.2",
-    "octopus-test-utils": "~0.0.10",
-    "shelljs": "~0.7.8",
+    "lerna-script-test-utils": "~0.0.1",
     "sinon": "~2.4.0",
     "sinon-chai": "~2.12.0"
   },
