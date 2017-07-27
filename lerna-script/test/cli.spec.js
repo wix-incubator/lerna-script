@@ -26,6 +26,6 @@ describe('cli', () => {
 
   function cliRunner() {
     const cmd = `${process.cwd()}/bin/cli.js`;
-    return (args = '') => exec(`${cmd} ${args}`);
+    return (args = '') => exec(`${cmd} ${args}`, {stdio: [null, null, null]});
   }
 });
