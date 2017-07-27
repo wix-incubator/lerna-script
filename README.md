@@ -38,8 +38,9 @@ const {packages, iter, exec} = require('lerna-script'),
 
 module.exports.syncNvmRc = () => {
   const rootNvmRcPath = join(process.cwd(), '.nvmrc'); 
-  return iter.parallel(packages(), pkg => {
-    exec(pkg)(`cp ${rootNvmRcPath} .`);
+  
+  return iter.parallel(packages(), lernaPackage => {
+    exec(lernaPackage)(`cp ${rootNvmRcPath} .`);
   });
 }
 ```
@@ -48,5 +49,22 @@ What happened here:
  - you created `lerna.js` where each export is a task referenced by export name you can execute via `lerna-script [export]`;
  - you used functions from `lerna-script` which are just thin wrappers around [lerna api](https://github.com/lerna/lerna/tree/master/src);
  - you created task to sync root `.nvmrc` to all modules so that all of them have same node version defined.
+
+You could also fallback to [lerna api](https://github.com/lerna/lerna/tree/master/src) and write same task as:
+
+```js
+const Repository = require('lerna/lib/Repository'),
+  PackageUtilities = require('lerna/lib/PackageUtilities'),
+  {join} = require('path'),
+  {execSync} = require('child_process');
+
+module.exports.syncNvmRc = () => {
+  const rootNvmRcPath = join(process.cwd(), '.nvmrc');
+  
+  return PackageUtilities.getPackages(new Repository()).forEach(lernaPackage => {
+    execSync(`cp ${rootNvmRcPath}`, {cwd: lernaPackage.location});
+  });
+}
+```
 
 To see available function please check-out [lerna-script](./lerna-script), for pre-cooked tasks check-out [presets](./presets).

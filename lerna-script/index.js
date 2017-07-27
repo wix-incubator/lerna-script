@@ -5,11 +5,17 @@ module.exports.packages = () => PackageUtilities.getPackages(new Repository());
 module.exports.iter = {forEach, parallel};
 module.exports.exec = {cmd: runCommand, script: runScript};
 
-function forEach(packages, task) {
+function forEach(packages, callback) {
+  return Promise.resolve().then(() => {
+    return packages.forEach(pkg => callback(pkg));
+  });
+}
+
+function parallel(packages, callback) {
 
 }
 
-function parallel(packages, task) {
+function parallelBatched(packages, callback) {
 
 }
 
