@@ -10,7 +10,7 @@ describe('cli', () => {
     empty()
       .within(() => runCli())
       .catch(err => {
-        expect(err.stderr).to.match(/.*Cannot find module.*lerna-tasks.js/);
+        expect(err.stderr).to.match(/.*Cannot find module.*lerna.js/);
         done();
       });
   });
@@ -19,7 +19,7 @@ describe('cli', () => {
     const runCli = cliRunner();
 
     return empty()
-      .addFile('lerna-tasks.js', 'module.exports.someTask = console.log("task someTask executed")')
+      .addFile('lerna.js', 'module.exports.someTask = console.log("task someTask executed")')
       .within(() => runCli('someTask'))
       .then(res => expect(res.toString()).to.match(/.*task someTask executed/));
   });
