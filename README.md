@@ -1,5 +1,7 @@
 # lerna-script
 
+*Experimental* - it's not near ready - and can still be abandoned - use at your own risk!
+
 [Lerna](https://lernajs.io/) is a nice tool to manage JavaScript projects with multiple packages, but sometimes you need 
 more than it provides. Fret not - [lerna-script](https://www.npmjs.com/package/lerna-script) to the rescue. It allows 
 you to add custom tasks/scripts to automate multiple package management routine tasks. Some use cases:
