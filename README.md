@@ -45,6 +45,12 @@ module.exports.syncNvmRc = () => {
 }
 ```
 
+And then you can run it:
+
+```bash
+npm start syncNvmRc
+```
+
 What happened here:
  - you created `lerna.js` where each export is a task referenced by export name you can execute via `lerna-script [export]`;
  - you used functions from `lerna-script` which are just thin wrappers around [lerna api](https://github.com/lerna/lerna/tree/master/src);
