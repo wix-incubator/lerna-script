@@ -9,10 +9,12 @@
   "scripts": {
     "test": "mocha"
   },
-  "keywords": ["lerna", "script"],
+  "keywords": [
+    "lerna",
+    "script"
+  ],
   "author": "vilius@wix.com",
   "license": "BSD",
-
   "devDependencies": {
     "chai": "~4.1.0",
     "lerna": "~2.0.0",
