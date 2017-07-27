@@ -1,6 +1,6 @@
 const {expect} = require('chai').use(require('sinon-chai')),
   sinon = require('sinon'),
-  {empty} = require('octopus-test-utils'),
+  {empty} = require('lerna-script-test-utils'),
   index = require('..');
 
 describe('index', () => {

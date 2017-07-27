@@ -1,5 +1,5 @@
 const {expect} = require('chai'),
-  {empty} = require('octopus-test-utils'),
+  {empty} = require('lerna-script-test-utils'),
   exec = require('child_process').execSync;
 
 describe('cli', () => {
