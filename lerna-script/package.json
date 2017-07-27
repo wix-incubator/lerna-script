@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "lerna extension for custom scripts",
   "main": "index.js",
+  "homepage": "https://github.com/wix/lerna-script/tree/master/lerna-script",
   "bin": {
     "lerna-script": "./bin/cli.js"
   },
@@ -13,6 +14,10 @@
     "lerna",
     "script"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/lerna-script/tree/master/lerna-script"
+  },
   "author": "vilius@wix.com",
   "license": "BSD",
   "devDependencies": {

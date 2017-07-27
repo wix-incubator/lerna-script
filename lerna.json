@@ -1,7 +1,7 @@
 {
   "lerna": "2.0.0",
   "packages": [
-    "*"
+    "lerna-script", "lerna-script-test-utils"
   ],
   "version": "0.0.1"
 }
