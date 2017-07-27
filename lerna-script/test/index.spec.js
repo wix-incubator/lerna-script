@@ -34,6 +34,7 @@ describe.only('index', () => {
 
   describe('iter.parallel', () => {
 
+    //TODO: verify async nature?
     it('should iterate through available packages', () => {
       const task = sinon.spy();
 
@@ -64,7 +65,6 @@ describe.only('index', () => {
       });
     });
   });
-
 
   function aLernaProject() {
     return empty()
