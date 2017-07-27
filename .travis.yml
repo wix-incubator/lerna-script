@@ -1,0 +1,8 @@
+language: node_js
+branches:
+  only:
+  - master
+script:
+  - npm install
+  - npm run bootstrap
+  - npm run test
