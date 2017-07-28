@@ -79,7 +79,7 @@ describe('index', () => {
     });
   });
 
-  describe.only('exec.command', () => {
+  describe('exec.command', () => {
 
     it('should execute command in package cwd', () => {
       return aLernaProject().within(() => {

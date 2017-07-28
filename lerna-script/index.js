@@ -1,11 +1,13 @@
 const Repository = require('lerna/lib/Repository'),
   PackageUtilities = require('lerna/lib/PackageUtilities'),
   Package = require('lerna/lib/Package'),
+  NpmUtilities = require('lerna/lib/NpmUtilities');
   execThen = require('exec-then'),
   {join} = require('path');
+  npmlog = require('npmlog');
 
-module.exports.packages = loadPackages;
-module.exports.rootPackage = loadRootPackage;
+module.exports.packages = ({log = npmlog} = {log: npmlog}) => loadPackages({log});
+module.exports.rootPackage = ({log = npmlog} = {log: npmlog}) => loadRootPackage({log});
 module.exports.iter = {forEach, parallel, batched};
 module.exports.exec = {command: runCommand, script: runScript};
 
@@ -40,14 +42,19 @@ function runCommand(lernaPackage) {
     });
 }
 
-function runScript(pkg, script, options) {
-
+function runScript(lernaPackage, script) {
+  return new Promise((reject, resolve) => {
+    NpmUtilities.runScriptInDir(script, [], lernaPackage, err => err ? reject(err) : resolve());
+  })
 }
 
-function loadPackages() {
+function loadPackages({log}) {
+  log.verbose('loadPackages');
   return PackageUtilities.getPackages(new Repository());
 }
 
-function loadRootPackage() {
-  return new Package(require(join(process.cwd(), './package.json')), process.cwd());
+function loadRootPackage({log}) {
+  const cwd = process.cwd();
+  log.verbose('loadRootPackage', {cwd});
+  return new Package(require(join(cwd, './package.json')), cwd);
 }
