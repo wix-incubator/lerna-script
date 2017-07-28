@@ -21,5 +21,5 @@ Executed provided command for all `lernaPackages` in a parallel fashion. `taskFn
 ### iter.batched(lernaPackages: [], , task: lernaPackage => Promise): Promise(undefined)
 Executed provided command for all `lernaPackages` in a batched fashion respecting dependency graph. `taskFn` can be either sync task or return a `Promise`.
 
-### exec.command(lernaPackage)(command): Promise(stdout)
+### exec.command(lernaPackage, {verbose = true})(command): Promise(stdout)
 Executes given command for a package and returns collected `stdout`.

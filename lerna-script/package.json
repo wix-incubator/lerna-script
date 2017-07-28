@@ -22,6 +22,7 @@
   "license": "BSD",
   "devDependencies": {
     "chai": "~4.1.0",
+    "intercept-stdout": "^0.1.2",
     "lerna": "~2.0.0",
     "lerna-script-test-utils": "^0.0.3",
     "mocha": "~3.4.2",
