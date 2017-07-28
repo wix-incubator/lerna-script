@@ -20,10 +20,13 @@ describe('index', () => {
   describe('packages', () => {
 
     it('should return a list of packages', () => {
+      const log = loggerMock();
+
       return aLernaProject().within(() => {
-        const packages = index.packages();
+        const packages = index.packages({log});
 
         expect(packages.length).to.equal(2);
+        expect(log.verbose).to.have.been.calledWithMatch('loadPackages');
       });
     });
   });
@@ -31,11 +34,14 @@ describe('index', () => {
   describe('rootPackage', () => {
 
     it('should return a root package', () => {
+      const log = loggerMock();
+
       return aLernaProject().within(() => {
-        const rootPackage = index.rootPackage();
+        const rootPackage = index.rootPackage({log});
 
         expect(rootPackage.name).to.equal('root');
         expect(rootPackage.location).to.equal(process.cwd());
+        expect(log.verbose).to.have.been.calledWithMatch('loadRootPackage');
       });
     });
   });
@@ -113,9 +119,7 @@ describe('index', () => {
         })
       });
     });
-
   });
-
 
   function aLernaProject() {
     return empty()
@@ -124,4 +128,11 @@ describe('index', () => {
       .module('nested/a', module => module.packageJson({version: '1.0.0'}))
       .module('nested/b', module => module.packageJson({name: 'b', version: '1.0.1', dependencies: {'a': '~1.0.0'}}));
   }
+
+  function loggerMock() {
+    return {
+      verbose: sinon.spy()
+    };
+  }
+
 });
