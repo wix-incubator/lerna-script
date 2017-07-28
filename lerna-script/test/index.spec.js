@@ -1,9 +1,21 @@
 const {expect} = require('chai').use(require('sinon-chai')),
   sinon = require('sinon'),
   {empty} = require('lerna-script-test-utils'),
-  index = require('..');
+  index = require('..'),
+  intercept = require('intercept-stdout');
 
 describe('index', () => {
+  let capturedOutput = "";
+  let detach;
+
+  beforeEach(() => detach = intercept(txt => {
+    capturedOutput += txt;
+  }));
+
+  afterEach(() => {
+    detach();
+    capturedOutput = "";
+  });
 
   describe('packages', () => {
 
@@ -81,7 +93,7 @@ describe('index', () => {
 
   describe('exec.command', () => {
 
-    it('should execute command in package cwd', () => {
+    it('should execute command in package cwd and print output by default', () => {
       return aLernaProject().within(() => {
         const lernaPackage = index.packages().pop();
 
@@ -90,6 +102,18 @@ describe('index', () => {
         })
       });
     });
+
+    it('should not print output if disabled', () => {
+      return aLernaProject().within(() => {
+        const lernaPackage = index.packages().pop();
+
+        return index.exec.command(lernaPackage, {verbose: false})('pwd').then(stdout => {
+          expect(stdout).to.equal(lernaPackage.location + '\n');
+          expect(capturedOutput).to.not.be.string(lernaPackage.location);
+        })
+      });
+    });
+
   });
 
 

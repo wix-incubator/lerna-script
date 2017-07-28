@@ -32,8 +32,8 @@ function batched(lernaPackages, taskFn) {
   });
 }
 
-function runCommand(lernaPackage) {
-  return command => execThen(command, {cwd: lernaPackage.location}).then((res = {}) => {
+function runCommand(lernaPackage, {verbose = true} = {verbose: true}) {
+  return command => execThen(command, {cwd: lernaPackage.location, verbose}).then((res = {}) => {
       if (res.err) {
         return Promise.reject(new Error(`message: '${res.err.message}'\n stdout: ${res.stdout}\n, stderr: ${res.stderr}\n`));
       } else {
