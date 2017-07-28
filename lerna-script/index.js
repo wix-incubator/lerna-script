@@ -1,9 +1,13 @@
 const Repository = require('lerna/lib/Repository'),
-  PackageUtilities = require('lerna/lib/PackageUtilities');
+  PackageUtilities = require('lerna/lib/PackageUtilities'),
+  Package = require('lerna/lib/Package'),
+  execThen = require('exec-then'),
+  {join} = require('path');
 
 module.exports.packages = loadPackages;
+module.exports.rootPackage = loadRootPackage;
 module.exports.iter = {forEach, parallel, batched};
-module.exports.exec = {cmd: runCommand, script: runScript};
+module.exports.exec = {command: runCommand, script: runScript};
 
 function forEach(lernaPackages, taskFn) {
   return Promise.resolve().then(() => lernaPackages.forEach(pkg => taskFn(pkg)));
@@ -26,8 +30,14 @@ function batched(lernaPackages, taskFn) {
   });
 }
 
-function runCommand(pkg, command, options) {
-
+function runCommand(lernaPackage) {
+  return command => execThen(command, {cwd: lernaPackage.location}).then((res = {}) => {
+      if (res.err) {
+        return Promise.reject(new Error(`message: '${res.err.message}'\n stdout: ${res.stdout}\n, stderr: ${res.stderr}\n`));
+      } else {
+        return res.stdout;
+      }
+    });
 }
 
 function runScript(pkg, script, options) {
@@ -36,4 +46,8 @@ function runScript(pkg, script, options) {
 
 function loadPackages() {
   return PackageUtilities.getPackages(new Repository());
+}
+
+function loadRootPackage() {
+  return new Package(require(join(process.cwd(), './package.json')), process.cwd());
 }

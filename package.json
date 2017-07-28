@@ -3,8 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "clean": "lerna clean --yes",
     "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
+    "rebuild": "lerna clean --yes && lerna bootstrap && lerna run test",
     "lerna": "lerna"
   },
   "devDependencies": {

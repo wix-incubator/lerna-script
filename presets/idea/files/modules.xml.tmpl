@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      {{#each modules}}
+      <module fileurl="file://$PROJECT_DIR$/{{dir}}/{{name}}.iml" filepath="$PROJECT_DIR$/{{dir}}/{{name}}.iml" {{#if group}}group="{{group}}"{{/if}}/>
+      {{/each}}
+    </modules>
+  </component>
+</project>

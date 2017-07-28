@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+    <component name="NodeJsMochaPackageDirSetting">
+        <data>$PROJECT_DIR$/test-utils/node_modules/mocha</data>
+    </component>
+    <component name="NodeJsMochaPackageDirSetting">
+        <data>$PROJECT_DIR$/{{config.mochaPackage}}</data>
+    </component>
+    <component name="RunManager">
+      {{#each config.modules}}
+        <configuration default="false" name="{{name}}" type="mocha-javascript-test-runner" factoryName="Mocha">
+            <node-options />
+            <node-interpreter>{{nodePath}}</node-interpreter>
+            <working-directory>$PROJECT_DIR$/{{relativePath}}</working-directory>
+            <pass-parent-env>true</pass-parent-env>
+            <envs>
+                <env name="DEBUG" value="wix:*" />
+            </envs>
+            <ui>bdd</ui>
+            <extra-mocha-options />
+            <test-kind>PATTERN</test-kind>
+            <test-pattern>test/**/*.spec.js test/**/*.it.js</test-pattern>
+            <method />
+        </configuration>
+      {{/each}}
+        <!--<list size="1">
+            <item index="0" class="java.lang.String" itemvalue="Mocha.wix-domain-qwe" />
+        </list>-->
+    </component>
+  <component name="PropertiesComponent">
+    <property name="JavaScriptLanguageLevel" value="ES6" />
+  </component>
+</project>
