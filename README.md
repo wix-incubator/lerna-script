@@ -1,4 +1,4 @@
-# lerna-script
+# lerna-script [![Build Status](https://img.shields.io/travis/wix/lerna-script/master.svg?label=build%20status)](https://travis-ci.org/wix/lerna-script)
 
 **Experimental** - it's not near ready - and can still be abandoned - use at your own risk!
 
