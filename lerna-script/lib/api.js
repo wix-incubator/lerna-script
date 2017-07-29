@@ -3,7 +3,7 @@ const Repository = require('lerna/lib/Repository'),
   Package = require('lerna/lib/Package'),
   NpmUtilities = require('lerna/lib/NpmUtilities'),
   execThen = require('exec-then'),
-  {join} = require('path');
+  {join} = require('path'),
   npmlog = require('npmlog');
 
 module.exports.packages = ({log = npmlog} = {log: npmlog}) => loadPackages({log});
@@ -32,8 +32,8 @@ function batched(lernaPackages, taskFn) {
   });
 }
 
-function runCommand(lernaPackage, {verbose = true} = {verbose: true}) {
-  return command => execThen(command, {cwd: lernaPackage.location, verbose}).then((res = {}) => {
+function runCommand(lernaPackage, {silent = true} = {silent: true}) {
+  return command => execThen(command, {cwd: lernaPackage.location, verbose: !silent}).then((res = {}) => {
     if (res.err) {
       return Promise.reject(new Error(`message: '${res.err.message}'\n stdout: ${res.stdout}\n, stderr: ${res.stderr}\n`));
     } else {
@@ -42,15 +42,23 @@ function runCommand(lernaPackage, {verbose = true} = {verbose: true}) {
   });
 }
 
-function runScript(lernaPackage, {silent = true} = {silent: true}) {
-  return script => new Promise((resolve, reject) => {
-    const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
-    if (silent) {
-      NpmUtilities.runScriptInDir(script, [], lernaPackage.location, callback);
+function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
+  return script => {
+    if (lernaPackage.scripts && lernaPackage.scripts[script]) {
+      return new Promise((resolve, reject) => {
+        const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
+        if (silent) {
+          NpmUtilities.runScriptInDir(script, [], lernaPackage.location, callback);
+        } else {
+          NpmUtilities.runScriptInPackageStreaming(script, [], lernaPackage, callback)
+        }
+      });
     } else {
-      NpmUtilities.runScriptInPackageStreaming(script, [], lernaPackage, callback)
+      log.warn('runNpmScript', 'script not found', {script, cwd: lernaPackage.location});
+      return Promise.resolve('');
     }
-  })
+
+  }
 }
 
 function loadPackages({log}) {

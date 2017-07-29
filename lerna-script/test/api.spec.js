@@ -105,18 +105,31 @@ describe('api', () => {
 
         return index.exec.command(lernaPackage)('pwd').then(stdout => {
           expect(stdout).to.equal(lernaPackage.location + '\n');
-        })
+          expect(capturedOutput).to.not.contain(lernaPackage.location + '\n');
+        });
       });
     });
 
-    it('should not print output if disabled', () => {
+    it('should print output if enabled', () => {
       return aLernaProject().within(() => {
         const lernaPackage = index.packages().pop();
 
-        return index.exec.command(lernaPackage, {verbose: false})('pwd').then(stdout => {
+        return index.exec.command(lernaPackage, {silent: false})('pwd').then(stdout => {
           expect(stdout).to.equal(lernaPackage.location + '\n');
-          expect(capturedOutput).to.not.be.string(lernaPackage.location);
-        })
+          expect(capturedOutput).to.contain(lernaPackage.location);
+        });
+      });
+    });
+
+    it('should reject for a failing command', done => {
+      aLernaProject().within(() => {
+        const lernaPackage = index.packages().pop();
+
+        return index.exec.command(lernaPackage)('asd zzz').catch(e => {
+          expect(e.message).to.contain('Command failed');
+          expect(e.message).to.contain('asd zzz');
+          done();
+        });
       });
     });
   });
@@ -133,7 +146,7 @@ describe('api', () => {
         return index.exec.script(lernaPackage)('test').then(stdout => {
           expect(stdout).to.contain('tested');
           expect(capturedOutput).to.not.contain('tested');
-        })
+        });
       });
     });
 
@@ -147,12 +160,43 @@ describe('api', () => {
         return index.exec.script(lernaPackage, {silent: false})('test').then(stdout => {
           expect(stdout).to.contain('tested');
           expect(capturedOutput).to.contain('tested');
-        })
+        });
       });
     });
 
-  });
+    //TODO: it looks like this one rejects a promise, traced to execa line 210
+    it('should reject for a failing script', done => {
+      const project = empty()
+        .addFile('package.json', {"name": "root", version: "1.0.0", scripts: {test: 'qwe zzz'}});
 
+      project.within(() => {
+        const lernaPackage = index.rootPackage();
+
+        return index.exec.script(lernaPackage)('test').catch(e => {
+          expect(e.message).to.contain('Command failed: npm run test');
+          done();
+        });
+      });
+    });
+
+    it('should skip a script and log a warning if its missing', () => {
+      const log = loggerMock();
+      const project = empty()
+        .addFile('package.json', {"name": "root", version: "1.0.0"});
+
+      return project.within(() => {
+        const lernaPackage = index.rootPackage();
+
+        return index.exec.script(lernaPackage, {log})('test').then(stdout => {
+          expect(stdout).to.equal('');
+          expect(log.warn).to.have.been.calledWith('runNpmScript', 'script not found', {
+            script: 'test',
+            cwd: lernaPackage.location
+          });
+        });
+      });
+    });
+  });
 
   function aLernaProject() {
     return empty()
@@ -164,7 +208,8 @@ describe('api', () => {
 
   function loggerMock() {
     return {
-      verbose: sinon.spy()
+      verbose: sinon.spy(),
+      warn: sinon.spy()
     };
   }
 
