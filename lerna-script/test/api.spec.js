@@ -4,7 +4,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
   index = require('..'),
   intercept = require('intercept-stdout');
 
-describe('index', () => {
+describe('api', () => {
   let capturedOutput = "";
   let detach;
 
@@ -120,6 +120,39 @@ describe('index', () => {
       });
     });
   });
+
+  describe.only('exec.script', () => {
+
+    it('should execute npm script for package and return output', () => {
+      const project = empty()
+        .addFile('package.json', {"name": "root", version: "1.0.0", scripts: {test: 'echo tested'}});
+
+      return project.within(() => {
+        const lernaPackage = index.rootPackage();
+
+        return index.exec.script(lernaPackage)('test').then(stdout => {
+          expect(stdout).to.contain('tested');
+          expect(capturedOutput).to.not.contain('tested');
+        })
+      });
+    });
+
+    it('should stream output to stdour/stderr if silent=false', () => {
+      const project = empty()
+        .addFile('package.json', {"name": "root", version: "1.0.0", scripts: {test: 'echo tested'}});
+
+      return project.within(() => {
+        const lernaPackage = index.rootPackage();
+
+        return index.exec.script(lernaPackage, {silent: false})('test').then(stdout => {
+          expect(stdout).to.contain('tested');
+          expect(capturedOutput).to.contain('tested');
+        })
+      });
+    });
+
+  });
+
 
   function aLernaProject() {
     return empty()

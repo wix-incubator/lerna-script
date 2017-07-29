@@ -1,7 +1,7 @@
 const Repository = require('lerna/lib/Repository'),
   PackageUtilities = require('lerna/lib/PackageUtilities'),
   Package = require('lerna/lib/Package'),
-  NpmUtilities = require('lerna/lib/NpmUtilities');
+  NpmUtilities = require('lerna/lib/NpmUtilities'),
   execThen = require('exec-then'),
   {join} = require('path');
   npmlog = require('npmlog');
@@ -28,23 +28,28 @@ function batched(lernaPackages, taskFn) {
     .catch(done);
 
   return new Promise((resolve, reject) => {
-    PackageUtilities.runParallelBatches(batchedPackages, lernaTaskFn, 4, err => err ? reject(err): resolve());
+    PackageUtilities.runParallelBatches(batchedPackages, lernaTaskFn, 4, err => err ? reject(err) : resolve());
   });
 }
 
 function runCommand(lernaPackage, {verbose = true} = {verbose: true}) {
   return command => execThen(command, {cwd: lernaPackage.location, verbose}).then((res = {}) => {
-      if (res.err) {
-        return Promise.reject(new Error(`message: '${res.err.message}'\n stdout: ${res.stdout}\n, stderr: ${res.stderr}\n`));
-      } else {
-        return res.stdout;
-      }
-    });
+    if (res.err) {
+      return Promise.reject(new Error(`message: '${res.err.message}'\n stdout: ${res.stdout}\n, stderr: ${res.stderr}\n`));
+    } else {
+      return res.stdout;
+    }
+  });
 }
 
-function runScript(lernaPackage, script) {
-  return new Promise((reject, resolve) => {
-    NpmUtilities.runScriptInDir(script, [], lernaPackage, err => err ? reject(err) : resolve());
+function runScript(lernaPackage, {silent = true} = {silent: true}) {
+  return script => new Promise((resolve, reject) => {
+    const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
+    if (silent) {
+      NpmUtilities.runScriptInDir(script, [], lernaPackage.location, callback);
+    } else {
+      NpmUtilities.runScriptInPackageStreaming(script, [], lernaPackage, callback)
+    }
   })
 }
 
