@@ -16,7 +16,11 @@ module.exports = function generateIdeaProject() {
   const rootPackage = lernaScript.rootPackage();
   const lernaPackages = lernaScript.packages();
 
-  return lernaScript.exec.command(rootPackage)('rm -rf .idea && mkdir .idea && rm -f *.iml')
+
+
+  return lernaScript.exec.command(rootPackage)('rm -rf .idea')
+    .then(() => lernaScript.exec.command(rootPackage)('rm -f *.iml'))
+    .then(() => lernaScript.exec.command(rootPackage)('mkdir .idea'))
     .then(() => lernaScript.exec.command(rootPackage)(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`))
     .then(() => {
       createWorkspaceXml(lernaPackages, rootPackage);

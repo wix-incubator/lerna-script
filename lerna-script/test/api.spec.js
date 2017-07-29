@@ -97,7 +97,7 @@ describe('api', () => {
     });
   });
 
-  describe.only('exec.command', () => {
+  describe('exec.command', () => {
 
     it('should execute command in package cwd and print output by default', () => {
       const log = loggerMock();
