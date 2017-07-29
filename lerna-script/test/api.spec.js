@@ -100,10 +100,13 @@ describe('api', () => {
   describe.only('exec.command', () => {
 
     it('should execute command in package cwd and print output by default', () => {
+      const log = loggerMock();
+
       return aLernaProject().within(() => {
         const lernaPackage = index.packages().pop();
 
-        return index.exec.command(lernaPackage)('pwd').then(stdout => {
+        return index.exec.command(lernaPackage, {log})('pwd').then(stdout => {
+          expect(log.silly).to.have.been.calledWith("runCommand", 'pwd', {cwd: lernaPackage.location, silent: true});
           expect(stdout).to.equal(lernaPackage.location);
           expect(capturedOutput).to.not.contain(lernaPackage.location);
         });
@@ -208,7 +211,8 @@ describe('api', () => {
   function loggerMock() {
     return {
       verbose: sinon.spy(),
-      warn: sinon.spy()
+      warn: sinon.spy(),
+      silly: sinon.spy(),
     };
   }
 

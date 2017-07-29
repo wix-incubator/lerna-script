@@ -32,19 +32,31 @@ function batched(lernaPackages, taskFn) {
   });
 }
 
-function runCommand(lernaPackage, {silent = true} = {silent: true}) {
+function loadPackages({log = npmlog} = {log: npmlog}) {
+  log.verbose('loadPackages');
+  return PackageUtilities.getPackages(new Repository());
+}
+
+function loadRootPackage({log = npmlog} = {log: npmlog}) {
+  const cwd = process.cwd();
+  log.verbose('loadRootPackage', {cwd});
+  return new Package(require(join(cwd, './package.json')), cwd);
+}
+
+function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
   return command => {
-      const commandAndArgs = command.split(' ');
-      const actualCommand = commandAndArgs.shift();
-      const actualCommandArgs = commandAndArgs;
-      return new Promise((resolve, reject) => {
-        const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
-        if (silent) {
-          ChildProcessUtilities.exec(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}, callback);
-        } else {
-          ChildProcessUtilities.spawnStreaming(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}, lernaPackage.name, callback);
-        }
-      });
+    log.silly("runCommand", command, {cwd: lernaPackage.location, silent});
+    const commandAndArgs = command.split(' ');
+    const actualCommand = commandAndArgs.shift();
+    const actualCommandArgs = commandAndArgs;
+    return new Promise((resolve, reject) => {
+      const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
+      if (silent) {
+        ChildProcessUtilities.exec(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}, callback);
+      } else {
+        ChildProcessUtilities.spawnStreaming(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}, lernaPackage.name, callback);
+      }
+    });
   };
 }
 
@@ -64,15 +76,4 @@ function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, 
       return Promise.resolve('');
     }
   };
-}
-
-function loadPackages({log = npmlog} = {log: npmlog}) {
-  log.verbose('loadPackages');
-  return PackageUtilities.getPackages(new Repository());
-}
-
-function loadRootPackage({log = npmlog} = {log: npmlog}) {
-  const cwd = process.cwd();
-  log.verbose('loadRootPackage', {cwd});
-  return new Package(require(join(cwd, './package.json')), cwd);
 }
