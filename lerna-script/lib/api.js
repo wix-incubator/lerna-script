@@ -2,12 +2,12 @@ const Repository = require('lerna/lib/Repository'),
   PackageUtilities = require('lerna/lib/PackageUtilities'),
   Package = require('lerna/lib/Package'),
   NpmUtilities = require('lerna/lib/NpmUtilities'),
-  execThen = require('exec-then'),
+  ChildProcessUtilities = require('lerna/lib/ChildProcessUtilities'),
   {join} = require('path'),
   npmlog = require('npmlog');
 
-module.exports.packages = ({log = npmlog} = {log: npmlog}) => loadPackages({log});
-module.exports.rootPackage = ({log = npmlog} = {log: npmlog}) => loadRootPackage({log});
+module.exports.packages = loadPackages;
+module.exports.rootPackage = loadRootPackage;
 module.exports.iter = {forEach, parallel, batched};
 module.exports.exec = {command: runCommand, script: runScript};
 
@@ -33,13 +33,19 @@ function batched(lernaPackages, taskFn) {
 }
 
 function runCommand(lernaPackage, {silent = true} = {silent: true}) {
-  return command => execThen(command, {cwd: lernaPackage.location, verbose: !silent}).then((res = {}) => {
-    if (res.err) {
-      return Promise.reject(new Error(`message: '${res.err.message}'\n stdout: ${res.stdout}\n, stderr: ${res.stderr}\n`));
-    } else {
-      return res.stdout;
-    }
-  });
+  return command => {
+      const commandAndArgs = command.split(' ');
+      const actualCommand = commandAndArgs.shift();
+      const actualCommandArgs = commandAndArgs;
+      return new Promise((resolve, reject) => {
+        const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
+        if (silent) {
+          ChildProcessUtilities.exec(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}, callback);
+        } else {
+          ChildProcessUtilities.spawnStreaming(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}, lernaPackage.name, callback);
+        }
+      });
+  };
 }
 
 function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
@@ -57,16 +63,15 @@ function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, 
       log.warn('runNpmScript', 'script not found', {script, cwd: lernaPackage.location});
       return Promise.resolve('');
     }
-
-  }
+  };
 }
 
-function loadPackages({log}) {
+function loadPackages({log = npmlog} = {log: npmlog}) {
   log.verbose('loadPackages');
   return PackageUtilities.getPackages(new Repository());
 }
 
-function loadRootPackage({log}) {
+function loadRootPackage({log = npmlog} = {log: npmlog}) {
   const cwd = process.cwd();
   log.verbose('loadRootPackage', {cwd});
   return new Package(require(join(cwd, './package.json')), cwd);

@@ -97,15 +97,15 @@ describe('api', () => {
     });
   });
 
-  describe('exec.command', () => {
+  describe.only('exec.command', () => {
 
     it('should execute command in package cwd and print output by default', () => {
       return aLernaProject().within(() => {
         const lernaPackage = index.packages().pop();
 
         return index.exec.command(lernaPackage)('pwd').then(stdout => {
-          expect(stdout).to.equal(lernaPackage.location + '\n');
-          expect(capturedOutput).to.not.contain(lernaPackage.location + '\n');
+          expect(stdout).to.equal(lernaPackage.location);
+          expect(capturedOutput).to.not.contain(lernaPackage.location);
         });
       });
     });
@@ -115,7 +115,7 @@ describe('api', () => {
         const lernaPackage = index.packages().pop();
 
         return index.exec.command(lernaPackage, {silent: false})('pwd').then(stdout => {
-          expect(stdout).to.equal(lernaPackage.location + '\n');
+          expect(stdout).to.equal(lernaPackage.location);
           expect(capturedOutput).to.contain(lernaPackage.location);
         });
       });
@@ -126,15 +126,14 @@ describe('api', () => {
         const lernaPackage = index.packages().pop();
 
         return index.exec.command(lernaPackage)('asd zzz').catch(e => {
-          expect(e.message).to.contain('Command failed');
-          expect(e.message).to.contain('asd zzz');
+          expect(e.message).to.contain('spawn asd ENOENT');
           done();
         });
       });
     });
   });
 
-  describe.only('exec.script', () => {
+  describe('exec.script', () => {
 
     it('should execute npm script for package and return output', () => {
       const project = empty()
