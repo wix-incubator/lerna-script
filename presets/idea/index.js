@@ -18,16 +18,16 @@ module.exports = function generateIdeaProject() {
 
 
 
-  return lernaScript.exec.command(rootPackage)('rm -rf .idea')
-    .then(() => lernaScript.exec.command(rootPackage)('rm -f *.iml'))
-    .then(() => lernaScript.exec.command(rootPackage)('mkdir .idea'))
-    .then(() => lernaScript.exec.command(rootPackage)(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`))
+  return lernaScript.exec.command('rm -rf .idea')(rootPackage)
+    .then(() => lernaScript.exec.command('rm -f *.iml')(rootPackage))
+    .then(() => lernaScript.exec.command('mkdir .idea')(rootPackage))
+    .then(() => lernaScript.exec.command(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`)(rootPackage))
     .then(() => {
       createWorkspaceXml(lernaPackages, rootPackage);
       createModulesXml(lernaPackages, rootPackage);
 
       return lernaScript.iter.parallel(lernaPackages, lernaPackage => {
-        return lernaScript.exec.command(lernaPackage)('rm -f *.iml')
+        return lernaScript.exec.command('rm -f *.iml')(lernaPackage)
           .then(() => createModuleIml(lernaPackage));
       });
     });

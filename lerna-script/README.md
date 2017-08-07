@@ -23,31 +23,31 @@ or return a `Promise`.
 Executed provided command for all `lernaPackages` in a batched fashion respecting dependency graph. `taskFn` can be either 
 sync task or return a `Promise`.
 
-### exec.command(lernaPackage, {silent = true})(command): Promise(stdout)
+### exec.command(command)(lernaPackage, {silent = true}): Promise(stdout)
 Executes given command for a package and returns collected `stdout`.
 
 Note that `command` is a single command, meaning `rm -f zzz` and not ex. `rm -f zzz && mkdir zzz`. It's just for convenience 
 you can provide command and args as a single string. 
 
 Argument list #1:
- - lernaPackage - package returned either by `rootPackage()` or `packages()`;
- - silent - should command output be streamed to stdout/stderr or suppressed. Defaults to `true`; 
+ - command - command to execute;
 
 Argument list #2:
- - command - command to execute;
+ - lernaPackage - package returned either by `rootPackage()` or `packages()`;
+ - silent - should command output be streamed to stdout/stderr or suppressed. Defaults to `true`; 
  
 Returns:
  - stdout - collected output; 
  
-### exec.script(lernaPackage, {silent = true})(script): Promise(stdout)
+### exec.script(script)(lernaPackage, {silent = true}): Promise(stdout)
 Executes given npm script for a package and returns collected `stdout`.
 
 Argument list #1:
- - lernaPackage - package returned either by `rootPackage()` or `packages()`;
- - silent - should script output be streamed to stdout/stderr or suppressed. Defaults to `true`;
+ - script - npm script to execute;
 
 Argument list #2:
- - script - npm script to execute;
+ - lernaPackage - package returned either by `rootPackage()` or `packages()`;
+ - silent - should script output be streamed to stdout/stderr or suppressed. Defaults to `true`;
  
 Returns:
  - stdout - collected output;

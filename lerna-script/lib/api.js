@@ -43,8 +43,8 @@ function loadRootPackage({log = npmlog} = {log: npmlog}) {
   return new Package(require(join(cwd, './package.json')), cwd);
 }
 
-function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
-  return command => {
+function runCommand(command) {
+  return (lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) => {
     log.silly("runCommand", command, {cwd: lernaPackage.location, silent});
     const commandAndArgs = command.split(' ');
     const actualCommand = commandAndArgs.shift();
@@ -60,8 +60,8 @@ function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true,
   };
 }
 
-function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
-  return script => {
+function runScript(script) {
+  return (lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) => {
     if (lernaPackage.scripts && lernaPackage.scripts[script]) {
       return new Promise((resolve, reject) => {
         const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
