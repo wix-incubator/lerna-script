@@ -16,8 +16,6 @@ module.exports = function generateIdeaProject() {
   const rootPackage = lernaScript.rootPackage();
   const lernaPackages = lernaScript.packages();
 
-
-
   return lernaScript.exec.command('rm -rf .idea')(rootPackage)
     .then(() => lernaScript.exec.command('rm -f *.iml')(rootPackage))
     .then(() => lernaScript.exec.command('mkdir .idea')(rootPackage))
@@ -31,7 +29,6 @@ module.exports = function generateIdeaProject() {
           .then(() => createModuleIml(lernaPackage));
       });
     });
-
 };
 
 function createWorkspaceXml(lernaPackages, rootPackage) {

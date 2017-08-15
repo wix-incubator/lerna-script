@@ -4,7 +4,8 @@ const Repository = require('lerna/lib/Repository'),
   NpmUtilities = require('lerna/lib/NpmUtilities'),
   ChildProcessUtilities = require('lerna/lib/ChildProcessUtilities'),
   {join} = require('path'),
-  npmlog = require('npmlog');
+  npmlog = require('npmlog'),
+  Promise = require('bluebird');
 
 module.exports.packages = loadPackages;
 module.exports.rootPackage = loadRootPackage;
@@ -12,20 +13,40 @@ module.exports.iter = {forEach, parallel, batched};
 module.exports.exec = {command: runCommand, script: runScript};
 
 function forEach(lernaPackages, taskFn) {
-  return Promise.resolve().then(() => lernaPackages.forEach(pkg => taskFn(pkg)));
+  const promisifiedTaskFn = Promise.method(taskFn);
+  const forEachTracker = npmlog.newItem('forEach', lernaPackages.length);
+  return Promise.each(lernaPackages, lernaPackage => {
+    return promisifiedTaskFn(lernaPackage, forEachTracker).finally(() => forEachTracker.completeWork(1));
+  }).finally(() => forEachTracker.finish());
 }
 
 function parallel(lernaPackages, taskFn) {
-  const packagePromiseFunctions = () => lernaPackages.map(lernaPackage => Promise.resolve().then(() => taskFn(lernaPackage)));
-  return Promise.all(packagePromiseFunctions());
+  const promisifiedTaskFn = Promise.method(taskFn);
+  const forEachTracker = npmlog.newGroup('forEach', lernaPackages.length);
+  return Promise.map(lernaPackages, (lernaPackage) => {
+    const promiseTracker = forEachTracker.newItem(lernaPackage.name);
+    promiseTracker.pause();
+    return promisifiedTaskFn(lernaPackage, promiseTracker).finally(() => {
+      promiseTracker.resume();
+      promiseTracker.completeWork(1);
+    });
+  }).finally(() => forEachTracker.finish());
 }
 
 function batched(lernaPackages, taskFn) {
+  const promisifiedTaskFn = Promise.method(taskFn);
+  const forEachTracker = npmlog.newGroup('forEach', lernaPackages.length);
   const batchedPackages = PackageUtilities.topologicallyBatchPackages(lernaPackages);
-  const lernaTaskFn = lernaPackage => done => Promise.resolve()
-    .then(() => taskFn(lernaPackage))
-    .then(done)
-    .catch(done);
+  const lernaTaskFn = lernaPackage => done => {
+    const promiseTracker = forEachTracker.newItem(lernaPackage.name);
+    promiseTracker.pause();
+    promisifiedTaskFn(lernaPackage, promiseTracker)
+      .finally(() => {
+        promiseTracker.resume();
+        promiseTracker.completeWork(1);
+        done();
+      });
+  };
 
   return new Promise((resolve, reject) => {
     PackageUtilities.runParallelBatches(batchedPackages, lernaTaskFn, 4, err => err ? reject(err) : resolve());
