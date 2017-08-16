@@ -51,3 +51,12 @@ Argument list #2:
  
 Returns:
  - stdout - collected output;
+ 
+### changes.build(lernaPackage): undefined
+Marks package as built.
+
+### changes.unbuild(lernaPackage): undefined
+Marks package as unbuilt.
+
+### changes.isBuilt(lernaPackage): boolean
+Returns true if package is build and false otherwise.

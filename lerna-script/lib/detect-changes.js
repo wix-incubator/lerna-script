@@ -5,18 +5,18 @@ const fs = require('fs'),
   ignore = require('ignore'),
   klawSync = require('klaw-sync');
 
-function makePackageBuilt(lernaPackage, label) {
+function makePackageBuilt(lernaPackage) {
   fsExtra.ensureDirSync(path.join(process.cwd(), '.lerna'));
-  fs.writeFileSync(targetFileSentinelFile(lernaPackage, label), '');
+  fs.writeFileSync(targetFileSentinelFile(lernaPackage), '');
 }
 
-function makePackageUnbuilt(lernaPackage, label) {
-  fsExtra.removeSync(targetFileSentinelFile(lernaPackage, label));
+function makePackageUnbuilt(lernaPackage) {
+  fsExtra.removeSync(targetFileSentinelFile(lernaPackage));
 }
 
-function isPackageBuilt(lernaPackage, label) {
+function isPackageBuilt(lernaPackage) {
   const ignored = collectIgnores(lernaPackage.location);
-  const targetSentinelForPackage = targetFileSentinelFile(lernaPackage, label);
+  const targetSentinelForPackage = targetFileSentinelFile(lernaPackage);
   return fsUtils.existsSync(targetSentinelForPackage) &&
     !modifiedAfter(lernaPackage, ignored, fs.statSync(targetSentinelForPackage).mtime.getTime());
 }

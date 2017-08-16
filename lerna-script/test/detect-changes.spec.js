@@ -1,20 +1,19 @@
 const {expect} = require('chai').use(require('sinon-chai')),
   sinon = require('sinon'),
   {empty} = require('lerna-script-test-utils'),
-  detectChanges = require('../lib/detect-changes'),
   index = require('..'),
   intercept = require('intercept-stdout'),
   {join} = require('path'),
   {writeFileSync} = require('fs');
 
-describe.only('detect-changes', () => {
+describe('detect-changes', () => {
 
   it('should not detect any changes for already marked modules', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
       const lernaPackages = index.packages();
-      lernaPackages.forEach(lernaPackage => expect(detectChanges.isPackageBuilt(lernaPackage, 'woop')).to.equal(true));
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(true));
     });
   });
 
@@ -23,7 +22,7 @@ describe.only('detect-changes', () => {
 
     return project.within(() => {
       const lernaPackages = index.packages();
-      lernaPackages.forEach(lernaPackage => expect(detectChanges.isPackageBuilt(lernaPackage, 'woop')).to.equal(false));
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(false));
     });
   });
 
@@ -34,7 +33,7 @@ describe.only('detect-changes', () => {
       const aLernaPackage = index.packages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(detectChanges.isPackageBuilt(aLernaPackage, 'woop')).to.equal(false);
+      expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);
     });
   });
 
@@ -49,7 +48,7 @@ describe.only('detect-changes', () => {
       const aLernaPackage = index.packages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(detectChanges.isPackageBuilt(aLernaPackage, 'woop')).to.equal(true);
+      expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
     });
   });
 
@@ -64,14 +63,26 @@ describe.only('detect-changes', () => {
       const aLernaPackage = index.packages().find(lernaPackage => lernaPackage.name === 'a');
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(detectChanges.isPackageBuilt(aLernaPackage, 'woop')).to.equal(true);
+      expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
     });
   });
+
+  it('should should unbuild a module', () => {
+    const project = asBuilt(asGitCommited(aLernaProject()));
+
+    return project.within(() => {
+      const aLernaPackage = index.packages().pop();
+      index.changes.unbuild(aLernaPackage);
+
+      expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);
+    });
+  });
+
 
   function asBuilt(project) {
     return project.inDir(ctx => {
       const lernaPackages = index.packages();
-      lernaPackages.forEach(lernaPackage => detectChanges.markPackageBuilt(lernaPackage, 'woop'));
+      lernaPackages.forEach(lernaPackage => index.changes.build(lernaPackage));
       ctx.exec('sleep 1'); //so that second would rotate
     });
   }
