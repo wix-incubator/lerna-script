@@ -11,6 +11,7 @@ module.exports.packages = loadPackages;
 module.exports.rootPackage = loadRootPackage;
 module.exports.iter = {forEach, parallel, batched};
 module.exports.exec = {command: runCommand, script: runScript};
+// module.exports.build = {build: markPackageBuilt, unbuild: markPackageUnbuilt, isBuilt: isPackageBuilt};
 
 function forEach(lernaPackages, taskFn) {
   const promisifiedTaskFn = Promise.method(taskFn);
