@@ -6,7 +6,8 @@ const Repository = require('lerna/lib/Repository'),
   {join} = require('path'),
   npmlog = require('npmlog'),
   Promise = require('bluebird'),
-  detectChanges = require('./detect-changes');
+  detectChanges = require('./detect-changes'),
+  filters = require('./filters');
 
 module.exports.packages = loadPackages;
 
@@ -27,6 +28,10 @@ module.exports.changes = {
   build: detectChanges.markPackageBuilt,
   unbuild: detectChanges.markPackageUnbuilt,
   isBuilt: detectChanges.isPackageBuilt
+};
+
+module.exports.filter = {
+  removeBuilt: filters.removeBuilt
 };
 
 function forEach(lernaPackages, taskFn) {

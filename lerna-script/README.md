@@ -60,3 +60,12 @@ Marks package as unbuilt.
 
 ### changes.isBuilt(lernaPackage): boolean
 Returns true if package is build and false otherwise.
+
+### filters.removeBuilt(lernaPackages: []): []
+Filters-out packages that have been marked as built `changes.build` and were not changed since. Note that it filters-out also dependent packages, so if:
+ - a, did not change, depends on b;
+ - b, changed;
+ - c, not changed, no inter-project dependencies.
+ 
+Then it will return only `c` as `b` has changed and `a` depends on `b`, so it needs to be rebuilt/retested/re...
+ 

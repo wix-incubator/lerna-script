@@ -1,8 +1,6 @@
-const {expect} = require('chai').use(require('sinon-chai')),
-  sinon = require('sinon'),
+const {expect} = require('chai'),
   {empty} = require('lerna-script-test-utils'),
   index = require('..'),
-  intercept = require('intercept-stdout'),
   {join} = require('path'),
   {writeFileSync} = require('fs');
 
