@@ -7,7 +7,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
   {join} = require('path'),
   {writeFileSync} = require('fs');
 
-describe.only('detect-changes', () => {
+describe('detect-changes', () => {
 
   it('should not detect any changes for already marked modules', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
