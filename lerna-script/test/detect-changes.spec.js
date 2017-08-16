@@ -7,7 +7,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
   {join} = require('path'),
   {writeFileSync} = require('fs');
 
-describe('detect-changes', () => {
+describe.only('detect-changes', () => {
 
   it('should not detect any changes for already marked modules', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
@@ -53,6 +53,20 @@ describe('detect-changes', () => {
     });
   });
 
+  it('should respect .gitignore in module dir', () => {
+    const projectWithGitIgnore = aLernaProject().inDir(ctx => {
+      ctx.addFile('nested/a/.gitignore', 'some.txt\n');
+    });
+
+    const project = asBuilt(asGitCommited(projectWithGitIgnore));
+
+    return project.within(() => {
+      const aLernaPackage = index.packages().find(lernaPackage => lernaPackage.name === 'a');
+      writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
+
+      expect(detectChanges.isPackageBuilt(aLernaPackage, 'woop')).to.equal(true);
+    });
+  });
 
   function asBuilt(project) {
     return project.inDir(ctx => {

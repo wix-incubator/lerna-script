@@ -1,17 +1,17 @@
-const shelljs = require('shelljs');
-const fs = require('fs');
-const path = require('path');
-const fsUtils = require('lerna/lib/FileSystemUtilities');
-const ignore = require('ignore');
+const fs = require('fs'),
+  fsExtra = require('fs-extra'),
+  path = require('path'),
+  fsUtils = require('lerna/lib/FileSystemUtilities'),
+  ignore = require('ignore'),
+  klawSync = require('klaw-sync');
 
 function makePackageBuilt(lernaPackage, label) {
-  shelljs.mkdir('-p', path.join(process.cwd(), '.lerna'));
-  fsUtils.writeFileSync(targetFileSentinelFile(lernaPackage, label), '');
+  fsExtra.ensureDirSync(path.join(process.cwd(), '.lerna'));
+  fs.writeFileSync(targetFileSentinelFile(lernaPackage, label), '');
 }
 
 function makePackageUnbuilt(lernaPackage, label) {
-  const targetSentinelForPackage = targetFileSentinelFile(lernaPackage, label);
-  fsUtils.existsSync(targetSentinelForPackage) && fsUtils.unlinkSync(targetSentinelForPackage);
+  fsExtra.removeSync(targetFileSentinelFile(lernaPackage, label));
 }
 
 function isPackageBuilt(lernaPackage, label) {
@@ -27,14 +27,14 @@ function targetFileSentinelFile(lernaPackage, label = 'default') {
 
 function modifiedAfter(lernaPackage, ignored, timeStamp) {
   let rootAbsolutePath = path.resolve(process.cwd(), lernaPackage.location);
-  const entries = shelljs.ls(lernaPackage.location);
+  const entries = klawSync(lernaPackage.location);
 
   return entries.map(entry => {
-    const absolutePath = path.resolve(rootAbsolutePath, entry);
+    const absolutePath = path.resolve(rootAbsolutePath, entry.path);
     return {
       absolutePath,
       relativePath: path.relative(process.cwd(), absolutePath),
-      stats: fs.lstatSync(absolutePath)
+      stats: entry.stats
     }
   })
     .filter(({relativePath}) => !ignored.ignores(relativePath))
