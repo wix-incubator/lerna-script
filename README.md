@@ -46,7 +46,7 @@ const {packages, iter, exec} = require('lerna-script'),
 module.exports.syncNvmRc = () => {
   const rootNvmRcPath = join(process.cwd(), '.nvmrc'); 
   
-  return iter.parallel(packages(), lernaPackage => {
+  return iter.parallel(packages())(lernaPackage => {
     exec(lernaPackage)(`cp ${rootNvmRcPath} .`);
   });
 }
@@ -99,7 +99,7 @@ module.exports.test = () => {
   // filters.removeBuilt removes packages that did not change since last run
   const changedPackages = filters.removeBuilt(packages());
   
-  return iter.forEach(changedPackages, lernaPackage => { 
+  return iter.forEach(changedPackages)(lernaPackage => { 
     return exec.script('test')(lernaPackage)
       .then(() => changes.markBuilt(lernaPackage)) //mark package as built once `npm test` script passes.
   });
@@ -134,10 +134,10 @@ npm install --save-dev husky
 
 then add script to `package.json`
 
-```js
+```json
 {
   "scripts": {
-    "prepush": "lerna-script update-repo-urls",
+    "prepush": "lerna-script update-repo-urls"
   }
 }
 ```
@@ -152,13 +152,13 @@ const {join, relative} = require('path');
 module.exports['update-repo-urls'] = () => {
   const baseUrl = 'https://github.com/module';
 
-  return iter.forEach(packages(), lernaPackage => {
+  return iter.forEach(packages())(lernaPackage => {
     const packageJsonPath = join(lernaPackage.location, 'package.json');
     const relativeModulePath = relative(process.cwd(), lernaPackage.location);
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
     writeFileSync(packageJsonPath, JSON.stringify(Object.assign({}, packageJson, {
       homepage: `${baseUrl}/tree/master/${relativeModulePath}`
-    }));
+    })));
   });
 }
 ```

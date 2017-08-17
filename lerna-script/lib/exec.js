@@ -2,8 +2,8 @@ const NpmUtilities = require('lerna/lib/NpmUtilities'),
   ChildProcessUtilities = require('lerna/lib/ChildProcessUtilities'),
   npmlog = require('npmlog');
 
-function runCommand(command) {
-  return (lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) => {
+function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
+  return command => {
     log.silly("runCommand", command, {cwd: lernaPackage.location, silent});
     const commandAndArgs = command.split(' ');
     const actualCommand = commandAndArgs.shift();
@@ -19,8 +19,8 @@ function runCommand(command) {
   };
 }
 
-function runScript(script) {
-  return (lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) => {
+function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
+  return script => {
     if (lernaPackage.scripts && lernaPackage.scripts[script]) {
       return new Promise((resolve, reject) => {
         const callback = (err, stdout) => err ? reject(err) : resolve(stdout);

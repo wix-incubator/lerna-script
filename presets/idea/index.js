@@ -15,17 +15,18 @@ const supportedSourceFolders = [
 module.exports = function generateIdeaProject() {
   const rootPackage = lernaScript.rootPackage();
   const lernaPackages = lernaScript.packages();
+  const execInRoot = lernaScript.exec.command(rootPackage);
 
-  return lernaScript.exec.command('rm -rf .idea')(rootPackage)
-    .then(() => lernaScript.exec.command('rm -f *.iml')(rootPackage))
-    .then(() => lernaScript.exec.command('mkdir .idea')(rootPackage))
-    .then(() => lernaScript.exec.command(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`)(rootPackage))
+  return execInRoot('rm -rf .idea')
+    .then(() => execInRoot('rm -f *.iml'))
+    .then(() => execInRoot('mkdir .idea'))
+    .then(() => execInRoot(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`))
     .then(() => {
       createWorkspaceXml(lernaPackages, rootPackage);
       createModulesXml(lernaPackages, rootPackage);
 
-      return lernaScript.iter.parallel(lernaPackages, lernaPackage => {
-        return lernaScript.exec.command('rm -f *.iml')(lernaPackage)
+      return lernaScript.iter.parallel(lernaPackages)(lernaPackage => {
+        return lernaScript.exec.command(lernaPackage)('rm -f *.iml')
           .then(() => createModuleIml(lernaPackage));
       });
     });

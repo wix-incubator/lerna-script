@@ -13,7 +13,7 @@ describe('exec', () => {
       return aLernaProject().within(() => {
         const lernaPackage = index.packages().pop();
 
-        return index.exec.command('pwd')(lernaPackage, {log}).then(stdout => {
+        return index.exec.command(lernaPackage, {log})('pwd').then(stdout => {
           expect(log.silly).to.have.been.calledWith("runCommand", 'pwd', {cwd: lernaPackage.location, silent: true});
           expect(stdout).to.equal(lernaPackage.location);
           expect(output()).to.not.contain(lernaPackage.location);
@@ -25,7 +25,7 @@ describe('exec', () => {
       return aLernaProject().within(() => {
         const lernaPackage = index.packages().pop();
 
-        return index.exec.command('pwd')(lernaPackage, {silent: false}).then(stdout => {
+        return index.exec.command(lernaPackage, {silent: false})('pwd').then(stdout => {
           expect(stdout).to.equal(lernaPackage.location);
           expect(output()).to.contain(lernaPackage.location);
         });
@@ -36,7 +36,7 @@ describe('exec', () => {
       aLernaProject().within(() => {
         const lernaPackage = index.packages().pop();
 
-        index.exec.command('asd zzz')(lernaPackage).catch(e => {
+        index.exec.command(lernaPackage)('asd zzz').catch(e => {
           expect(e.message).to.contain('spawn asd ENOENT');
           done();
         });
@@ -53,7 +53,7 @@ describe('exec', () => {
       return project.within(() => {
         const lernaPackage = index.rootPackage();
 
-        return index.exec.script('test')(lernaPackage).then(stdout => {
+        return index.exec.script(lernaPackage)('test').then(stdout => {
           expect(stdout).to.contain('tested');
           expect(output()).to.not.contain('tested');
         });
@@ -67,7 +67,7 @@ describe('exec', () => {
       return project.within(() => {
         const lernaPackage = index.rootPackage();
 
-        return index.exec.script('test')(lernaPackage, {silent: false}).then(stdout => {
+        return index.exec.script(lernaPackage, {silent: false})('test').then(stdout => {
           expect(stdout).to.contain('tested');
           expect(output()).to.contain('tested');
         });
@@ -82,7 +82,7 @@ describe('exec', () => {
       project.within(() => {
         const lernaPackage = index.rootPackage();
 
-        index.exec.script('test')(lernaPackage).catch(e => {
+        index.exec.script(lernaPackage)('test').catch(e => {
           expect(e.message).to.contain('Command failed: npm run test');
           done();
         });
@@ -97,7 +97,7 @@ describe('exec', () => {
       return project.within(() => {
         const lernaPackage = index.rootPackage();
 
-        return index.exec.script('test')(lernaPackage, {log}).then(stdout => {
+        return index.exec.script(lernaPackage, {log})('test').then(stdout => {
           expect(stdout).to.equal('');
           expect(log.warn).to.have.been.calledWith('runNpmScript', 'script not found', {
             script: 'test',

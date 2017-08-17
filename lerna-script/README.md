@@ -12,18 +12,18 @@ Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of 
 
 LernaPackage is [Package in lerna](https://github.com/lerna/lerna/blob/master/src/Package.js).
  
-### iter.forEach(lernaPackages: [], task: lernaPackage => Promise, log): Promise(taskResults: [])
+### iter.forEach(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a serial fashion. `taskFn` can be either sync task or return a `Promise`.
 
-### iter.parallel(lernaPackages: [], , task: lernaPackage => Promise, log): Promise(taskResults: [])
+### iter.parallel(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a parallel fashion(`Promise.all`). `taskFn` can be either sync task 
 or return a `Promise`.
 
-### iter.batched(lernaPackages: [], , task: lernaPackage => Promise, log): Promise(undefined)
+### iter.batched(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(undefined)
 Executed provided command for all `lernaPackages` in a batched fashion respecting dependency graph. `taskFn` can be either 
 sync task or return a `Promise`.
 
-### exec.command(command)(lernaPackage, {silent = true}): Promise(stdout)
+### exec.command(lernaPackage, {silent = true})(command): Promise(stdout)
 Executes given command for a package and returns collected `stdout`.
 
 Note that `command` is a single command, meaning `rm -f zzz` and not ex. `rm -f zzz && mkdir zzz`. It's just for convenience 
@@ -39,7 +39,7 @@ Argument list #2:
 Returns:
  - stdout - collected output; 
  
-### exec.script(script)(lernaPackage, {silent = true}): Promise(stdout)
+### exec.script(lernaPackage, {silent = true})(script): Promise(stdout)
 Executes given npm script for a package and returns collected `stdout`.
 
 Argument list #1:
