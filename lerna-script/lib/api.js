@@ -5,12 +5,34 @@ const Repository = require('lerna/lib/Repository'),
   ChildProcessUtilities = require('lerna/lib/ChildProcessUtilities'),
   {join} = require('path'),
   npmlog = require('npmlog'),
-  Promise = require('bluebird');
+  Promise = require('bluebird'),
+  detectChanges = require('./detect-changes'),
+  filters = require('./filters');
 
 module.exports.packages = loadPackages;
+
 module.exports.rootPackage = loadRootPackage;
-module.exports.iter = {forEach, parallel, batched};
-module.exports.exec = {command: runCommand, script: runScript};
+
+module.exports.iter = {
+  forEach,
+  parallel,
+  batched
+};
+
+module.exports.exec = {
+  command: runCommand,
+  script: runScript
+};
+
+module.exports.changes = {
+  build: detectChanges.markPackageBuilt,
+  unbuild: detectChanges.markPackageUnbuilt,
+  isBuilt: detectChanges.isPackageBuilt
+};
+
+module.exports.filter = {
+  removeBuilt: filters.removeBuilt
+};
 
 function forEach(lernaPackages, taskFn) {
   const promisifiedTaskFn = Promise.method(taskFn);
