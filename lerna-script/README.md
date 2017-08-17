@@ -69,3 +69,5 @@ Filters-out packages that have been marked as built `changes.build` and were not
  
 Then it will return only `c` as `b` has changed and `a` depends on `b`, so it needs to be rebuilt/retested/re...
  
+### filter.gitSince(lernaPackages: [])(refspec): []
+Filters-out packages that have did not change since `refspec` - ex. master, brach, tag.
