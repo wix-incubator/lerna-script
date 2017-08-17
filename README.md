@@ -115,4 +115,52 @@ module.exports.test = () => {
 
 ## Git hooks
 
-TBD: example with https://www.npmjs.com/package/husky
+Sometimes there are things you want to make sure are done/enforced on your modules like:
+ - linting all modules in repo;
+ - making sure some meta is normalized automatically across all modules;
+ - ...
+
+Recommendation is to combine [lerna-script](https://www.npmjs.com/package/lerna-script) with [husky](https://www.npmjs.com/package/husky) for running automatic actions on pre-push/pre-commit hooks. Then you don't have to think about it and it just happens automatically.
+
+Say you want to make sure that [repository](https://docs.npmjs.com/files/package.json#repository) url is valid for all modules and you don't leave it out when adding new module (via amazing copy/paste pattern).
+
+For that you could add a [lerna-script](https://www.npmjs.com/package/lerna-script) task to normalize [repository](https://docs.npmjs.com/files/package.json#repository) and hook-it up to [pre-push git hook](https://git-scm.com/book/gr/v2/Customizing-Git-Git-Hooks).
+
+First install husky:
+
+```bash
+npm install --save-dev husky
+```
+
+then add script to `package.json`
+
+```js
+{
+  "scripts": {
+    "prepush": "lerna-script update-repo-urls",
+  }
+}
+```
+
+and add export to `lerna.js`:
+
+```js
+const {packages, iter, exec, changes, filters} = require('lerna-script');
+const {readFileSync, writeFileSync} = require('fs');
+const {join, relative} = require('path');
+
+module.exports['update-repo-urls'] = () => {
+  const baseUrl = 'https://github.com/module';
+
+  return iter.forEach(packages(), lernaPackage => {
+    const packageJsonPath = join(lernaPackage.location, 'package.json');
+    const relativeModulePath = relative(process.cwd(), lernaPackage.location);
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+    writeFileSync(packageJsonPath, JSON.stringify(Object.assign({}, packageJson, {
+      homepage: `${baseUrl}/tree/master/${relativeModulePath}`
+    }));
+  });
+}
+```
+
+**Note:** Example is a bit contrived - you should do read/write in async way, could use `parallel` instead of `forEach`, but you got the point:)
