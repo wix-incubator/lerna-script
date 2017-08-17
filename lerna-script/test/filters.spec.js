@@ -1,5 +1,5 @@
 const {expect} = require('chai'),
-  {empty} = require('lerna-script-test-utils'),
+  {aLernaProject, asBuilt, asGitCommited, empty} = require('./utils'),
   index = require('..');
 
 describe('filters', () => {
@@ -50,25 +50,31 @@ describe('filters', () => {
 
   });
 
-  function asBuilt(project) {
-    return project.inDir(ctx => {
-      const lernaPackages = index.packages();
-      lernaPackages.forEach(lernaPackage => index.changes.build(lernaPackage));
-      ctx.exec('sleep 1'); //so that second would rotate on file change date
+  describe('filters.gitSince', () => {
+
+    it('removes modules without changes', () => {
+      return empty()
+        .addFile('package.json', {"name": "root", version: "1.0.0"})
+        .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["nested/**"], "version": "0.0.0"})
+        .module('nested/a', module => module.packageJson({name: 'a', version: '2.0.0'}))
+        .module('nested/ba', module => module.packageJson({
+          name: 'ba',
+          version: '1.0.0',
+          dependencies: {'b': '~1.0.0'}
+        }))
+        .inDir(ctx => {
+          ctx.exec('git init && git config user.email mail@example.org && git config user.name name');
+          ctx.exec('git add -A && git commit -am ok');
+          ctx.exec('git checkout -b test');
+        })
+        .module('nested/b', module => module.packageJson({name: 'b', version: '1.0.0'}))
+        .inDir(ctx => {
+          ctx.exec('git add -A && git commit -am ok');
+        })
+        .within(() => {
+          const lernaPackages = index.filter.gitSince(index.packages())('master');
+          expect(lernaPackages.map(p => p.name)).to.have.same.members(['b', 'ba']);
+        });
     });
-  }
-
-  function asGitCommited(project) {
-    return project.inDir(ctx => ctx.exec('git add -A && git commit -am "init"'));
-  }
-
-  function aLernaProject() {
-    return empty()
-      .addFile('package.json', {"name": "root", version: "1.0.0"})
-      .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["nested/**"], "version": "0.0.0"})
-      .module('nested/a', module => module.packageJson({version: '1.0.0'}))
-      .module('nested/b', module => module.packageJson({name: 'b', version: '1.0.1', dependencies: {'a': '~1.0.0'}}))
-      .inDir(ctx => ctx.exec('git init'));
-  }
-
+  });
 });

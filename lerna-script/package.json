@@ -2,7 +2,7 @@
   "name": "lerna-script",
   "version": "0.0.7",
   "description": "lerna extension for custom scripts",
-  "main": "lib/api.js",
+  "main": "index.js",
   "homepage": "https://github.com/wix/lerna-script/tree/master/lerna-script",
   "bin": {
     "lerna-script": "bin/cli.js"
