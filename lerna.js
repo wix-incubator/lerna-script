@@ -1,0 +1,1 @@
+module.exports.idea = require('lerna-script-preset-idea');

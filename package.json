@@ -7,9 +7,12 @@
     "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
     "rebuild": "lerna clean --yes && lerna bootstrap && lerna run test",
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "idea": "lerna-script idea"
   },
   "devDependencies": {
-    "lerna": "^2.0.0"
+    "lerna": "^2.0.0",
+    "lerna-script": "latest",
+    "lerna-script-preset-idea": "latest"
   }
 }
