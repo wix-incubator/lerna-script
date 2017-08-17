@@ -1,21 +1,9 @@
 const {expect} = require('chai').use(require('sinon-chai')),
-  {aLernaProject, loggerMock, empty} = require('./utils'),
-  index = require('..'),
-  intercept = require('intercept-stdout');
+  {aLernaProject, loggerMock, empty, captureOutput} = require('./utils'),
+  index = require('..');
 
 describe('exec', () => {
-  let capturedOutput = "";
-  let detach;
-
-  beforeEach(() => detach = intercept(txt => {
-    capturedOutput += txt;
-  }));
-
-  afterEach(() => {
-    detach();
-    capturedOutput = "";
-  });
-
+  const output = captureOutput();
 
   describe('command', () => {
 
@@ -28,7 +16,7 @@ describe('exec', () => {
         return index.exec.command('pwd')(lernaPackage, {log}).then(stdout => {
           expect(log.silly).to.have.been.calledWith("runCommand", 'pwd', {cwd: lernaPackage.location, silent: true});
           expect(stdout).to.equal(lernaPackage.location);
-          expect(capturedOutput).to.not.contain(lernaPackage.location);
+          expect(output()).to.not.contain(lernaPackage.location);
         });
       });
     });
@@ -39,7 +27,7 @@ describe('exec', () => {
 
         return index.exec.command('pwd')(lernaPackage, {silent: false}).then(stdout => {
           expect(stdout).to.equal(lernaPackage.location);
-          expect(capturedOutput).to.contain(lernaPackage.location);
+          expect(output()).to.contain(lernaPackage.location);
         });
       });
     });
@@ -67,7 +55,7 @@ describe('exec', () => {
 
         return index.exec.script('test')(lernaPackage).then(stdout => {
           expect(stdout).to.contain('tested');
-          expect(capturedOutput).to.not.contain('tested');
+          expect(output()).to.not.contain('tested');
         });
       });
     });
@@ -81,7 +69,7 @@ describe('exec', () => {
 
         return index.exec.script('test')(lernaPackage, {silent: false}).then(stdout => {
           expect(stdout).to.contain('tested');
-          expect(capturedOutput).to.contain('tested');
+          expect(output()).to.contain('tested');
         });
       });
     });

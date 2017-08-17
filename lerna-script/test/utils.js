@@ -1,6 +1,7 @@
 const {empty} = require('lerna-script-test-utils'),
   sinon = require('sinon'),
-  index = require('..');
+  index = require('..'),
+  intercept = require('intercept-stdout');
 
 module.exports.empty = empty;
 
@@ -34,5 +35,22 @@ module.exports.loggerMock = () => {
     warn: sinon.spy(),
     silly: sinon.spy(),
   };
+};
+
+module.exports.captureOutput = () => {
+  let capturedOutput = "";
+  let detach;
+
+  beforeEach(() => detach = intercept(txt => {
+    capturedOutput += txt;
+  }));
+
+  afterEach(() => {
+    detach();
+    capturedOutput = "";
+  });
+
+
+  return () => capturedOutput;
 };
 
