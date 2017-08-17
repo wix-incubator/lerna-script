@@ -41,4 +41,4 @@ npm start idea
 # API
 
 ## ()
-Returns a `start` task that generates/regenerates idea project.
+Returns a function that generates [WebStorm](https://www.jetbrains.com/webstorm/) for all modules in repo.
