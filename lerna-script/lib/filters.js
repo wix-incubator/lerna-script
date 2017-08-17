@@ -1,5 +1,25 @@
 const _ = require('lodash'),
-  detectChanges = require('./detect-changes');
+  detectChanges = require('./detect-changes'),
+  UpdatedPackagesCollector = require('lerna/lib/UpdatedPackagesCollector'),
+  PackageGraph = require('lerna/lib/PackageGraph').default,
+  log = require('npmlog');
+
+//TODO: see how to make it less sucky
+function removeGitSince(lernaPackages) {
+  return refspec => {
+    const collector = new UpdatedPackagesCollector({
+      filteredPackages: lernaPackages,
+      logger: log,
+      repository: {
+        packageGraph: new PackageGraph(lernaPackages),
+        rootPath: process.cwd()
+      },
+      options: {since: refspec}
+    });
+
+    return collector.getUpdates().map(u => u.package);
+  };
+}
 
 function filterOutBuiltPackages(lernaPackages) {
   const changedPackages = lernaPackages.filter(lernaPackage => !detectChanges.isPackageBuilt(lernaPackage));
@@ -47,5 +67,6 @@ function createDependencyEdgesFromPackages(packages) {
 }
 
 module.exports = {
-  removeBuilt: filterOutBuiltPackages
+  filterOutBuiltPackages,
+  removeGitSince
 };

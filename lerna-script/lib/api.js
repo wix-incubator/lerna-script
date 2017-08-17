@@ -31,7 +31,8 @@ module.exports.changes = {
 };
 
 module.exports.filter = {
-  removeBuilt: filters.removeBuilt
+  removeBuilt: filters.filterOutBuiltPackages,
+  gitSince: filters.removeGitSince
 };
 
 function forEach(lernaPackages, taskFn) {
