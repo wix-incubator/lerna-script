@@ -20,10 +20,10 @@ npm install --save-dev lerna-script
 
 # Usage
 
-  - Basic usage example
-  - Incremental builds
-  - Presets
-  - Git hooks
+  - [Basic usage example](#basic-usage-example)
+  - [Incremental builds](#incremental-builds)
+  - [Presets](#presets)
+  - [Git hooks](#git-hooks)
 
 ## Basic usage example
 
