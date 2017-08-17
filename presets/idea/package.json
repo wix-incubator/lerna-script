@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-preset-idea",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "task for start that generates intellij project for repo",
   "author": "vilius@wix.com",
   "license": "BSD",
@@ -21,11 +21,11 @@
     "shelljs": "^0.7.8"
   },
   "peerDependencies": {
-    "lerna-script": "^0.0.6"
+    "lerna-script": "^0.0.7"
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "lerna-script": "^0.0.6",
+    "lerna-script": "^0.0.7",
     "lerna-script-test-utils": "~0.0.2",
     "mocha": "3.4.1",
     "sinon": "2.3.1",
