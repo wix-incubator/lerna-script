@@ -11,7 +11,7 @@ describe('detect-changes', () => {
 
     return project.within(() => {
       const lernaPackages = index.loadPackages();
-      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(true));
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)()).to.equal(true));
     });
   });
 
@@ -20,7 +20,7 @@ describe('detect-changes', () => {
 
     return project.within(() => {
       const lernaPackages = index.loadPackages();
-      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(false));
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)()).to.equal(false));
     });
   });
 
@@ -31,7 +31,7 @@ describe('detect-changes', () => {
       const aLernaPackage = index.loadPackages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
     });
   });
 
@@ -46,7 +46,7 @@ describe('detect-changes', () => {
       const aLernaPackage = index.loadPackages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(true);
     });
   });
 
@@ -61,7 +61,7 @@ describe('detect-changes', () => {
       const aLernaPackage = index.loadPackages().find(lernaPackage => lernaPackage.name === 'a');
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(true);
     });
   });
 
@@ -70,9 +70,33 @@ describe('detect-changes', () => {
 
     return project.within(() => {
       const aLernaPackage = index.loadPackages().pop();
-      index.changes.unbuild(aLernaPackage);
+      index.changes.unbuild(aLernaPackage)();
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
     });
   });
+
+  it('should respect label for makePackageBuilt', () => {
+    const project = asBuilt(asGitCommited(aLernaProject()), 'woop');
+
+    return project.within(() => {
+      const lernaPackages = index.loadPackages();
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)()).to.equal(false));
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)('woop')).to.equal(true));
+    });
+  });
+
+  it('should respect label for makePackageUnbuilt', () => {
+    const project = asBuilt(asGitCommited(aLernaProject()), 'woop');
+
+    return project.within(() => {
+      const aLernaPackage = index.loadPackages().pop();
+      index.changes.unbuild(aLernaPackage)();
+      expect(index.changes.isBuilt(aLernaPackage)('woop')).to.equal(true);
+
+      index.changes.unbuild(aLernaPackage)('woop');
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
+    });
+  });
+
 });

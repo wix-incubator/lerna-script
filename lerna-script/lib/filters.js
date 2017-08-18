@@ -5,8 +5,8 @@ const _ = require('lodash'),
   PackageGraph = require('lerna/lib/PackageGraph').default,
   log = require('npmlog');
 
-function removeByGlob(lernaPackages, glob) {
-  return PackageUtilities.filterPackages(lernaPackages, {ignore: glob})
+function removeByGlob(lernaPackages) {
+  return glob => PackageUtilities.filterPackages(lernaPackages, {ignore: glob})
 }
 
 
@@ -28,8 +28,12 @@ function removeGitSince(lernaPackages) {
 }
 
 function removeBuilt(lernaPackages) {
-  const changedPackages = lernaPackages.filter(lernaPackage => !detectChanges.isPackageBuilt(lernaPackage));
-  return figureOutAllPackagesThatNeedToBeBuilt(lernaPackages, changedPackages);
+  return label => {
+    const changedPackages = lernaPackages.filter(lernaPackage => !detectChanges.isPackageBuilt(lernaPackage)(label));
+    const unbuiltPackages = figureOutAllPackagesThatNeedToBeBuilt(lernaPackages, changedPackages);
+    unbuiltPackages.forEach(p => detectChanges.markPackageUnbuilt(p)(label));
+    return unbuiltPackages;
+  };
 }
 
 function figureOutAllPackagesThatNeedToBeBuilt(allPackages, changedPackages) {

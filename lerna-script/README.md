@@ -59,25 +59,41 @@ Argument list #2:
 Returns:
  - stdout - collected output;
  
-### changes.build(lernaPackage): undefined
+### changes.build(lernaPackage)([label]): undefined
 Marks package as built.
 
-### changes.unbuild(lernaPackage): undefined
+Parameters:
+ - lernaPackage - package to unbuild;
+ - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label.
+
+### changes.unbuild(lernaPackage)([label]): undefined
 Marks package as unbuilt.
 
-### changes.isBuilt(lernaPackage): boolean
+Parameters:
+ - lernaPackage - package to unbuild;
+ - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
+
+### changes.isBuilt(lernaPackage)([label]): boolean
 Returns true if package is build and false otherwise.
 
-### filters.removeBuilt(lernaPackages: []): []
+Parameters:
+ - lernaPackage - package to unbuild;
+ - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
+
+### filters.removeBuilt(lernaPackages: [])([label]): []
 Filters-out packages that have been marked as built `changes.build` and were not changed since. Note that it filters-out also dependent packages, so if:
  - a, did not change, depends on b;
  - b, changed;
  - c, not changed, no inter-project dependencies.
  
 Then it will return only `c` as `b` has changed and `a` depends on `b`, so it needs to be rebuilt/retested/re...
+
+Parameters:
+ - lernaPackages - packages to filter;
+ - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
  
 ### filter.gitSince(lernaPackages: [])(refspec): []
 Filters-out packages that have did not change since `refspec` - ex. master, brach, tag.
 
-### filters.removeByGlob(lernaPackages: [], glob: String): []
+### filters.removeByGlob(lernaPackages: [])(glob: String): []
 Filters-out packages by provided glob pattern.

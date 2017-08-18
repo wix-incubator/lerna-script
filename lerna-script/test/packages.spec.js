@@ -4,7 +4,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
 
 describe('packages', () => {
 
-  describe.only('packages', () => {
+  describe('packages', () => {
 
     it('should return a list of packages', () => {
       const log = loggerMock();
