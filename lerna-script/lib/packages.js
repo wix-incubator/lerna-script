@@ -4,9 +4,13 @@ const Repository = require('lerna/lib/Repository'),
   {join} = require('path'),
   npmlog = require('npmlog');
 
-function loadPackages({log = npmlog} = {log: npmlog}) {
+function loadPackages({log = npmlog, packages} = {log: npmlog}) {
   log.verbose('loadPackages');
-  return PackageUtilities.getPackages(new Repository());
+  const repo = new Repository();
+  return PackageUtilities.getPackages({
+    rootPath: repo.rootPath,
+    packageConfigs: packages || repo.packageConfigs
+  });
 }
 
 function loadRootPackage({log = npmlog} = {log: npmlog}) {

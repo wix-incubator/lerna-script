@@ -10,12 +10,21 @@ describe('packages', () => {
       const log = loggerMock();
 
       return aLernaProject().within(() => {
-        const packages = index.packages({log});
+        const packages = index.loadPackages({log});
 
         expect(packages.length).to.equal(2);
         expect(log.verbose).to.have.been.calledWithMatch('loadPackages');
       });
     });
+
+    it('should accept custom package configs', () => {
+      return aLernaProject().within(() => {
+        const packages = index.loadPackages({packages: ['nested/a']});
+
+        expect(packages.map(p => p.name)).to.have.same.members(['a']);
+      });
+    });
+
   });
 
   describe('rootPackage', () => {
@@ -24,7 +33,7 @@ describe('packages', () => {
       const log = loggerMock();
 
       return aLernaProject().within(() => {
-        const rootPackage = index.rootPackage({log});
+        const rootPackage = index.loadRootPackage({log});
 
         expect(rootPackage.name).to.equal('root');
         expect(rootPackage.location).to.equal(process.cwd());

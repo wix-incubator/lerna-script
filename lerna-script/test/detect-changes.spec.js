@@ -10,8 +10,8 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
-      const lernaPackages = index.packages();
-      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(true));
+      const lernaPackages = index.loadPackages();
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)()).to.equal(true));
     });
   });
 
@@ -19,8 +19,8 @@ describe('detect-changes', () => {
     const project = aLernaProject();
 
     return project.within(() => {
-      const lernaPackages = index.packages();
-      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(false));
+      const lernaPackages = index.loadPackages();
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)()).to.equal(false));
     });
   });
 
@@ -28,10 +28,10 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().pop();
+      const aLernaPackage = index.loadPackages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
     });
   });
 
@@ -43,10 +43,10 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(projectWithGitIgnore));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().pop();
+      const aLernaPackage = index.loadPackages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(true);
     });
   });
 
@@ -58,10 +58,10 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(projectWithGitIgnore));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().find(lernaPackage => lernaPackage.name === 'a');
+      const aLernaPackage = index.loadPackages().find(lernaPackage => lernaPackage.name === 'a');
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(true);
     });
   });
 
@@ -69,10 +69,34 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().pop();
-      index.changes.unbuild(aLernaPackage);
+      const aLernaPackage = index.loadPackages().pop();
+      index.changes.unbuild(aLernaPackage)();
 
-      expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
     });
   });
+
+  it('should respect label for makePackageBuilt', () => {
+    const project = asBuilt(asGitCommited(aLernaProject()), 'woop');
+
+    return project.within(() => {
+      const lernaPackages = index.loadPackages();
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)()).to.equal(false));
+      lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)('woop')).to.equal(true));
+    });
+  });
+
+  it('should respect label for makePackageUnbuilt', () => {
+    const project = asBuilt(asGitCommited(aLernaProject()), 'woop');
+
+    return project.within(() => {
+      const aLernaPackage = index.loadPackages().pop();
+      index.changes.unbuild(aLernaPackage)();
+      expect(index.changes.isBuilt(aLernaPackage)('woop')).to.equal(true);
+
+      index.changes.unbuild(aLernaPackage)('woop');
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
+    });
+  });
+
 });

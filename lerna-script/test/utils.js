@@ -15,10 +15,10 @@ module.exports.aLernaProject = () => {
 };
 
 
-module.exports.asBuilt = project => {
+module.exports.asBuilt = (project, label) => {
   return project.inDir(ctx => {
-    const lernaPackages = index.packages();
-    lernaPackages.forEach(lernaPackage => index.changes.build(lernaPackage));
+    const lernaPackages = index.loadPackages();
+    lernaPackages.forEach(lernaPackage => index.changes.build(lernaPackage)(label));
     ctx.exec('sleep 1'); //so that second would rotate
   });
 };

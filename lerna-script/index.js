@@ -4,8 +4,8 @@ const iterators = require('./lib/iterators'),
   filters = require('./lib/filters'),
   exec = require('./lib/exec');
 
-module.exports.packages = packages.loadPackages;
-module.exports.rootPackage = packages.loadRootPackage;
+module.exports.loadPackages = packages.loadPackages;
+module.exports.loadRootPackage = packages.loadRootPackage;
 
 module.exports.iter = {
   forEach: iterators.forEach,
@@ -20,8 +20,9 @@ module.exports.changes = {
 };
 
 module.exports.filter = {
-  removeBuilt: filters.filterOutBuiltPackages,
-  gitSince: filters.removeGitSince
+  removeBuilt: filters.removeBuilt,
+  gitSince: filters.removeGitSince,
+  removeByGlob: filters.removeByGlob,
 };
 
 module.exports.exec = {
