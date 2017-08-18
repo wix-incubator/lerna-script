@@ -91,7 +91,9 @@ Then it will return only `c` as `b` has changed and `a` depends on `b`, so it ne
 Parameters:
  - lernaPackages - packages to filter;
  - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
- 
+
+**Note:** this filter mutates built/unbuild state, meaning that it unbuilds dependents to get reproducible runs.
+
 ### filter.gitSince(lernaPackages: [])(refspec): []
 Filters-out packages that have did not change since `refspec` - ex. master, brach, tag.
 
