@@ -4,5 +4,6 @@
     "lerna-script",
     "test-utils",
     "presets/*"
-  ]
+  ],
+  "version": "0.1.1"
 }
