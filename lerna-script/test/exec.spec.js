@@ -21,13 +21,13 @@ describe('exec', () => {
       });
     });
 
-    it('should print output if enabled', () => {
+    it.only('should print output if enabled', () => {
       return aLernaProject().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
-        return index.exec.command(lernaPackage, {silent: false})('pwd').then(stdout => {
-          expect(stdout).to.equal(lernaPackage.location);
-          expect(output()).to.contain(lernaPackage.location);
+        return index.exec.command(lernaPackage, {silent: false})('ls -lah .').then(stdout => {
+          expect(stdout).to.contain('package.json');
+          expect(output()).to.contain('package.json');
         });
       });
     });

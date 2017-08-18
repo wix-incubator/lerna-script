@@ -14,5 +14,8 @@
     "lerna": "^2.0.0",
     "lerna-script": "latest",
     "lerna-script-preset-idea": "latest"
+  },
+  "dependencies": {
+    "shelljs": "^0.7.8"
   }
 }

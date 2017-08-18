@@ -3,7 +3,7 @@ const fs = require('fs'),
   path = require('path'),
   fsUtils = require('lerna/lib/FileSystemUtilities'),
   ignore = require('ignore'),
-  klawSync = require('klaw-sync');
+  shelljs = require('shelljs');
 
 function makePackageBuilt(lernaPackage) {
   return label => {
@@ -21,7 +21,7 @@ function isPackageBuilt(lernaPackage) {
     const ignored = collectIgnores(lernaPackage.location);
     const targetSentinelForPackage = targetFileSentinelFile(lernaPackage, label);
     return fsUtils.existsSync(targetSentinelForPackage) &&
-      !modifiedAfter(lernaPackage, ignored, fs.statSync(targetSentinelForPackage).mtime.getTime());
+      !modifiedAfter(lernaPackage.location, '.', ignored, fs.statSync(targetSentinelForPackage).mtime.getTime());
   };
 }
 
@@ -29,23 +29,24 @@ function targetFileSentinelFile(lernaPackage, label = 'default') {
   return path.resolve(process.cwd(), '.lerna', `.octo-${lernaPackage.name}-${label}-sentinel`);
 }
 
-function modifiedAfter(lernaPackage, ignored, timeStamp) {
-  let rootAbsolutePath = path.resolve(process.cwd(), lernaPackage.location);
-  const entries = klawSync(lernaPackage.location);
+function modifiedAfter(baseDir, dir, ignored, timeStamp) {
+  let rootAbsolutePath = path.resolve(baseDir, dir);
+  const entries = shelljs.ls(rootAbsolutePath);
+  //const entries = klawSync(lernaPackage.location);
 
   return entries.map(entry => {
-    const absolutePath = path.resolve(rootAbsolutePath, entry.path);
+    const absolutePath = path.resolve(rootAbsolutePath, entry);
     return {
       absolutePath,
-      relativePath: path.relative(process.cwd(), absolutePath),
-      stats: entry.stats
+      relativePath: path.relative(baseDir, absolutePath),
+      stats: fs.lstatSync(absolutePath)
     }
   })
     .filter(({relativePath}) => !ignored.ignores(relativePath))
     .filter(({stats}) => !stats.isSymbolicLink())
     .sort(({stats}) => stats.isFile() ? -1 : 1)
     .some(({relativePath, stats}) => {
-      return stats.isDirectory() ? modifiedAfter(lernaPackage.location, relativePath, ignored, timeStamp) : stats.mtime.getTime() > timeStamp
+      return stats.isDirectory() ? modifiedAfter(baseDir, relativePath, ignored, timeStamp) : stats.mtime.getTime() > timeStamp
     });
 }
 

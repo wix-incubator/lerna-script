@@ -15,6 +15,19 @@ describe('detect-changes', () => {
     });
   });
 
+  it('should detect changes recursively', () => {
+    const project = asBuilt(asGitCommited(aLernaProject().inDir(ctx => {
+      ctx.addFile('nested/a/test/test.js', '');
+    })));
+
+    return project.within(ctx => {
+      ctx.addFile('nested/a/test/test2.js', '');
+      const lernaPackage = index.loadPackages().find(p => p.name === 'a');
+
+      expect(index.changes.isBuilt(lernaPackage)()).to.equal(false);
+    });
+  });
+
   it('should detect uncommitted modules as changed', () => {
     const project = aLernaProject();
 
