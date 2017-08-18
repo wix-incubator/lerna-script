@@ -14,6 +14,24 @@ module.exports.aLernaProject = () => {
     .inDir(ctx => ctx.exec('git init'));
 };
 
+module.exports.aLernaProjectWithSpec = (spec = {'a': [], 'b': ['a']}) => {
+  const project = empty()
+    .addFile('package.json', {"name": "root", version: "1.0.0"})
+    .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["nested/**"], "version": "0.0.0"});
+
+  Object.keys(spec).forEach(name => {
+    project.module(`nested/${name}`, module => {
+      const dependencies = {};
+      spec[name].forEach(dep => dependencies[dep] = "1.0.0");
+      module.packageJson({version: '1.0.0', dependencies});
+    });
+  });
+
+  return project.inDir(ctx => ctx.exec('git init'));
+
+};
+
+
 
 module.exports.asBuilt = (project, label) => {
   return project.inDir(ctx => {

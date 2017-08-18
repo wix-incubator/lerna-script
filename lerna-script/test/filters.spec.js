@@ -13,7 +13,7 @@ describe('filters', function () {
       return project.within(() => {
         const lernaPackages = index.filters.removeByGlob(index.loadPackages())('a');
         expect(lernaPackages.map(p => p.name)).to.have.same.members(['b']);
-      })
+      });
     });
   });
 
@@ -32,9 +32,11 @@ describe('filters', function () {
       const project = asBuilt(asGitCommited(aLernaProject()));
 
       return project.within(() => {
-        const unbuiltLernaPackages = index.filters.removeBuilt(index.loadPackages())();
-        expect(unbuiltLernaPackages.length).to.equal(0);
-      })
+        const packages = index.loadPackages();
+        index.changes.unbuild(packages.find(p => p.name === 'a'))();
+        const unbuiltLernaPackages = index.filters.removeBuilt(packages)();
+        expect(unbuiltLernaPackages.length).to.equal(1);
+      });
     });
 
     it('should filter-out packages whose dependencies changed', () => {
@@ -46,7 +48,7 @@ describe('filters', function () {
 
         const unbuiltLernaPackages = index.filters.removeBuilt(lernaPackages)();
         expect(unbuiltLernaPackages.length).to.equal(1);
-      })
+      });
     });
 
     it('should respect labels when filtering-out packages', () => {

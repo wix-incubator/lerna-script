@@ -21,7 +21,7 @@ describe('exec', () => {
       });
     });
 
-    it.only('should print output if enabled', () => {
+    it('should print output if enabled', () => {
       return aLernaProject().within(() => {
         const lernaPackage = index.loadPackages().pop();
 

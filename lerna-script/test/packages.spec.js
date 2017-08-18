@@ -1,5 +1,5 @@
 const {expect} = require('chai').use(require('sinon-chai')),
-  {aLernaProject, loggerMock} = require('./utils'),
+  {aLernaProject, aLernaProjectWithSpec, loggerMock} = require('./utils'),
   index = require('..');
 
 describe('packages', () => {
@@ -25,6 +25,17 @@ describe('packages', () => {
       });
     });
 
+    it('should return topo-sorted packages', () => {
+      return aLernaProjectWithSpec({
+        a: ['b'],
+        b: ['c'],
+        c: ['d'],
+        d: []
+      }).within(() => {
+        const packages = index.loadPackages();
+        expect(packages.map(p => p.name)).to.deep.equal(['d', 'c', 'b', 'a']);
+      });
+    });
   });
 
   describe('rootPackage', () => {
