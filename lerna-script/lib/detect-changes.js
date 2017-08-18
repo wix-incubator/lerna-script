@@ -45,7 +45,7 @@ function modifiedAfter(lernaPackage, ignored, timeStamp) {
     .filter(({stats}) => !stats.isSymbolicLink())
     .sort(({stats}) => stats.isFile() ? -1 : 1)
     .some(({relativePath, stats}) => {
-      return stats.isDirectory() ? modifiedAfter(baseDir, relativePath, ignored, timeStamp) : stats.mtime.getTime() > timeStamp
+      return stats.isDirectory() ? modifiedAfter(lernaPackage.location, relativePath, ignored, timeStamp) : stats.mtime.getTime() > timeStamp
     });
 }
 

@@ -94,7 +94,7 @@ Parameters:
 
 **Note:** this filter mutates built/unbuild state, meaning that it unbuilds dependents to get reproducible runs.
 
-### filter.gitSince(lernaPackages: [])(refspec): []
+### filters.gitSince(lernaPackages: [])(refspec): []
 Filters-out packages that have did not change since `refspec` - ex. master, brach, tag.
 
 ### filters.removeByGlob(lernaPackages: [])(glob: String): []

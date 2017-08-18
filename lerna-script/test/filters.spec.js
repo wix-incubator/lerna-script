@@ -11,7 +11,7 @@ describe('filters', function () {
       const project = aLernaProject();
 
       return project.within(() => {
-        const lernaPackages = index.filter.removeByGlob(index.loadPackages())('a');
+        const lernaPackages = index.filters.removeByGlob(index.loadPackages())('a');
         expect(lernaPackages.map(p => p.name)).to.have.same.members(['b']);
       })
     });
@@ -23,7 +23,7 @@ describe('filters', function () {
       const project = aLernaProject();
 
       return project.within(() => {
-        const unbuiltLernaPackages = index.filter.removeBuilt(index.loadPackages())();
+        const unbuiltLernaPackages = index.filters.removeBuilt(index.loadPackages())();
         expect(unbuiltLernaPackages.length).to.equal(2);
       })
     });
@@ -32,7 +32,7 @@ describe('filters', function () {
       const project = asBuilt(asGitCommited(aLernaProject()));
 
       return project.within(() => {
-        const unbuiltLernaPackages = index.filter.removeBuilt(index.loadPackages())();
+        const unbuiltLernaPackages = index.filters.removeBuilt(index.loadPackages())();
         expect(unbuiltLernaPackages.length).to.equal(0);
       })
     });
@@ -44,7 +44,7 @@ describe('filters', function () {
         const lernaPackages = index.loadPackages();
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'b'))();
 
-        const unbuiltLernaPackages = index.filter.removeBuilt(lernaPackages)();
+        const unbuiltLernaPackages = index.filters.removeBuilt(lernaPackages)();
         expect(unbuiltLernaPackages.length).to.equal(1);
       })
     });
@@ -56,10 +56,10 @@ describe('filters', function () {
         const lernaPackages = index.loadPackages();
 
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'b'))();
-        expect(index.filter.removeBuilt(lernaPackages)('woop').length).to.equal(0);
+        expect(index.filters.removeBuilt(lernaPackages)('woop').length).to.equal(0);
 
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'b'))('woop');
-        expect(index.filter.removeBuilt(lernaPackages)('woop').length).to.equal(1);
+        expect(index.filters.removeBuilt(lernaPackages)('woop').length).to.equal(1);
       });
     });
 
@@ -71,11 +71,11 @@ describe('filters', function () {
         const lernaPackages = index.loadPackages();
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'a'))();
 
-        expect(index.filter.removeBuilt(lernaPackages)().length).to.equal(2);
+        expect(index.filters.removeBuilt(lernaPackages)().length).to.equal(2);
 
         index.changes.build(lernaPackages.find(lernaPackage => lernaPackage.name === 'a'))();
         ctx.exec('sleep 1');
-        expect(index.filter.removeBuilt(lernaPackages)().length).to.equal(1);
+        expect(index.filters.removeBuilt(lernaPackages)().length).to.equal(1);
       })
     });
 
@@ -103,7 +103,7 @@ describe('filters', function () {
           ctx.exec('git add -A && git commit -am ok');
         })
         .within(() => {
-          const lernaPackages = index.filter.gitSince(index.loadPackages())('master');
+          const lernaPackages = index.filters.gitSince(index.loadPackages())('master');
           expect(lernaPackages.map(p => p.name)).to.have.same.members(['b', 'ba']);
         });
     });

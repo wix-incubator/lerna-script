@@ -19,7 +19,7 @@ module.exports.changes = {
   isBuilt: detectChanges.isPackageBuilt
 };
 
-module.exports.filter = {
+module.exports.filters = {
   removeBuilt: filters.removeBuilt,
   gitSince: filters.removeGitSince,
   removeByGlob: filters.removeByGlob,
