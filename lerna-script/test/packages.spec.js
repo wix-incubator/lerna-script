@@ -4,7 +4,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
 
 describe('packages', () => {
 
-  describe('packages', () => {
+  describe.only('packages', () => {
 
     it('should return a list of packages', () => {
       const log = loggerMock();
@@ -16,6 +16,15 @@ describe('packages', () => {
         expect(log.verbose).to.have.been.calledWithMatch('loadPackages');
       });
     });
+
+    it('should accept custom package configs', () => {
+      return aLernaProject().within(() => {
+        const packages = index.loadPackages({packages: ['nested/a']});
+
+        expect(packages.map(p => p.name)).to.have.same.members(['a']);
+      });
+    });
+
   });
 
   describe('rootPackage', () => {

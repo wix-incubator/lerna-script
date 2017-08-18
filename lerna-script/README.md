@@ -4,13 +4,20 @@ For usage documentation please see [root of repo](../README.md);
 
 # API
 
-### loadPackages({[log]}): LernaPackages[]
+### loadPackages({[log], [packages]}): LernaPackages[]
 Returns list of packages/modules in repo - forward to lerna;
+
+Parameters:
+ - opts:
+   - log: optional `npmlog` logger;
+   - packages - optional list of package config. defaults to default lerna package config.
 
 ### loadRootPackage({[log]}): LernaPackage[]
 Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of root module. 
 
-LernaPackage is [Package in lerna](https://github.com/lerna/lerna/blob/master/src/Package.js).
+Parameters:
+ - opts:
+   - log: optional `npmlog` logger;
  
 ### iter.forEach(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a serial fashion. `taskFn` can be either sync task or return a `Promise`.
@@ -71,3 +78,6 @@ Then it will return only `c` as `b` has changed and `a` depends on `b`, so it ne
  
 ### filter.gitSince(lernaPackages: [])(refspec): []
 Filters-out packages that have did not change since `refspec` - ex. master, brach, tag.
+
+### filters.removeByGlob(lernaPackages: [], glob: String): []
+Filters-out packages by provided glob pattern.

@@ -4,6 +4,18 @@ const {expect} = require('chai'),
 
 describe('filters', () => {
 
+  describe('removeByGlob', () => {
+
+    it('should filter-out packages by provided glob', () => {
+      const project = aLernaProject();
+
+      return project.within(() => {
+        const lernaPackages = index.filter.removeByGlob(index.loadPackages(), 'a');
+        expect(lernaPackages.map(p => p.name)).to.have.same.members(['b']);
+      })
+    });
+  });
+
   describe('removeBuilt', () => {
 
     it('should not filter-out any packages for unbuilt project', () => {

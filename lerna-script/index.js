@@ -20,8 +20,9 @@ module.exports.changes = {
 };
 
 module.exports.filter = {
-  removeBuilt: filters.filterOutBuiltPackages,
-  gitSince: filters.removeGitSince
+  removeBuilt: filters.removeBuilt,
+  gitSince: filters.removeGitSince,
+  removeByGlob: filters.removeByGlob,
 };
 
 module.exports.exec = {
