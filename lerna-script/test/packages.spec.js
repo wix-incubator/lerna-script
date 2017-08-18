@@ -10,7 +10,7 @@ describe('packages', () => {
       const log = loggerMock();
 
       return aLernaProject().within(() => {
-        const packages = index.packages({log});
+        const packages = index.loadPackages({log});
 
         expect(packages.length).to.equal(2);
         expect(log.verbose).to.have.been.calledWithMatch('loadPackages');
@@ -24,7 +24,7 @@ describe('packages', () => {
       const log = loggerMock();
 
       return aLernaProject().within(() => {
-        const rootPackage = index.rootPackage({log});
+        const rootPackage = index.loadRootPackage({log});
 
         expect(rootPackage.name).to.equal('root');
         expect(rootPackage.location).to.equal(process.cwd());

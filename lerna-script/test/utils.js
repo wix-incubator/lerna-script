@@ -17,7 +17,7 @@ module.exports.aLernaProject = () => {
 
 module.exports.asBuilt = project => {
   return project.inDir(ctx => {
-    const lernaPackages = index.packages();
+    const lernaPackages = index.loadPackages();
     lernaPackages.forEach(lernaPackage => index.changes.build(lernaPackage));
     ctx.exec('sleep 1'); //so that second would rotate
   });

@@ -10,7 +10,7 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
-      const lernaPackages = index.packages();
+      const lernaPackages = index.loadPackages();
       lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(true));
     });
   });
@@ -19,7 +19,7 @@ describe('detect-changes', () => {
     const project = aLernaProject();
 
     return project.within(() => {
-      const lernaPackages = index.packages();
+      const lernaPackages = index.loadPackages();
       lernaPackages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)).to.equal(false));
     });
   });
@@ -28,7 +28,7 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().pop();
+      const aLernaPackage = index.loadPackages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
       expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);
@@ -43,7 +43,7 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(projectWithGitIgnore));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().pop();
+      const aLernaPackage = index.loadPackages().pop();
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
       expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
@@ -58,7 +58,7 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(projectWithGitIgnore));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().find(lernaPackage => lernaPackage.name === 'a');
+      const aLernaPackage = index.loadPackages().find(lernaPackage => lernaPackage.name === 'a');
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe');
 
       expect(index.changes.isBuilt(aLernaPackage)).to.equal(true);
@@ -69,7 +69,7 @@ describe('detect-changes', () => {
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
-      const aLernaPackage = index.packages().pop();
+      const aLernaPackage = index.loadPackages().pop();
       index.changes.unbuild(aLernaPackage);
 
       expect(index.changes.isBuilt(aLernaPackage)).to.equal(false);

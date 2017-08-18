@@ -13,8 +13,8 @@ const supportedSourceFolders = [
 ];
 
 module.exports = function generateIdeaProject() {
-  const rootPackage = lernaScript.rootPackage();
-  const lernaPackages = lernaScript.packages();
+  const rootPackage = lernaScript.loadRootPackage();
+  const lernaPackages = lernaScript.loadPackages();
   const execInRoot = lernaScript.exec.command(rootPackage);
 
   return execInRoot('rm -rf .idea')

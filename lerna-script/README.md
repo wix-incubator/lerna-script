@@ -4,10 +4,10 @@ For usage documentation please see [root of repo](../README.md);
 
 # API
 
-### packages(): LernaPackages[]
+### loadPackages({[log]}): LernaPackages[]
 Returns list of packages/modules in repo - forward to lerna;
 
-### rootPackage(): LernaPackage[]
+### loadRootPackage({[log]}): LernaPackage[]
 Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of root module. 
 
 LernaPackage is [Package in lerna](https://github.com/lerna/lerna/blob/master/src/Package.js).

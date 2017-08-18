@@ -10,7 +10,7 @@ describe('filters', () => {
       const project = aLernaProject();
 
       return project.within(() => {
-        const unbuiltLernaPackages = index.filter.removeBuilt(index.packages());
+        const unbuiltLernaPackages = index.filter.removeBuilt(index.loadPackages());
         expect(unbuiltLernaPackages.length).to.equal(2);
       })
     });
@@ -19,7 +19,7 @@ describe('filters', () => {
       const project = asBuilt(asGitCommited(aLernaProject()));
 
       return project.within(() => {
-        const unbuiltLernaPackages = index.filter.removeBuilt(index.packages());
+        const unbuiltLernaPackages = index.filter.removeBuilt(index.loadPackages());
         expect(unbuiltLernaPackages.length).to.equal(0);
       })
     });
@@ -28,7 +28,7 @@ describe('filters', () => {
       const project = asBuilt(asGitCommited(aLernaProject()));
 
       return project.within(() => {
-        const lernaPackages = index.packages();
+        const lernaPackages = index.loadPackages();
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'a'));
 
         const unbuiltLernaPackages = index.filter.removeBuilt(lernaPackages);
@@ -40,7 +40,7 @@ describe('filters', () => {
       const project = asBuilt(asGitCommited(aLernaProject()));
 
       return project.within(() => {
-        const lernaPackages = index.packages();
+        const lernaPackages = index.loadPackages();
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'a'));
 
         const unbuiltLernaPackages = index.filter.removeBuilt(lernaPackages);
@@ -72,7 +72,7 @@ describe('filters', () => {
           ctx.exec('git add -A && git commit -am ok');
         })
         .within(() => {
-          const lernaPackages = index.filter.gitSince(index.packages())('master');
+          const lernaPackages = index.filter.gitSince(index.loadPackages())('master');
           expect(lernaPackages.map(p => p.name)).to.have.same.members(['b', 'ba']);
         });
     });

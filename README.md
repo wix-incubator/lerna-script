@@ -40,13 +40,13 @@ Add `lerna-script` launcher to `package.json` scripts:
 To start using, add `lerna.js` to root of your mono-repo and add initial task:
 
 ```js
-const {packages, iter, exec} = require('lerna-script'),
+const {loadPackages, iter, exec} = require('lerna-script'),
   {join} = require('path');
 
 module.exports.syncNvmRc = () => {
   const rootNvmRcPath = join(process.cwd(), '.nvmrc'); 
   
-  return iter.parallel(packages())(lernaPackage => {
+  return iter.parallel(loadPackages())(lernaPackage => {
     exec(lernaPackage)(`cp ${rootNvmRcPath} .`);
   });
 }
@@ -93,11 +93,11 @@ graph.
 For this [lerna-script](./lerna-script) provides means to both mark modules as built and filter-out already built modules:
 
 ```js
-const {packages, iter, exec, changes, filters} = require('lerna-script');
+const {loadPackages, iter, exec, changes, filters} = require('lerna-script');
 
 module.exports.test = () => {
   // filters.removeBuilt removes packages that did not change since last run
-  const changedPackages = filters.removeBuilt(packages());
+  const changedPackages = filters.removeBuilt(loadPackages());
   
   return iter.forEach(changedPackages)(lernaPackage => { 
     return exec.script('test')(lernaPackage)
@@ -145,14 +145,14 @@ then add script to `package.json`
 and add export to `lerna.js`:
 
 ```js
-const {packages, iter, exec, changes, filters} = require('lerna-script');
+const {loadPackages, iter, exec, changes, filters} = require('lerna-script');
 const {readFileSync, writeFileSync} = require('fs');
 const {join, relative} = require('path');
 
 module.exports['update-repo-urls'] = () => {
   const baseUrl = 'https://github.com/module';
 
-  return iter.forEach(packages())(lernaPackage => {
+  return iter.forEach(loadPackages())(lernaPackage => {
     const packageJsonPath = join(lernaPackage.location, 'package.json');
     const relativeModulePath = relative(process.cwd(), lernaPackage.location);
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));

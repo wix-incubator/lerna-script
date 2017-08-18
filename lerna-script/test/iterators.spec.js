@@ -11,7 +11,7 @@ describe('iterators', () => {
       const task = sinon.spy();
 
       return aLernaProject().within(() => {
-        const packages = index.packages();
+        const packages = index.loadPackages();
 
         return index.iter.forEach(packages)(pkg => task(pkg.name)).then(() => {
           expect(task.getCall(0).args[0]).to.equal('a');
@@ -28,7 +28,7 @@ describe('iterators', () => {
       const task = sinon.spy();
 
       return aLernaProject().within(() => {
-        const packages = index.packages();
+        const packages = index.loadPackages();
 
         return index.iter.parallel(packages)(pkg => task(pkg.name)).then(() => {
           expect(task).to.have.been.calledWith('a');
@@ -45,7 +45,7 @@ describe('iterators', () => {
       const task = sinon.spy();
 
       return aLernaProject().within(() => {
-        const packages = index.packages();
+        const packages = index.loadPackages();
 
         return index.iter.batched(packages)(pkg => task(pkg.name)).then(() => {
           expect(task).to.have.been.calledWith('a');
