@@ -19,7 +19,7 @@ function forEach(lernaPackages) {
 function parallel(lernaPackages) {
   return taskFn => {
     const promisifiedTaskFn = Promise.method(taskFn);
-    const forEachTracker = npmlog.newGroup('forEach', lernaPackages.length);
+    const forEachTracker = npmlog.newGroup('parallel', lernaPackages.length);
     npmlog.enableProgress();
 
     return Promise.map(lernaPackages, (lernaPackage) => {
@@ -36,7 +36,7 @@ function parallel(lernaPackages) {
 function batched(lernaPackages) {
   return taskFn => {
     const promisifiedTaskFn = Promise.method(taskFn);
-    const forEachTracker = npmlog.newGroup('forEach', lernaPackages.length);
+    const forEachTracker = npmlog.newGroup('batched', lernaPackages.length);
     npmlog.enableProgress();
 
     const batchedPackages = PackageUtilities.topologicallyBatchPackages(lernaPackages);

@@ -8,14 +8,14 @@ For usage documentation please see [root of repo](../README.md);
 Returns list of packages/modules in repo - forward to lerna;
 
 Parameters:
-  - log: optional `npmlog` logger;
+  - log, optional - `npmlog` logger;
   - packageConfigs - optional list of package config. defaults to default lerna package config.
 
 ### loadRootPackage({[log]}): LernaPackage[]
 Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of root module. 
 
 Parameters:
-  - log: optional `npmlog` logger;
+  - log, optional - `npmlog` logger;
  
 ### iter.forEach(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a serial fashion. `taskFn` can be either sync task or return a `Promise`.
@@ -62,7 +62,7 @@ Marks package as built.
 
 Parameters:
   - lernaPackage - package to build;
-  - log: optional `npmlog` logger; 
+  - log, optional - `npmlog` logger; 
   - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label.
 
 ### changes.unbuild(lernaPackage, {[log]})([label]): undefined
@@ -70,7 +70,7 @@ Marks package as unbuilt.
 
 Parameters:
   - lernaPackage - package to unbuild;
-  - log: optional `npmlog` logger; 
+  - log, optional - `npmlog` logger; 
   - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
 
 ### changes.isBuilt(lernaPackage)([label]): boolean
@@ -80,7 +80,7 @@ Parameters:
  - lernaPackage - package to unbuild;
  - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
 
-### filters.removeBuilt(lernaPackages: [])([label]): []
+### filters.removeBuilt(lernaPackages: [], {[log]})([label]: String): []
 Filters-out packages that have been marked as built `changes.build` and were not changed since. Note that it filters-out also dependent packages, so if:
  - a, did not change, depends on b;
  - b, changed;
@@ -90,12 +90,24 @@ Then it will return only `c` as `b` has changed and `a` depends on `b`, so it ne
 
 Parameters:
  - lernaPackages - packages to filter;
+ - log, optional - `npmlog` logger; 
  - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
 
 **Note:** this filter mutates built/unbuild state, meaning that it unbuilds dependents to get reproducible runs.
 
-### filters.gitSince(lernaPackages: [])(refspec): []
+### filters.gitSince(lernaPackages: [], {[log]})(refspec: String): []
 Filters-out packages that have did not change since `refspec` - ex. master, brach, tag.
 
-### filters.removeByGlob(lernaPackages: [])(glob: String): []
+Parameters:
+ - lernaPackages - packages to filter;
+ - log, optional - `npmlog` logger; 
+ - refspec - git `refspec` = master, branchname, tag...
+
+
+### filters.removeByGlob(lernaPackages: [], {[log]})(glob: String): []
 Filters-out packages by provided glob pattern.
+
+Parameters:
+ - lernaPackages - packages to filter;
+ - log, optional - `npmlog` logger; 
+ - glob - glob pattern.
