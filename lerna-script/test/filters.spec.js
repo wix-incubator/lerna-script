@@ -1,18 +1,20 @@
 const {expect} = require('chai'),
-  {aLernaProject, asBuilt, asGitCommited, empty} = require('./utils'),
+  {aLernaProject, asBuilt, asGitCommited, empty, loggerMock} = require('./utils'),
   index = require('..');
 
-describe('filters', function () {
+describe.only('filters', function () {
   this.timeout(5000);
 
   describe('removeByGlob', () => {
 
     it('should filter-out packages by provided glob', () => {
+      const log = loggerMock();
       const project = aLernaProject();
 
       return project.within(() => {
-        const lernaPackages = index.filters.removeByGlob(index.loadPackages())('a');
+        const lernaPackages = index.filters.removeByGlob(index.loadPackages(), {log})('a');
         expect(lernaPackages.map(p => p.name)).to.have.same.members(['b']);
+        expect(log.verbose).to.have.been.calledWithMatch('removeByGlob', 'removed 1 packages');
       });
     });
   });
@@ -29,13 +31,18 @@ describe('filters', function () {
     });
 
     it('should filter-out changed packages', () => {
+      const log = loggerMock();
       const project = asBuilt(asGitCommited(aLernaProject()));
 
       return project.within(() => {
         const packages = index.loadPackages();
         index.changes.unbuild(packages.find(p => p.name === 'b'))();
-        const unbuiltLernaPackages = index.filters.removeBuilt(packages)();
+
+        const unbuiltLernaPackages = index.filters.removeBuilt(packages, {log})();
+
         expect(unbuiltLernaPackages.length).to.equal(1);
+        expect(log.verbose).to.have.been.calledWithMatch('removeBuilt', 'found 1 packages with changes');
+        expect(log.verbose).to.have.been.calledWithMatch('removeBuilt', 'removed 1 packages');
       });
     });
 
@@ -84,15 +91,12 @@ describe('filters', function () {
   describe('filters.gitSince', () => {
 
     it('removes modules without changes', () => {
+      const log = loggerMock();
       return empty()
         .addFile('package.json', {"name": "root", version: "1.0.0"})
         .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["nested/**"], "version": "0.0.0"})
         .module('nested/a', module => module.packageJson({name: 'a', version: '2.0.0'}))
-        .module('nested/ba', module => module.packageJson({
-          name: 'ba',
-          version: '1.0.0',
-          dependencies: {'b': '~1.0.0'}
-        }))
+        .module('nested/ba', module => module.packageJson({name: 'ba', version: '1.0.0', dependencies: {'b': '~1.0.0'}}))
         .inDir(ctx => {
           ctx.exec('git init && git config user.email mail@example.org && git config user.name name');
           ctx.exec('git add -A && git commit -am ok');
@@ -103,8 +107,10 @@ describe('filters', function () {
           ctx.exec('git add -A && git commit -am ok');
         })
         .within(() => {
-          const lernaPackages = index.filters.gitSince(index.loadPackages())('master');
+          const lernaPackages = index.filters.gitSince(index.loadPackages(), {log})('master');
+
           expect(lernaPackages.map(p => p.name)).to.have.same.members(['b', 'ba']);
+          expect(log.verbose).to.have.been.calledWithMatch('removeGitSince', 'removed 1 packages');
         });
     });
   });

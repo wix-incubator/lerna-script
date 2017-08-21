@@ -28,10 +28,7 @@ module.exports.aLernaProjectWithSpec = (spec = {'a': [], 'b': ['a']}) => {
   });
 
   return project.inDir(ctx => ctx.exec('git init'));
-
 };
-
-
 
 module.exports.asBuilt = (project, {label, log} = {}) => {
   return project.inDir(ctx => {
@@ -52,6 +49,7 @@ module.exports.loggerMock = () => {
     verbose: sinon.spy(),
     warn: sinon.spy(),
     silly: sinon.spy(),
+    info: sinon.spy(),
   };
 };
 
@@ -71,4 +69,3 @@ module.exports.captureOutput = () => {
 
   return () => capturedOutput;
 };
-
