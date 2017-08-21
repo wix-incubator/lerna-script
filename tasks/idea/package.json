@@ -1,5 +1,5 @@
 {
-  "name": "lerna-script-preset-idea",
+  "name": "lerna-script-tasks-idea",
   "version": "0.1.3",
   "description": "task for start that generates intellij project for repo",
   "author": "vilius@wix.com",

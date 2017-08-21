@@ -22,7 +22,7 @@ npm install --save-dev lerna-script
 
   - [Basic usage example](#basic-usage-example)
   - [Incremental builds](#incremental-builds)
-  - [Presets](#presets)
+  - [Tasks](#tasks)
   - [Git hooks](#git-hooks)
 
 ## Basic usage example
@@ -80,7 +80,7 @@ module.exports.syncNvmRc = () => {
 }
 ```
 
-To see available function please check-out [lerna-script](./lerna-script), for pre-cooked tasks check-out [presets](./presets).
+To see available function please check-out [lerna-script](./lerna-script), for pre-cooked tasks check-out [tasks](./tasks).
 
 ## Incremental builds
 
@@ -106,11 +106,11 @@ module.exports.test = () => {
 }
 ```
 
-## Presets
+## Tasks
 
-[lerna-script](.) has some presets or otherwise pre-assembled tasks/task-sets for solving some problem. Examples:
- - [idea](./presets/idea) - to generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
- - TBD [npm-links](./presets/npm-links) - to fix repo, docs, etc. links for all modules matching their git path;
+[lerna-script](.) has some pre-assembled tasks/task-sets for solving some problem. Examples:
+ - [idea](./tasks/idea) - to generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
+ - TBD [npm-links](./tasks/npm-links) - to fix repo, docs, etc. links for all modules matching their git path;
  - ...
 
 ## Git hooks
