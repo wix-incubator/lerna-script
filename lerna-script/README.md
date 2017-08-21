@@ -4,13 +4,13 @@ For usage documentation please see [root of repo](../README.md);
 
 # API
 
-### loadPackages({[log], [packages]}): LernaPackages[]
+### loadPackages({[log], [packageConfigs]}): LernaPackages[]
 Returns list of packages/modules in repo - forward to lerna;
 
 Parameters:
  - opts:
    - log: optional `npmlog` logger;
-   - packages - optional list of package config. defaults to default lerna package config.
+   - packageConfigs - optional list of package config. defaults to default lerna package config.
 
 ### loadRootPackage({[log]}): LernaPackage[]
 Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of root module. 

@@ -1,10 +1,11 @@
 const {expect} = require('chai').use(require('sinon-chai')),
   {aLernaProject, aLernaProjectWithSpec, loggerMock} = require('./utils'),
-  index = require('..');
+  index = require('..'),
+  sinon = require('sinon');
 
 describe('packages', () => {
 
-  describe('packages', () => {
+  describe('loadPackages', () => {
 
     it('should return a list of packages', () => {
       const log = loggerMock();
@@ -13,15 +14,18 @@ describe('packages', () => {
         const packages = index.loadPackages({log});
 
         expect(packages.length).to.equal(2);
-        expect(log.verbose).to.have.been.calledWithMatch('loadPackages');
+        expect(log.verbose).to.have.been.calledWithMatch('loadPackages', 'using default packageConfigs', sinon.match.object);
       });
     });
 
     it('should accept custom package configs', () => {
+      const log = loggerMock();
+
       return aLernaProject().within(() => {
-        const packages = index.loadPackages({packages: ['nested/a']});
+        const packages = index.loadPackages({log, packageConfigs: ['nested/a']});
 
         expect(packages.map(p => p.name)).to.have.same.members(['a']);
+        expect(log.verbose).to.have.been.calledWithMatch('loadPackages', 'using provided packageConfigs', sinon.match.object);
       });
     });
 
@@ -38,7 +42,7 @@ describe('packages', () => {
     });
   });
 
-  describe('rootPackage', () => {
+  describe('loadRootPackage', () => {
 
     it('should return a root package', () => {
       const log = loggerMock();
@@ -48,7 +52,7 @@ describe('packages', () => {
 
         expect(rootPackage.name).to.equal('root');
         expect(rootPackage.location).to.equal(process.cwd());
-        expect(log.verbose).to.have.been.calledWithMatch('loadRootPackage');
+        expect(log.verbose).to.have.been.calledWithMatch('loadRootPackage', sinon.match.object);
       });
     });
   });

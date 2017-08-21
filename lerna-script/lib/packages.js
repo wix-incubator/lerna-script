@@ -5,12 +5,18 @@ const Repository = require('lerna/lib/Repository'),
   {join} = require('path'),
   npmlog = require('npmlog');
 
-function loadPackages({log = npmlog, packages} = {log: npmlog}) {
-  log.verbose('loadPackages');
+function loadPackages({log = npmlog, packageConfigs} = {log: npmlog}) {
   const repo = new Repository();
+  const effectivePackageConfigs = packageConfigs || repo.packageConfigs;
+  if (packageConfigs) {
+    log.verbose('loadPackages', 'using provided packageConfigs', {packageConfigs: effectivePackageConfigs});
+  } else {
+    log.verbose('loadPackages', 'using default packageConfigs', {packageConfigs: effectivePackageConfigs});
+  }
+
   const loadedPackages = PackageUtilities.getPackages({
     rootPath: repo.rootPath,
-    packageConfigs: packages || repo.packageConfigs
+    packageConfigs: effectivePackageConfigs
   });
 
   const batched = PackageUtilities.topologicallyBatchPackages(loadedPackages);

@@ -3,10 +3,12 @@ const fs = require('fs'),
   path = require('path'),
   fsUtils = require('lerna/lib/FileSystemUtilities'),
   ignore = require('ignore'),
-  shelljs = require('shelljs');
+  shelljs = require('shelljs'),
+  npmlog = require('npmlog');
 
-function makePackageBuilt(lernaPackage) {
+function makePackageBuilt(lernaPackage, {log = npmlog} = {log: npmlog}) {
   return label => {
+    log.verbose('makePackageBuilt', {packagePath: lernaPackage.location});
     fsExtra.ensureDirSync(path.join(process.cwd(), '.lerna'));
     fs.writeFileSync(targetFileSentinelFile(lernaPackage, label), '');
   };
