@@ -97,11 +97,11 @@ const {loadPackages, iter, exec, changes, filters} = require('lerna-script');
 
 module.exports.test = () => {
   // filters.removeBuilt removes packages that did not change since last run
-  const changedPackages = filters.removeBuilt(loadPackages());
+  const changedPackages = filters.removeBuilt(loadPackages())('test');
   
   return iter.forEach(changedPackages)(lernaPackage => { 
-    return exec.script('test')(lernaPackage)
-      .then(() => changes.markBuilt(lernaPackage)) //mark package as built once `npm test` script passes.
+    return exec.script(lernaPackage)('test')
+      .then(() => changes.markBuilt(lernaPackage)('test')) //mark package as built once `npm test` script passes.
   });
 }
 ```
