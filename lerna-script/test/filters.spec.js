@@ -2,7 +2,7 @@ const {expect} = require('chai'),
   {aLernaProject, asBuilt, asGitCommited, empty, loggerMock} = require('./utils'),
   index = require('..');
 
-describe.only('filters', function () {
+describe('filters', function () {
   this.timeout(5000);
 
   describe('removeByGlob', () => {

@@ -9,7 +9,7 @@ describe('task-runner', () => {
     const task = sinon.spy();
 
     return runTask({task}, 'task').then(() => {
-      expect(task).to.have.been.calledOnce;
+      expect(task).to.have.been.calledWith(logMock);
       expect(logMock.info).to.have.been.calledWith('lerna-script', 'executing task: "task"')
     });
   });

@@ -3,7 +3,7 @@
   "packages": [
     "lerna-script",
     "test-utils",
-    "presets/*"
+    "tasks/*"
   ],
   "version": "0.2.0"
 }

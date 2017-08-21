@@ -15,7 +15,9 @@ const supportedSourceFolders = [
 module.exports = function generateIdeaProject() {
   const rootPackage = lernaScript.loadRootPackage();
   const lernaPackages = lernaScript.loadPackages();
-  const execInRoot = lernaScript.exec.command(rootPackage);
+  const execInRoot = cmd => {
+    lernaScript.exec.command(rootPackage);
+  };
 
   return execInRoot('rm -rf .idea')
     .then(() => execInRoot('rm -f *.iml'))
