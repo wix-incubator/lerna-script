@@ -37,7 +37,7 @@ describe('exec', () => {
         const lernaPackage = index.loadPackages().pop();
 
         index.exec.command(lernaPackage)('asd zzz').catch(e => {
-          expect(e.message).to.contain('spawn asd ENOENT');
+          expect(e.message).to.match(/spawn.*ENO/);
           done();
         });
       });

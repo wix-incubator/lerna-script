@@ -52,7 +52,7 @@ describe('filters', function () {
     });
 
     it('should respect labels when filtering-out packages', () => {
-      const project = asBuilt(asGitCommited(aLernaProject()), 'woop');
+      const project = asBuilt(asGitCommited(aLernaProject()), {label: 'woop'});
 
       return project.within(() => {
         const lernaPackages = index.loadPackages();
@@ -64,7 +64,6 @@ describe('filters', function () {
         expect(index.filters.removeBuilt(lernaPackages)('woop').length).to.equal(1);
       });
     });
-
 
     it('should unmark dependents as built', () => {
       const project = asBuilt(asGitCommited(aLernaProject()));
@@ -80,7 +79,6 @@ describe('filters', function () {
         expect(index.filters.removeBuilt(lernaPackages)().length).to.equal(1);
       })
     });
-
   });
 
   describe('filters.gitSince', () => {

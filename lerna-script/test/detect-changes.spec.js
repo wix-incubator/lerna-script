@@ -1,8 +1,9 @@
-const {expect} = require('chai'),
-  {aLernaProject, asBuilt, asGitCommited} = require('./utils'),
+const {expect} = require('chai').use(require('sinon-chai')),
+  {aLernaProject, asBuilt, asGitCommited, loggerMock} = require('./utils'),
   index = require('..'),
   {join} = require('path'),
-  {writeFileSync} = require('fs');
+  {writeFileSync} = require('fs'),
+  sinon = require('sinon');
 
 describe('detect-changes', () => {
 
@@ -78,19 +79,36 @@ describe('detect-changes', () => {
     });
   });
 
-  it('should should unbuild a module', () => {
+  it('should unbuild a module', () => {
+    const log = loggerMock();
     const project = asBuilt(asGitCommited(aLernaProject()));
 
     return project.within(() => {
       const aLernaPackage = index.loadPackages().pop();
-      index.changes.unbuild(aLernaPackage)();
+      index.changes.unbuild(aLernaPackage, {log})();
 
       expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
+      expect(log.verbose).to.have.been.calledWithMatch('makePackageUnbuilt', 'marking module unbuilt', sinon.match.object)
     });
   });
 
+  it('should build a module', () => {
+    const log = loggerMock();
+    const project = asGitCommited(aLernaProject());
+
+    return project.within(() => {
+      const aLernaPackage = index.loadPackages().pop();
+
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false);
+      index.changes.build(aLernaPackage, {log})();
+      expect(index.changes.isBuilt(aLernaPackage)()).to.equal(true);
+      expect(log.verbose).to.have.been.calledWithMatch('makePackageBuilt', 'marking module built', sinon.match.object)
+    });
+  });
+
+
   it('should respect label for makePackageBuilt', () => {
-    const project = asBuilt(asGitCommited(aLernaProject()), 'woop');
+    const project = asBuilt(asGitCommited(aLernaProject()), {label: 'woop'});
 
     return project.within(() => {
       const lernaPackages = index.loadPackages();
@@ -100,7 +118,7 @@ describe('detect-changes', () => {
   });
 
   it('should respect label for makePackageUnbuilt', () => {
-    const project = asBuilt(asGitCommited(aLernaProject()), 'woop');
+    const project = asBuilt(asGitCommited(aLernaProject()), {label: 'woop'});
 
     return project.within(() => {
       const aLernaPackage = index.loadPackages().pop();

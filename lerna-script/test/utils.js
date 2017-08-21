@@ -33,10 +33,10 @@ module.exports.aLernaProjectWithSpec = (spec = {'a': [], 'b': ['a']}) => {
 
 
 
-module.exports.asBuilt = (project, label) => {
+module.exports.asBuilt = (project, {label, log} = {}) => {
   return project.inDir(ctx => {
-    const lernaPackages = index.loadPackages();
-    lernaPackages.forEach(lernaPackage => index.changes.build(lernaPackage)(label));
+    const lernaPackages = index.loadPackages({log});
+    lernaPackages.forEach(lernaPackage => index.changes.build(lernaPackage, {log})(label));
     ctx.exec('sleep 1'); //so that second would rotate
   });
 };

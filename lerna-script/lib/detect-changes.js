@@ -8,14 +8,17 @@ const fs = require('fs'),
 
 function makePackageBuilt(lernaPackage, {log = npmlog} = {log: npmlog}) {
   return label => {
-    log.verbose('makePackageBuilt', {packagePath: lernaPackage.location});
+    log.verbose('makePackageBuilt', 'marking module built', {packagePath: lernaPackage.location, label});
     fsExtra.ensureDirSync(path.join(process.cwd(), '.lerna'));
     fs.writeFileSync(targetFileSentinelFile(lernaPackage, label), '');
   };
 }
 
-function makePackageUnbuilt(lernaPackage) {
-  return label => fsExtra.removeSync(targetFileSentinelFile(lernaPackage, label));
+function makePackageUnbuilt(lernaPackage, {log = npmlog} = {log: npmlog}) {
+  return label => {
+    log.verbose('makePackageUnbuilt', 'marking module unbuilt', {packagePath: lernaPackage.location, label});
+    fsExtra.removeSync(targetFileSentinelFile(lernaPackage, label));
+  }
 }
 
 function isPackageBuilt(lernaPackage) {

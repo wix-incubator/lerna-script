@@ -8,16 +8,14 @@ For usage documentation please see [root of repo](../README.md);
 Returns list of packages/modules in repo - forward to lerna;
 
 Parameters:
- - opts:
-   - log: optional `npmlog` logger;
-   - packageConfigs - optional list of package config. defaults to default lerna package config.
+  - log: optional `npmlog` logger;
+  - packageConfigs - optional list of package config. defaults to default lerna package config.
 
 ### loadRootPackage({[log]}): LernaPackage[]
 Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of root module. 
 
 Parameters:
- - opts:
-   - log: optional `npmlog` logger;
+  - log: optional `npmlog` logger;
  
 ### iter.forEach(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a serial fashion. `taskFn` can be either sync task or return a `Promise`.
@@ -59,19 +57,21 @@ Argument list #2:
 Returns:
  - stdout - collected output;
  
-### changes.build(lernaPackage)([label]): undefined
+### changes.build(lernaPackage, {[log]})([label]): undefined
 Marks package as built.
 
 Parameters:
- - lernaPackage - package to unbuild;
- - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label.
+  - lernaPackage - package to build;
+  - log: optional `npmlog` logger; 
+  - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label.
 
-### changes.unbuild(lernaPackage)([label]): undefined
+### changes.unbuild(lernaPackage, {[log]})([label]): undefined
 Marks package as unbuilt.
 
 Parameters:
- - lernaPackage - package to unbuild;
- - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
+  - lernaPackage - package to unbuild;
+  - log: optional `npmlog` logger; 
+  - label, optional - given you have several exports scripts, you can separate them in different build/unbuild groups by label
 
 ### changes.isBuilt(lernaPackage)([label]): boolean
 Returns true if package is build and false otherwise.
