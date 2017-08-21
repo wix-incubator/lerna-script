@@ -33,7 +33,7 @@ describe('filters', function () {
 
       return project.within(() => {
         const packages = index.loadPackages();
-        index.changes.unbuild(packages.find(p => p.name === 'a'))();
+        index.changes.unbuild(packages.find(p => p.name === 'b'))();
         const unbuiltLernaPackages = index.filters.removeBuilt(packages)();
         expect(unbuiltLernaPackages.length).to.equal(1);
       });
