@@ -28,7 +28,7 @@ describe('cli', () => {
       .catch(e => {
         expect(e.status).to.equal(1);
         expect(e.stderr.toString()).to.be.string('Task "someTask" failed');
-        expect(e.stderr.toString()).to.be.string('at module.exports.someTask');
+        expect(e.stderr.toString()).to.be.string('at Object.module.exports.someTask');
         done();
       })
   });

@@ -8,7 +8,7 @@ module.exports = ({process, log}) => (tasks, task) => {
     process.exit(1);
   } else {
     log.info('lerna-script', `executing task: "${task}"`);
-    return Promise.resolve().then(tasks[task](log));
+    return Promise.resolve().then(() => tasks[task](log));
   }
 };
 

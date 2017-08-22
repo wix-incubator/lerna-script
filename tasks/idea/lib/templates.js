@@ -14,8 +14,8 @@ module.exports.ideaModulesFile = function(targetFile, modules) {
   fs.writeFileSync(targetFile, content);
 };
 
-module.exports.ideaModuleImlFile = function(targetFile, sourceFolders) {
-  const content = moduleImlTemplate({sourceFolders: sourceFolders});
+module.exports.ideaModuleImlFile = function(targetFile, config) {
+  const content = moduleImlTemplate({config});
   fs.writeFileSync(targetFile, content);
 };
 

@@ -3,10 +3,12 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      {{#each sourceFolders}}
+      {{#each config.sourceFolders}}
       <sourceFolder url="file://$MODULE_DIR$/{{name}}" isTestSource="{{isTestSource}}" />
       {{/each}}
-      <excludeFolder url="file://$MODULE_DIR$/node_modules" />
+      {{#each config.excludeFolders}}
+      <excludeFolder url="file://$MODULE_DIR$/{{this}}" />
+      {{/each}}
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Node.js v0.12.7 Core Modules" level="application" />
