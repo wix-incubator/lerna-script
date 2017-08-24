@@ -2,7 +2,8 @@ const iterators = require('./lib/iterators'),
   packages = require('./lib/packages'),
   detectChanges = require('./lib/detect-changes'),
   filters = require('./lib/filters'),
-  exec = require('./lib/exec');
+  exec = require('./lib/exec'),
+  fs = require('./lib/fs');
 
 module.exports.loadPackages = packages.loadPackages;
 module.exports.loadRootPackage = packages.loadRootPackage;
@@ -28,6 +29,11 @@ module.exports.filters = {
 module.exports.exec = {
   command: exec.runCommand,
   script: exec.runScript
+};
+
+module.exports.fs = {
+  readFile: fs.readFile,
+  writeFile: fs.writeFile
 };
 
 
