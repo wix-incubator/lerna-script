@@ -1,35 +1,36 @@
-# octopus-start-preset-modules [![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/octopus-start-preset-modules)
+# lerna-script-tasks-modules
+
+Syncs dependencies/devDependencies/peerDependencies for modules within repo.
 
 ## install
 
 ```bash
-npm install --save-dev octopus-start-preset-modules
+npm install --save-dev lerna-script-tasks-modules
 ```
 
 ## Usage
 
+Say you have modules:
+ - `/packages/a` with version `1.0.0`
+ - `/packages/b` with version `1.0.0` and it depends on module `a` where ```{dependencies: {"a": "~1.0.0"}}```
+ 
+and you up the version of `/packages/a` to `2.0.0`. If you want for version of `a` to be in sync in module `b`, then you could do:
+
 ```js
-const {sync, where, list} = require('octopus-start-preset-modules'),
-  Start = require('start');
+//lerna.js
 
-const start = new Start();
-
-module.exports['modules:sync'] = start(sync());
-module.exports['modules:where'] = start(where());
-module.exports['modules:list'] = start(list());
+module.exports[modules:sync] = require('lerna-script-tasks-modules')();
 ```
+
+and then upon executing `lerna-script modules:sync` version of dependency `a` for module `b` will be set to `~2.0.0`.
+Same goes for `devDependencies` and `peerDependencies`. 
 
 ## API
 
-### sync(mutateVersion: version => version)
-Returns a function that you can bind to `exports` and that will sync modules across multi-module repo. Syncing modules means:
- - if you have module `a` with version `1.0.0` and another module `b` depends on it, but depends on different version (ex. `~1.0.1`), then modules `b` dependencies will be updated to match that of module `a` declared version.
+### ({packages: [], transformDependencies: version => version, transformPeerDependencies: version => version})(log): Promise
+Returns a function that syncs module versions across repo. 
  
 Parameters:
- - mutateVersion - if you want ex. version to be synced to some special semver expression(~) you can do `version => `^${version}``. Defaults to `version => `~${version}`` 
- 
-### list()
-Returns a function that you can bind to `exports` and that will simply print discovered modules.
-
-### where()
-Returns a function that you can bind to `exports` and that will simply print discovered modules.
+ - packages, optional = list of lerna packages. Loads defaults of not provided. 
+ - transformDependencies, optional = function to transform dependencies and devDependencies. Defaults to `version => '~' + version`. 
+ - transformPeerDependencies, optional - function to transform peerDependencies. Defaults to `version => '>=' + version`.

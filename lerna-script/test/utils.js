@@ -1,4 +1,4 @@
-const {empty} = require('lerna-script-test-utils'),
+const {empty, loggerMock} = require('lerna-script-test-utils'),
   sinon = require('sinon'),
   index = require('..'),
   intercept = require('intercept-stdout');
@@ -44,14 +44,7 @@ module.exports.asGitCommited = project => {
   });
 };
 
-module.exports.loggerMock = () => {
-  return {
-    verbose: sinon.spy(),
-    warn: sinon.spy(),
-    silly: sinon.spy(),
-    info: sinon.spy(),
-  };
-};
+module.exports.loggerMock = loggerMock;
 
 module.exports.captureOutput = () => {
   let capturedOutput = "";

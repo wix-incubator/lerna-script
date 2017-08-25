@@ -2,16 +2,31 @@ const {loadPackages, iter, fs} = require('lerna-script'),
   _ = require('lodash'),
   deepKeys = require('deep-keys');
 
-function syncModulesTask(mutateVersion = version => `~${version}`) {
+function providedOrDefaults({packages, transformDependencies, transformPeerDependencies} = {}) {
+  return {
+    loadedPackages: packages || loadPackages(),
+    transformDeps: transformDependencies || (version => `~${version}`),
+    transformPeerDeps: transformPeerDependencies || (version => `>=${version}`)
+  };
+}
+
+
+function syncModulesTask({packages, transformDependencies, transformPeerDependencies} = {}) {
   return log => {
-    const lernaPackages = loadPackages();
-    const modulesAndVersions = toModulesAndVersion(lernaPackages, mutateVersion);
-    return iter.forEach(lernaPackages, {log})((lernaPackage, log) => {
+    const {loadedPackages, transformDeps, transformPeerDeps} =
+      providedOrDefaults({packages, transformDependencies, transformPeerDependencies});
+
+    log.info('syncModulesTask', `syncing ${loadedPackages.length} modules`);
+    const modulesAndVersions = toModulesAndVersion(loadedPackages, transformDeps);
+    const modulesAndPeerVersions = toModulesAndVersion(loadedPackages, transformPeerDeps);
+    return iter.parallel(loadedPackages, {log})((lernaPackage, log) => {
+      const logMerged = input => log.info(`${lernaPackage.name}: ${input.key} (${input.currentValue} -> ${input.newValue})`);
       return fs.readFile(lernaPackage)('package.json', JSON.parse)
         .then(packageJson => merge(packageJson, {
           dependencies: modulesAndVersions,
-          devDependencies: modulesAndVersions
-        }))
+          devDependencies: modulesAndVersions,
+          peerDependencies: modulesAndPeerVersions
+        }, logMerged))
         .then(packageJson => fs.writeFile(lernaPackage)('package.json', packageJson));
     });
   }

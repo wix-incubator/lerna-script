@@ -3,7 +3,8 @@ const {resolve} = require('path'),
   {readFileSync, writeFileSync} = require('fs'),
   {join} = require('path'),
   fsExtra = require('fs-extra'),
-  os = require('os');
+  os = require('os'),
+  sinon = require('sinon');
 
 const TEMP_DIR = os.tmpdir();
 
@@ -43,6 +44,15 @@ function aLernaProjectWithSpec(spec = {'a': [], 'b': ['a']}) {
   return project.inDir(ctx => ctx.exec('git init'));
 }
 
+function loggerMock() {
+  return {
+    verbose: sinon.spy(),
+    warn: sinon.spy(),
+    silly: sinon.spy(),
+    info: sinon.spy(),
+  };
+}
+
 module.exports = {
   empty,
   aLernaProjectWithSpec,
@@ -50,5 +60,6 @@ module.exports = {
   fs: {
     readJson,
     writeJson
-  }
+  },
+  loggerMock
 };
