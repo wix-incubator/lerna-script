@@ -1,4 +1,4 @@
-const {empty} = require('lerna-script-test-utils'),
+const {empty, loggerMock} = require('lerna-script-test-utils'),
   {expect} = require('chai').use(require('sinon-chai')),
   idea = require('..'),
   sinon = require('sinon'),
@@ -132,11 +132,4 @@ describe('idea', () => {
     expect(shelljs.test('-f', 'nested/ba/b.iml')).to.equal(true);
     expect(shelljs.test('-f', 'nested/c/c.iml')).to.equal(true);
   }
-
-  function loggerMock() {
-    return {
-      info: sinon.spy()
-    };
-  }
-
 });

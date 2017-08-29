@@ -18,8 +18,9 @@ and you up the version of `/packages/a` to `2.0.0`. If you want for version of `
 
 ```js
 //lerna.js
+const syncModules = require('lerna-script-tasks-modules');
 
-module.exports[modules:sync] = require('lerna-script-tasks-modules')();
+module.exports['modules:sync'] = syncModules();
 ```
 
 and then upon executing `lerna-script modules:sync` version of dependency `a` for module `b` will be set to `~2.0.0`.

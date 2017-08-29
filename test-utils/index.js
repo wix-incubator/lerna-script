@@ -45,11 +45,33 @@ function aLernaProjectWithSpec(spec = {'a': [], 'b': ['a']}) {
 }
 
 function loggerMock() {
+  const item = {
+    finish: sinon.spy(),
+    completeWork: sinon.spy(),
+    verbose: sinon.spy(),
+    warn: sinon.spy(),
+    silly: sinon.spy(),
+    info: sinon.spy(),
+    pause: sinon.spy(),
+    resume: sinon.spy(),
+  };
+
+  const group = {
+    finish: sinon.spy(),
+    verbose: sinon.spy(),
+    warn: sinon.spy(),
+    silly: sinon.spy(),
+    info: sinon.spy(),
+    newItem: sinon.stub().returns(item)
+  };
+
   return {
     verbose: sinon.spy(),
     warn: sinon.spy(),
     silly: sinon.spy(),
     info: sinon.spy(),
+    newItem: sinon.stub().returns(item),
+    newGroup: sinon.stub().returns(group)
   };
 }
 

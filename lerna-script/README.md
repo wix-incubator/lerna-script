@@ -17,14 +17,14 @@ Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of 
 Parameters:
   - log, optional - `npmlog` logger;
  
-### iter.forEach(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
+### iter.forEach(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a serial fashion. `taskFn` can be either sync task or return a `Promise`.
 
-### iter.parallel(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
+### iter.parallel(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a parallel fashion(`Promise.all`). `taskFn` can be either sync task 
 or return a `Promise`.
 
-### iter.batched(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(undefined)
+### iter.batched(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(undefined)
 Executed provided command for all `lernaPackages` in a batched fashion respecting dependency graph. `taskFn` can be either 
 sync task or return a `Promise`.
 

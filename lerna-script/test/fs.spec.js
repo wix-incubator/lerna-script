@@ -2,7 +2,7 @@ const {expect} = require('chai'),
   {aLernaProject} = require('./utils'),
   index = require('..');
 
-describe.only('fs', () => {
+describe('fs', () => {
 
   describe('readFile', () => {
 

@@ -2,15 +2,6 @@ const {loadPackages, iter, fs} = require('lerna-script'),
   _ = require('lodash'),
   deepKeys = require('deep-keys');
 
-function providedOrDefaults({packages, transformDependencies, transformPeerDependencies} = {}) {
-  return {
-    loadedPackages: packages || loadPackages(),
-    transformDeps: transformDependencies || (version => `~${version}`),
-    transformPeerDeps: transformPeerDependencies || (version => `>=${version}`)
-  };
-}
-
-
 function syncModulesTask({packages, transformDependencies, transformPeerDependencies} = {}) {
   return log => {
     const {loadedPackages, transformDeps, transformPeerDeps} =
@@ -30,6 +21,14 @@ function syncModulesTask({packages, transformDependencies, transformPeerDependen
         .then(packageJson => fs.writeFile(lernaPackage)('package.json', packageJson));
     });
   }
+}
+
+function providedOrDefaults({packages, transformDependencies, transformPeerDependencies} = {}) {
+  return {
+    loadedPackages: packages || loadPackages(),
+    transformDeps: transformDependencies || (version => `~${version}`),
+    transformPeerDeps: transformPeerDependencies || (version => `>=${version}`)
+  };
 }
 
 function toModulesAndVersion(modules, mutateVersion) {
