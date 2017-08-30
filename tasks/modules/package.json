@@ -1,7 +1,7 @@
 {
-  "name": "lerna-script-tasks-idea",
-  "version": "0.2.1",
-  "description": "task for start that generates intellij project for repo",
+  "name": "lerna-script-tasks-modules",
+  "version": "0.0.1",
+  "description": "module version sync task for lerna-script",
   "author": "vilius@wix.com",
   "license": "BSD",
   "homepage": "https://github.com/wix/lerna-script/tree/master/presets/idea",
@@ -17,16 +17,16 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "handlebars": "4.0.10",
-    "shelljs": "^0.7.8"
+    "deep-keys": "^0.4.0",
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "lerna-script": "^0.2.0"
   },
   "devDependencies": {
-    "chai": "3.5.0",
     "lerna-script": "^0.2.0",
     "lerna-script-test-utils": "~0.0.2",
+    "chai": "3.5.0",
     "mocha": "3.4.1",
     "sinon": "2.3.1",
     "sinon-chai": "2.10.0",

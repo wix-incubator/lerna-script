@@ -17,14 +17,14 @@ Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of 
 Parameters:
   - log, optional - `npmlog` logger;
  
-### iter.forEach(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
+### iter.forEach(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a serial fashion. `taskFn` can be either sync task or return a `Promise`.
 
-### iter.parallel(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
+### iter.parallel(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
 Executed provided command for all `lernaPackages` in a parallel fashion(`Promise.all`). `taskFn` can be either sync task 
 or return a `Promise`.
 
-### iter.batched(lernaPackages: [])(task: (lernaPackage, log) => Promise): Promise(undefined)
+### iter.batched(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(undefined)
 Executed provided command for all `lernaPackages` in a batched fashion respecting dependency graph. `taskFn` can be either 
 sync task or return a `Promise`.
 
@@ -111,3 +111,22 @@ Parameters:
  - lernaPackages - packages to filter;
  - log, optional - `npmlog` logger; 
  - glob - glob pattern.
+
+### fs.readFile(lernaPackage)(relativePath, converter: buffer => ?): Promise[?]
+Reads a file as string by default or accepts a custom converter.
+
+Parameters:
+ - lernaPackage - a lerna package for cwd of reading;
+ - relativePath - file path relative to `lernaPackage` root.
+ - converter - a function to convert content, ex. `JSON.parse`
+
+### fs.writeFile(lernaPackage)(relativePath, content, converter: type => string): Promise[String]
+Writes string/buffer to file, accepts custom formatter.
+
+Automatically detects and formats object.
+
+Parameters:
+ - lernaPackage - a lerna package for cwd of reading;
+ - relativePath - file path relative to `lernaPackage` root. 
+ - content - content of file.
+ - converter - function to convert provided type to string/buffer.

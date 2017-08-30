@@ -15,27 +15,30 @@ const supportedSourceFolders = [
   {name: 'scripts', isTestSource: false}
 ];
 
-function generateIdeaProject(log) {
-  const rootPackage = lernaScript.loadRootPackage();
-  const lernaPackages = lernaScript.loadPackages();
-  const execInRoot = cmd => {
-    log.info('idea', `executing command: ${cmd}`);
-    return lernaScript.exec.command(rootPackage)(cmd);
-  };
+//TODO: add options: {packages, mocha: {patterns: ''}}
+function generateIdeaProject() {
+  return log => {
+    const rootPackage = lernaScript.loadRootPackage();
+    const lernaPackages = lernaScript.loadPackages();
+    const execInRoot = cmd => {
+      log.info('idea', `executing command: ${cmd}`);
+      return lernaScript.exec.command(rootPackage)(cmd);
+    };
 
-  return execInRoot('rm -rf .idea')
-    .then(() => execInRoot('rm -f *.iml'))
-    .then(() => execInRoot('mkdir .idea'))
-    .then(() => execInRoot(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`))
-    .then(() => {
-      createWorkspaceXml(lernaPackages, rootPackage, log);
-      createModulesXml(lernaPackages, rootPackage, log);
+    return execInRoot('rm -rf .idea')
+      .then(() => execInRoot('rm -f *.iml'))
+      .then(() => execInRoot('mkdir .idea'))
+      .then(() => execInRoot(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`))
+      .then(() => {
+        createWorkspaceXml(lernaPackages, rootPackage, log);
+        createModulesXml(lernaPackages, rootPackage, log);
 
-      return lernaScript.iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
-        return lernaScript.exec.command(lernaPackage)('rm -f *.iml')
-          .then(() => createModuleIml(lernaPackage, log));
+        return lernaScript.iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
+          return lernaScript.exec.command(lernaPackage)('rm -f *.iml')
+            .then(() => createModuleIml(lernaPackage, log));
+        });
       });
-    });
+  };
 }
 
 function createWorkspaceXml(lernaPackages, rootPackage, log) {

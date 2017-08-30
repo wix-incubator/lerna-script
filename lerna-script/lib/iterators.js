@@ -3,11 +3,10 @@ const PackageUtilities = require('lerna/lib/PackageUtilities'),
   npmlog = require('npmlog'),
   Promise = require('bluebird');
 
-
-function forEach(lernaPackages) {
+function forEach(lernaPackages, {log = npmlog} = {log: npmlog}) {
   return taskFn => {
     const promisifiedTaskFn = Promise.method(taskFn);
-    const forEachTracker = npmlog.newItem('forEach', lernaPackages.length);
+    const forEachTracker = log.newItem('forEach', lernaPackages.length);
     npmlog.enableProgress();
 
     return Promise.each(lernaPackages, lernaPackage => {
@@ -16,10 +15,10 @@ function forEach(lernaPackages) {
   };
 }
 
-function parallel(lernaPackages) {
+function parallel(lernaPackages, {log = npmlog} = {log: npmlog}) {
   return taskFn => {
     const promisifiedTaskFn = Promise.method(taskFn);
-    const forEachTracker = npmlog.newGroup('parallel', lernaPackages.length);
+    const forEachTracker = log.newGroup('parallel', lernaPackages.length);
     npmlog.enableProgress();
 
     return Promise.map(lernaPackages, (lernaPackage) => {
@@ -33,10 +32,10 @@ function parallel(lernaPackages) {
   };
 }
 
-function batched(lernaPackages) {
+function batched(lernaPackages, {log = npmlog} = {log: npmlog}) {
   return taskFn => {
     const promisifiedTaskFn = Promise.method(taskFn);
-    const forEachTracker = npmlog.newGroup('batched', lernaPackages.length);
+    const forEachTracker = log.newGroup('batched', lernaPackages.length);
     npmlog.enableProgress();
 
     const batchedPackages = PackageUtilities.topologicallyBatchPackages(lernaPackages);
