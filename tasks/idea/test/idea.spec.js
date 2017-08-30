@@ -9,14 +9,14 @@ describe('idea', () => {
   it('should generate idea project files', () => {
     const log = loggerMock();
     return aLernaProject().within(() => {
-      return idea(log).then(() => assertIdeaFilesGenerated());
+      return idea()(log).then(() => assertIdeaFilesGenerated());
     });
   });
 
   it('should set language level to ES6', () => {
     const log = loggerMock();
     return aLernaProject().within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<property name="JavaScriptLanguageLevel" value="ES6" />');
       });
     });
@@ -28,7 +28,7 @@ describe('idea', () => {
       .addFile('.idea/some-existing-file.txt', 'qwe');
 
     return project.within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         expect(shelljs.test('-f', '.idea/some-existing-file.txt')).to.equal(false);
       });
     });
@@ -37,7 +37,7 @@ describe('idea', () => {
   it('generates [module-name].iml with node_modules excluded so idea would not index all deps', () => {
     const log = loggerMock();
     return aLernaProject().within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         expect(shelljs.cat('nested/a/a.iml').stdout).to.be.string('<excludeFolder url="file://$MODULE_DIR$/node_modules" />');
       });
     });
@@ -50,7 +50,7 @@ describe('idea', () => {
       .addFolder('nested/a/tests');
 
     return project.within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         const imlFile = shelljs.cat('nested/a/a.iml').stdout;
         expect(imlFile).to.be.string('<sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />');
         expect(imlFile).to.be.string('<sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />');
@@ -66,7 +66,7 @@ describe('idea', () => {
       .addFolder('nested/a/scripts');
 
     return project.within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         const imlFile = shelljs.cat('nested/a/a.iml').stdout;
         expect(imlFile).to.be.string('<sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />');
         expect(imlFile).to.be.string('<sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />');
@@ -78,7 +78,7 @@ describe('idea', () => {
   it('generates Mocha run configurations for all modules with mocha, interpreter and env set', () => {
     const log = loggerMock();
     return aLernaProject().within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         const node = shelljs.exec('which node').stdout.split('/node/')[1].replace('\n', '');
 
         expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('$PROJECT_DIR$/nested/a/node_modules/mocha');
@@ -94,7 +94,7 @@ describe('idea', () => {
   it('adds modules to groups if they are in subfolders', () => {
     const log = loggerMock();
     return aLernaProject().within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         const modulesXml = shelljs.cat('.idea/modules.xml').stdout;
 
         expect(modulesXml).to.be.string('group="nested"');
@@ -108,7 +108,7 @@ describe('idea', () => {
   it('creates git-based ./idea/vcs.xml', () => {
     const log = loggerMock();
     return aLernaProject().within(() => {
-      return idea(log).then(() => {
+      return idea()(log).then(() => {
         expect(shelljs.cat('.idea/vcs.xml').stdout).to.be.string('<mapping directory="$PROJECT_DIR$" vcs="Git" />');
       });
     });

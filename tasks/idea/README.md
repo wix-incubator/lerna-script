@@ -29,7 +29,9 @@ Add `lerna-script` launcher to `package.json` scripts:
 Add export to `lerna.js`:
 
 ```js
-module.exports.idea = require('lerna-script-tasks-idea');
+const idea = require('lerna-script-tasks-idea');
+
+module.exports.idea = idea();
 ```
 
 To generate [WebStorm](https://www.jetbrains.com/webstorm/) project run:
