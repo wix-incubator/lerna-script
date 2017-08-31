@@ -17,16 +17,40 @@ Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of 
 Parameters:
   - log, optional - `npmlog` logger;
  
-### iter.forEach(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
+### iter.forEach(lernaPackages, {[log], [build]})(task): Promise
 Executed provided command for all `lernaPackages` in a serial fashion. `taskFn` can be either sync task or return a `Promise`.
 
-### iter.parallel(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(taskResults: [])
+Parameters:
+ - lernaPackages - list of lerna packages to iterate on;
+ - log - logger to be used for progress and pass-on to nested tasks;
+ - build - should a module be built as in `changes.build`;
+ - task - function to execute with signature `(lernaPackage, log) => Promise`.
+
+Returns promise with task results. 
+
+### iter.parallel(lernaPackages, {[log], [build]})(task): Promise
 Executed provided command for all `lernaPackages` in a parallel fashion(`Promise.all`). `taskFn` can be either sync task 
 or return a `Promise`.
 
-### iter.batched(lernaPackages: [], {[log]})(task: (lernaPackage, log) => Promise): Promise(undefined)
+Parameters:
+ - lernaPackages - list of lerna packages to iterate on;
+ - log - logger to be used for progress and pass-on to nested tasks;
+ - build - should a module be built as in `changes.build`;
+ - task - function to execute with signature `(lernaPackage, log) => Promise`.
+
+Returns promise with task results. 
+
+### iter.batched(lernaPackages, {[log], [build]})(task): Promise
 Executed provided command for all `lernaPackages` in a batched fashion respecting dependency graph. `taskFn` can be either 
 sync task or return a `Promise`.
+
+Parameters:
+ - lernaPackages - list of lerna packages to iterate on;
+ - log - logger to be used for progress and pass-on to nested tasks;
+ - build - should a module be built as in `changes.build`;
+ - task - function to execute with signature `(lernaPackage, log) => Promise`.
+
+Returns promise without results (undefined). 
 
 ### exec.command(lernaPackage, {silent = true})(command): Promise(stdout)
 Executes given command for a package and returns collected `stdout`.

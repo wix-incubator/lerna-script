@@ -5,6 +5,34 @@ const {expect} = require('chai'),
 
 describe('iterators', () => {
 
+  ['forEach', 'parallel', 'batched'].forEach(type => {
+
+    describe(type, () => {
+
+      it('should mark modules as built if "build" is provided', () => {
+        return aLernaProject().within(() => {
+          const packages = index.loadPackages();
+
+          return index.iter[type](packages, {build: type})(() => Promise.resolve()).then(() => {
+            packages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)(type)).to.equal(true));
+          });
+        });
+      });
+
+      it('should not mark as build on failure', done => {
+        aLernaProject().within(() => {
+          const packages = index.loadPackages();
+
+          return index.iter[type](packages, {build: type})(() => Promise.reject(new Error('woops')))
+            .catch(() => {
+              packages.forEach(lernaPackage => expect(index.changes.isBuilt(lernaPackage)(type)).to.equal(false));
+              done();
+            });
+        });
+      });
+    });
+  });
+
   describe('forEach', () => {
 
     it('should iterate through available packages', () => {
