@@ -1,6 +1,6 @@
 const {expect} = require('chai'),
   sinon = require('sinon'),
-  {aLernaProject, loggerMock} = require('./utils'),
+  {aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
   index = require('..');
 
 describe('iterators', () => {
@@ -10,7 +10,7 @@ describe('iterators', () => {
     describe(type, () => {
 
       it('should mark modules as built if "build" is provided', () => {
-        return aLernaProject().within(() => {
+        return aLernaProjectWith2Modules().within(() => {
           const packages = index.loadPackages();
 
           return index.iter[type](packages, {build: type})(() => Promise.resolve()).then(() => {
@@ -20,7 +20,7 @@ describe('iterators', () => {
       });
 
       it('should not mark as build on failure', done => {
-        aLernaProject().within(() => {
+        aLernaProjectWith2Modules().within(() => {
           const packages = index.loadPackages();
 
           return index.iter[type](packages, {build: type})(() => Promise.reject(new Error('woops')))
@@ -39,7 +39,7 @@ describe('iterators', () => {
       const task = sinon.spy();
       const log = loggerMock();
 
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const packages = index.loadPackages();
 
         return index.iter
@@ -61,7 +61,7 @@ describe('iterators', () => {
       const task = sinon.spy();
       const log = loggerMock();
 
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const packages = index.loadPackages();
 
         return index.iter
@@ -83,7 +83,7 @@ describe('iterators', () => {
       const task = sinon.spy();
       const log = loggerMock();
 
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const packages = index.loadPackages();
 
         return index.iter

@@ -1,5 +1,6 @@
 const {expect} = require('chai'),
-  {aLernaProject, asBuilt, asGitCommited, empty, loggerMock} = require('./utils'),
+  {asBuilt, asGitCommited} = require('./utils'),
+  {empty, aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
   index = require('..');
 
 describe('filters', function () {
@@ -9,7 +10,7 @@ describe('filters', function () {
 
     it('should filter-out packages by provided glob', () => {
       const log = loggerMock();
-      const project = aLernaProject();
+      const project = aLernaProjectWith2Modules();
 
       return project.within(() => {
         const lernaPackages = index.filters.removeByGlob(index.loadPackages(), {log})('a');
@@ -22,7 +23,7 @@ describe('filters', function () {
   describe('removeBuilt', () => {
 
     it('should not filter-out any packages for unbuilt project', () => {
-      const project = aLernaProject();
+      const project = aLernaProjectWith2Modules();
 
       return project.within(() => {
         const unbuiltLernaPackages = index.filters.removeBuilt(index.loadPackages())();
@@ -32,7 +33,7 @@ describe('filters', function () {
 
     it('should filter-out changed packages', () => {
       const log = loggerMock();
-      const project = asBuilt(asGitCommited(aLernaProject()));
+      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()));
 
       return project.within(() => {
         const packages = index.loadPackages();
@@ -47,7 +48,7 @@ describe('filters', function () {
     });
 
     it('should filter-out packages whose dependencies changed', () => {
-      const project = asBuilt(asGitCommited(aLernaProject()));
+      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()));
 
       return project.within(() => {
         const lernaPackages = index.loadPackages();
@@ -59,7 +60,7 @@ describe('filters', function () {
     });
 
     it('should respect labels when filtering-out packages', () => {
-      const project = asBuilt(asGitCommited(aLernaProject()), {label: 'woop'});
+      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'});
 
       return project.within(() => {
         const lernaPackages = index.loadPackages();
@@ -73,7 +74,7 @@ describe('filters', function () {
     });
 
     it('should unmark dependents as built', () => {
-      const project = asBuilt(asGitCommited(aLernaProject()));
+      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()));
 
       return project.within(ctx => {
         const lernaPackages = index.loadPackages();
@@ -94,15 +95,15 @@ describe('filters', function () {
       const log = loggerMock();
       return empty()
         .addFile('package.json', {"name": "root", version: "1.0.0"})
-        .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["nested/**"], "version": "0.0.0"})
-        .module('nested/a', module => module.packageJson({name: 'a', version: '2.0.0'}))
-        .module('nested/ba', module => module.packageJson({name: 'ba', version: '1.0.0', dependencies: {'b': '~1.0.0'}}))
+        .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["packages/**"], "version": "0.0.0"})
+        .module('packages/a', module => module.packageJson({name: 'a', version: '2.0.0'}))
+        .module('packages/ba', module => module.packageJson({name: 'ba', version: '1.0.0', dependencies: {'b': '~1.0.0'}}))
         .inDir(ctx => {
           ctx.exec('git init && git config user.email mail@example.org && git config user.name name');
           ctx.exec('git add -A && git commit -am ok');
           ctx.exec('git checkout -b test');
         })
-        .module('nested/b', module => module.packageJson({name: 'b', version: '1.0.0'}))
+        .module('packages/b', module => module.packageJson({name: 'b', version: '1.0.0'}))
         .inDir(ctx => {
           ctx.exec('git add -A && git commit -am ok');
         })

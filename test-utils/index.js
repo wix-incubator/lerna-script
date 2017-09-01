@@ -21,17 +21,16 @@ function writeJson(name, content, dir = process.cwd()) {
   return writeFileSync(join(dir, name), JSON.stringify(content));
 }
 
-function aLernaProject() {
-  return empty()
+function aLernaProjectWith2Modules() {
+  return aLernaProject({a: [], b: ['a']})
+}
+
+function aLernaProject(spec = {}) {
+  const project = empty()
     .addFile('package.json', {"name": "root", version: "1.0.0"})
     .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["packages/**"], "version": "0.0.0"})
     .inDir(ctx => ctx.exec('git init'));
-}
 
-function aLernaProjectWithSpec(spec = {'a': [], 'b': ['a']}) {
-  const project = empty()
-    .addFile('package.json', {"name": "root", version: "1.0.0"})
-    .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["packages/**"], "version": "0.0.0"});
 
   Object.keys(spec).forEach(name => {
     project.module(`packages/${name}`, module => {
@@ -70,6 +69,7 @@ function loggerMock() {
     warn: sinon.spy(),
     silly: sinon.spy(),
     info: sinon.spy(),
+    error: sinon.spy(),
     newItem: sinon.stub().returns(item),
     newGroup: sinon.stub().returns(group)
   };
@@ -77,7 +77,7 @@ function loggerMock() {
 
 module.exports = {
   empty,
-  aLernaProjectWithSpec,
+  aLernaProjectWith2Modules,
   aLernaProject,
   fs: {
     readJson,

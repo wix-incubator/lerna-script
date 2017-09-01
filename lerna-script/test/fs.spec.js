@@ -1,5 +1,5 @@
 const {expect} = require('chai'),
-  {aLernaProject} = require('./utils'),
+  {aLernaProjectWith2Modules} = require('lerna-script-test-utils'),
   index = require('..');
 
 describe('fs', () => {
@@ -7,7 +7,7 @@ describe('fs', () => {
   describe('readFile', () => {
 
     it('should read a file in module dir and return content as string', () => {
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         return index.fs.readFile(lernaPackage)('package.json').then(fileContent => {
@@ -17,7 +17,7 @@ describe('fs', () => {
     });
 
     it('should read a file as json by providing custom converter', () => {
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         return index.fs.readFile(lernaPackage)('package.json', JSON.parse).then(fileContent => {
@@ -30,7 +30,7 @@ describe('fs', () => {
   describe('writeFile', () => {
 
     it('should write string to file', () => {
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         return index.fs.writeFile(lernaPackage)('qwe.txt', 'bubu')
@@ -40,7 +40,7 @@ describe('fs', () => {
     });
 
     it('should write object', () => {
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         return index.fs.writeFile(lernaPackage)('qwe.json', {key: 'bubu'})
@@ -50,7 +50,7 @@ describe('fs', () => {
     });
 
     it('should accept custom serializer', () => {
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         return index.fs.writeFile(lernaPackage)('qwe.txt', 'bubu', c => 'a' + c)

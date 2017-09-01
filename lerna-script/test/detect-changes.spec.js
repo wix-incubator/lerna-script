@@ -1,5 +1,6 @@
 const {expect} = require('chai').use(require('sinon-chai')),
-  {aLernaProject, asBuilt, asGitCommited, loggerMock} = require('./utils'),
+  {asBuilt, asGitCommited} = require('./utils'),
+  {aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
   index = require('..'),
   {join} = require('path'),
   {writeFileSync} = require('fs'),
@@ -8,7 +9,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
 describe('detect-changes', () => {
 
   it('should not detect any changes for already marked modules', () => {
-    const project = asBuilt(asGitCommited(aLernaProject()));
+    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()));
 
     return project.within(() => {
       const lernaPackages = index.loadPackages();
@@ -17,12 +18,12 @@ describe('detect-changes', () => {
   });
 
   it('should detect changes recursively', () => {
-    const project = asBuilt(asGitCommited(aLernaProject().inDir(ctx => {
-      ctx.addFile('nested/a/test/test.js', '');
+    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules().inDir(ctx => {
+      ctx.addFile('packages/a/test/test.js', '');
     })));
 
     return project.within(ctx => {
-      ctx.addFile('nested/a/test/test2.js', '');
+      ctx.addFile('packages/a/test/test2.js', '');
       const lernaPackage = index.loadPackages().find(p => p.name === 'a');
 
       expect(index.changes.isBuilt(lernaPackage)()).to.equal(false);
@@ -30,7 +31,7 @@ describe('detect-changes', () => {
   });
 
   it('should detect uncommitted modules as changed', () => {
-    const project = aLernaProject();
+    const project = aLernaProjectWith2Modules();
 
     return project.within(() => {
       const lernaPackages = index.loadPackages();
@@ -39,7 +40,7 @@ describe('detect-changes', () => {
   });
 
   it('should detect change in module', () => {
-    const project = asBuilt(asGitCommited(aLernaProject()));
+    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()));
 
     return project.within(() => {
       const aLernaPackage = index.loadPackages().pop();
@@ -50,7 +51,7 @@ describe('detect-changes', () => {
   });
 
   it('should respect .gitignore in root', () => {
-    const projectWithGitIgnore = aLernaProject().inDir(ctx => {
+    const projectWithGitIgnore = aLernaProjectWith2Modules().inDir(ctx => {
       ctx.addFile('.gitignore', 'some.txt\n');
     });
 
@@ -65,8 +66,8 @@ describe('detect-changes', () => {
   });
 
   it('should respect .gitignore in module dir', () => {
-    const projectWithGitIgnore = aLernaProject().inDir(ctx => {
-      ctx.addFile('nested/a/.gitignore', 'some.txt\n');
+    const projectWithGitIgnore = aLernaProjectWith2Modules().inDir(ctx => {
+      ctx.addFile('packages/a/.gitignore', 'some.txt\n');
     });
 
     const project = asBuilt(asGitCommited(projectWithGitIgnore));
@@ -81,7 +82,7 @@ describe('detect-changes', () => {
 
   it('should unbuild a module', () => {
     const log = loggerMock();
-    const project = asBuilt(asGitCommited(aLernaProject()));
+    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()));
 
     return project.within(() => {
       const aLernaPackage = index.loadPackages().pop();
@@ -94,7 +95,7 @@ describe('detect-changes', () => {
 
   it('should build a module', () => {
     const log = loggerMock();
-    const project = asGitCommited(aLernaProject());
+    const project = asGitCommited(aLernaProjectWith2Modules());
 
     return project.within(() => {
       const aLernaPackage = index.loadPackages().pop();
@@ -108,7 +109,7 @@ describe('detect-changes', () => {
 
 
   it('should respect label for makePackageBuilt', () => {
-    const project = asBuilt(asGitCommited(aLernaProject()), {label: 'woop'});
+    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'});
 
     return project.within(() => {
       const lernaPackages = index.loadPackages();
@@ -118,7 +119,7 @@ describe('detect-changes', () => {
   });
 
   it('should respect label for makePackageUnbuilt', () => {
-    const project = asBuilt(asGitCommited(aLernaProject()), {label: 'woop'});
+    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'});
 
     return project.within(() => {
       const aLernaPackage = index.loadPackages().pop();

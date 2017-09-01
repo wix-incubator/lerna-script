@@ -1,7 +1,6 @@
 const {aLernaProject, fs, loggerMock} = require('lerna-script-test-utils'),
   {loadPackages} = require('lerna-script'),
   {expect} = require('chai').use(require('sinon-chai')),
-  sinon = require('sinon'),
   sync = require('..');
 
 describe('modules sync task', () => {

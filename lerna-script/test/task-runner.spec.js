@@ -1,4 +1,5 @@
 const {expect} = require('chai').use(require('sinon-chai')),
+  {loggerMock} = require('lerna-script-test-utils'),
   taskRunner = require('../lib/task-runner'),
   sinon = require('sinon');
 
@@ -34,15 +35,12 @@ describe('task-runner', () => {
   });
 
   function setupMocks() {
-    const logMock = {
-      info: sinon.spy(),
-      error: sinon.spy()
-    };
+    const logMock = loggerMock();
     const processMock = {
       exit: sinon.spy()
     };
 
 
-    return {logMock: logMock, processMock, runTask: taskRunner({log: logMock, process: processMock})};
+    return {logMock, processMock, runTask: taskRunner({log: logMock, process: processMock})};
   }
 });

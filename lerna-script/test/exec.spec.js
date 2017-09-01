@@ -1,5 +1,6 @@
 const {expect} = require('chai').use(require('sinon-chai')),
-  {aLernaProject, loggerMock, empty, captureOutput} = require('./utils'),
+  {captureOutput} = require('./utils'),
+  {empty, aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
   index = require('..');
 
 describe('exec', () => {
@@ -10,7 +11,7 @@ describe('exec', () => {
     it('should execute command in package cwd and print output by default', () => {
       const log = loggerMock();
 
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         return index.exec.command(lernaPackage, {log})('pwd').then(stdout => {
@@ -22,7 +23,7 @@ describe('exec', () => {
     });
 
     it('should print output if enabled', () => {
-      return aLernaProject().within(() => {
+      return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         return index.exec.command(lernaPackage, {silent: false})('ls -lah .').then(stdout => {
@@ -33,7 +34,7 @@ describe('exec', () => {
     });
 
     it('should reject for a failing command', done => {
-      aLernaProject().within(() => {
+      aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop();
 
         index.exec.command(lernaPackage)('asd zzz').catch(e => {
