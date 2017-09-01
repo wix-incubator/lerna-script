@@ -8,7 +8,7 @@ you to add custom tasks/scripts to automate multiple package management routine 
  - normalize `package.json`s of all modules (ex. fix repo url, docs url) on pre-push/pre-commit;
  - generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
  - sync dependencies across all modules - ex. to have same version of mocha;
- - have composite tasks (install, run n scripts) to ease maintenance for large teams/OSS projects.
+ - have composite tasks (install, run npm scripts) to ease maintenance for large teams/OSS projects.
  - regenerate readme's for root readme and all modules that are using ex. [markdown-magic](https://github.com/DavidWells/markdown-magic);
  - whatever else you need.
  
@@ -45,10 +45,9 @@ const {loadPackages, iter, exec} = require('lerna-script'),
 
 module.exports.syncNvmRc = log => {
   log.info('syncNvmRc', 'syncing .nvmrc to all modules from root');
-  const rootNvmRcPath = join(process.cwd(), '.nvmrc'); 
   
   return iter.parallel(loadPackages())(lernaPackage => {
-    exec(lernaPackage)(`cp ${rootNvmRcPath} .`);
+    exec.command(lernaPackage)(`cp ${join(process.cwd, ".nvmrc")} .`);
   });
 }
 ```
