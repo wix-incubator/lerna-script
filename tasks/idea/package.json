@@ -4,14 +4,14 @@
   "description": "task for start that generates intellij project for repo",
   "author": "vilius@wix.com",
   "license": "BSD",
-  "homepage": "https://github.com/wix/lerna-script/tree/master/presets/idea",
+  "homepage": "https://github.com/wix/lerna-script/tree/master/tasks/idea",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/lerna-script/tree/master/presets/idea"
+    "url": "https://github.com/wix/lerna-script/tree/master/tasks/idea"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
