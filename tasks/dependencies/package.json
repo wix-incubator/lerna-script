@@ -1,22 +1,24 @@
 {
-  "name": "lerna-script-tasks-modules",
-  "version": "0.3.0",
-  "description": "module version sync task for lerna-script",
-  "author": "vilius@wix.com",
-  "license": "BSD",
-  "homepage": "https://github.com/wix/lerna-script/tree/master/tasks/idea",
+  "name": "lerna-script-tasks-dependencies",
+  "version": "0.0.1",
+  "description": "tasks for lerna-script that adds dependency management support",
+  "author": "Vilius Lukosius",
+  "license": "ISC",
+  "homepage": "https://github.com/wix/lerna-script/tree/master/tasks/dependencies",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/lerna-script/tree/master/tasks/idea"
+    "url": "https://github.com/wix/lerna-script/tree/master/tasks/dependencies"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
+    "ramda": "0.23.0",
+    "semver": "5.3.0",
     "deep-keys": "^0.4.0",
     "lodash": "^4.17.4"
   },

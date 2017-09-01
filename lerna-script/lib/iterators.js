@@ -33,7 +33,10 @@ function parallel(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
       const promiseTracker = forEachTracker.newItem(lernaPackage.name);
       promiseTracker.pause();
       return promisifiedTaskFn(lernaPackage, promiseTracker)
-        .then(() => build && markPackageBuilt(lernaPackage, {log: forEachTracker})(build))
+        .then(res => {
+          build && markPackageBuilt(lernaPackage, {log: forEachTracker})(build);
+          return res;
+        })
         .finally(() => {
           promiseTracker.resume();
           promiseTracker.completeWork(1);

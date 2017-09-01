@@ -20,9 +20,12 @@
     "bluebird": "3.5.0",
     "fs-extra": "3.0.1"
   },
+  "peerDependencies": {
+    "sinon": ">3.0.0"
+  },
   "devDependencies": {
     "chai": "3.5.0",
     "mocha": "3.4.1",
-    "sinon": "^3.2.1"
+    "sinon": "3.2.1"
   }
 }

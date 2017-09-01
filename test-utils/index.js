@@ -71,7 +71,9 @@ function loggerMock() {
     info: sinon.spy(),
     error: sinon.spy(),
     newItem: sinon.stub().returns(item),
-    newGroup: sinon.stub().returns(group)
+    newGroup: sinon.stub().returns(group),
+    item,
+    group
   };
 }
 
