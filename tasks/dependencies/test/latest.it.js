@@ -43,13 +43,10 @@ describe('latest task', function () {
     return project.within(latest());
   });
 
-  function setup(packageJsonOverrides = {}) {
+  function setup(lernaJsonOverrides = {}) {
     const log = loggerMock();
     const project = aLernaProject()
-      .packageJson(Object.assign({
-        name: 'root',
-        private: true
-      }, packageJsonOverrides));
+      .lernaJson(lernaJsonOverrides);
 
     return {log, project};
   }

@@ -3,7 +3,7 @@ const {exec} = require('child_process'),
 
 function latestDependenciesTask() {
   return log => {
-    const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/package.json');
+    const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/lerna.json');
     return checkForLatestDependencies(managedDependencies, managedPeerDependencies, log);
   }
 }

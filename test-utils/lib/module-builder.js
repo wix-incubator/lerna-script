@@ -36,9 +36,14 @@ class ModuleBuilder {
     return this;
   }
 
-  packageJson(overrides) {
+  packageJson(overrides = {}) {
     return this.addFile('package.json', aPackageJson(this._dir.split('/').pop(), overrides));
   }
+
+  lernaJson(overrides = {}) {
+    return this.addFile('lerna.json', aLernaJson(overrides));
+  }
+
 
   addFile(name, payload) {
     this.addFolder(path.dirname(name));
@@ -111,6 +116,13 @@ function aPackageJson(name, overrides) {
     },
     author: '',
     license: 'ISC'
+  }, overrides);
+}
+
+function aLernaJson(overrides) {
+  return Object.assign({}, {
+    lerna: "2.0.0",
+    packages: ["packages/**"], version: "0.0.0"
   }, overrides);
 }
 

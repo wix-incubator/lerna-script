@@ -25,9 +25,7 @@ describe('sync task', () => {
   function setup() {
     const log = loggerMock();
     const project = aLernaProject()
-      .packageJson({
-        name: 'root',
-        private: true,
+      .lernaJson({
         managedDependencies: {
           lodash: '1.1.0'
         },

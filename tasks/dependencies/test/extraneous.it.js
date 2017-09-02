@@ -18,9 +18,7 @@ describe('extraneous task', () => {
   function setup() {
     const log = loggerMock();
     const project = aLernaProject()
-      .packageJson({
-        name: 'root',
-        private: true,
+      .lernaJson({
         managedDependencies: {lodash: '1.1.0', highdash: '1.1.0', adash: '1.1.0'},
         managedPeerDependencies: {foo: '> 1.0.0', bar: '> 1.0.0'}
       })

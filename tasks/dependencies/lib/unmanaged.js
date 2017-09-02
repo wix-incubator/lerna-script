@@ -5,7 +5,7 @@ function unmanagedDependenciesTask() {
   return log => {
     const lernaPackages = loadPackages();
     const deps = {dependencies: {}, peerDependencies: {}};
-    const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/package.json');
+    const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/lerna.json');
     const innerModules = lernaPackages.map(p => p.name);
     const readJson = lernaPackage => fs.readFile(lernaPackage)('package.json', JSON.parse);
 

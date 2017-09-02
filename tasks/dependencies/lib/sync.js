@@ -5,7 +5,7 @@ const {iter, fs, loadPackages} = require('lerna-script'),
 function syncDependenciesTask() {
   return log => {
     const lernaPackages = loadPackages();
-    const template = asDependencies(require(process.cwd() + '/package.json'));
+    const template = asDependencies(require(process.cwd() + '/lerna.json'));
 
     return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
       const logMerged = input => log.info(`${lernaPackage.name}: ${input.key} (${input.currentValue} -> ${input.newValue})`);

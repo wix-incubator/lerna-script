@@ -27,8 +27,8 @@ function aLernaProjectWith2Modules() {
 
 function aLernaProject(spec = {}) {
   const project = empty()
-    .addFile('package.json', {"name": "root", version: "1.0.0"})
-    .addFile('lerna.json', {"lerna": "2.0.0", "packages": ["packages/**"], "version": "0.0.0"})
+    .packageJson({name: 'root'})
+    .lernaJson()
     .inDir(ctx => ctx.exec('git init'));
 
 
