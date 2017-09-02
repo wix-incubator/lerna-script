@@ -1,5 +1,6 @@
 const {aLernaProject, loggerMock, fs} = require('lerna-script-test-utils'),
   {expect} = require('chai').use(require('sinon-chai')),
+  {loadPackages} = require('lerna-script'),
   {sync} = require('..');
 
 describe('sync task', () => {
@@ -21,6 +22,22 @@ describe('sync task', () => {
       });
     });
   });
+
+  it('should use packages if provided', () => {
+    const {log, project} = setup();
+
+    return project.within(() => {
+      const packages = loadPackages().filter(p => p.name === 'a');
+
+      return sync({packages})(log).then(() => {
+        expect(fs.readJson('packages/a/package.json')).to.contain.deep.property('peerDependencies.foo', '> 1.0.0');
+        expect(fs.readJson('packages/a/package.json')).to.contain.deep.property('devDependencies.lodash', '1.1.0');
+
+        expect(fs.readJson('packages/b/package.json')).to.not.contain.deep.property('dependencies.lodash', '1.1.0');
+      });
+    });
+  });
+
 
   function setup() {
     const log = loggerMock();

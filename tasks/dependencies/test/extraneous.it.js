@@ -1,5 +1,6 @@
 const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   {expect} = require('chai').use(require('sinon-chai')),
+  {loadPackages} = require('lerna-script'),
   {extraneous} = require('..');
 
 describe('extraneous task', () => {
@@ -11,6 +12,19 @@ describe('extraneous task', () => {
       return extraneous()(log).then(() => {
         expect(log.error).to.have.been.calledWith('Extraneous managedDependencies: adash, highdash');
         expect(log.error).to.have.been.calledWith('Extraneous managedPeerDependencies: bar');
+      });
+    });
+  });
+
+  it('should use packages if provided', () => {
+    const {log, project} = setup();
+
+    return project.within(() => {
+      const packages = loadPackages().filter(p => p.name === 'b');
+
+      return extraneous({packages})(log).then(() => {
+        expect(log.error).to.have.been.calledWith('Extraneous managedDependencies: adash, highdash');
+        expect(log.error).to.have.been.calledWith('Extraneous managedPeerDependencies: bar, foo');
       });
     });
   });

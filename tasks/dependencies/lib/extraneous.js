@@ -1,9 +1,10 @@
 const {iter, fs, loadPackages} = require('lerna-script'),
   R = require('ramda');
 
-function extraneousDependenciesTask() {
+//TODO: logging for task
+function extraneousDependenciesTask({packages} = {}) {
   return log => {
-    const lernaPackages = loadPackages();
+    const lernaPackages = packages || loadPackages();
     const deps = {dependencies: {}, peerDependencies: {}};
     const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/lerna.json');
     const readJson = lernaPackage => fs.readFile(lernaPackage)('package.json', JSON.parse);

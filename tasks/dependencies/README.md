@@ -23,8 +23,12 @@ module.exports['deps:latest'] = latest();
 
 ## API
 
-### sync()
+### sync({[packages]})(log): Promise
 Task that syncs dependency versions (dependencies, devDependencies, peerDependencies) with those defined in `lerna.json` as `managed*Dependencies`.
+
+Parameters:
+ - packages - custom package list, or defaults as defined by `lerna.json`
+ - log - `npmlog` instance passed-in by `lerna-script`;
 
 Say you have `lerna.json` in root of your project like:
 
@@ -38,11 +42,22 @@ Say you have `lerna.json` in root of your project like:
 
 upon invocation of this task for all submodules that have `lodash` defined in `dependencies` or `devDependencies` version of `lodash` will be updated to `~1.0.0`.
 
-### unmanaged()
+### unmanaged({[packages]})(log): Promise
 List dependencies, that are present in modules `dependencies`, `devDependencies`, `peerDependencies`, but not defined in `lerna.json` as `managed*Dependencies`.
 
-### extraneous()
+Parameters:
+ - packages - custom package list, or defaults as defined by `lerna.json`
+ - log - `npmlog` instance passed-in by `lerna-script`;
+
+### extraneous({[packages]})(log): Promise
 List dependencies, that are present in `lerna.json` as `managed*Dependencies`, but not defined in modules `dependencies`, `devDependencies`, `peerDependencies`.
 
-### latest()
+Parameters:
+ - packages - custom package list, or defaults as defined by `lerna.json`
+ - log - `npmlog` instance passed-in by `lerna-script`;
+
+### latest()(log): Promise
 List dependencies, that are present in `lerna.json` as `managed*Dependencies` and needs updating based on latest version published in npmjs.org.
+
+Parameters:
+ - log - `npmlog` instance passed-in by `lerna-script`;

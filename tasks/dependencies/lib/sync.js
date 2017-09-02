@@ -2,9 +2,10 @@ const {iter, fs, loadPackages} = require('lerna-script'),
   _ = require('lodash'),
   deepKeys = require('deep-keys');
 
-function syncDependenciesTask() {
+//TODO: logging for task
+function syncDependenciesTask({packages} = {}) {
   return log => {
-    const lernaPackages = loadPackages();
+    const lernaPackages = packages || loadPackages();
     const template = asDependencies(require(process.cwd() + '/lerna.json'));
 
     return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
