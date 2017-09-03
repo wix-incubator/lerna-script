@@ -12,5 +12,7 @@ function sync(log) {
 
 module.exports = {
   idea: idea(),
-  sync
+  sync,
+  'deps:unmanaged': dependencies.unmanaged(),
+  'deps:latest': dependencies.latest()
 };

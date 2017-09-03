@@ -7,7 +7,7 @@ function extraneousDependenciesTask({packages} = {}) {
     const lernaPackages = packages || loadPackages();
     log.info('extraneous', `checking for extraneous dependencies for ${lernaPackages.length} modules`);
     const deps = {dependencies: {}, peerDependencies: {}};
-    const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/lerna.json');
+    const {managedDependencies = {}, managedPeerDependencies = {}} = require(process.cwd() + '/lerna.json');
     const readJson = lernaPackage => fs.readFile(lernaPackage)('package.json', JSON.parse);
 
     return iter.parallel(lernaPackages, {log})(readJson)

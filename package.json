@@ -14,12 +14,9 @@
     "husky": "^0.14.3",
     "lerna": "^2.0.0",
     "lerna-script": "latest",
-    "lerna-script-tasks-dependencies": "^0.4.0",
+    "lerna-script-tasks-dependencies": "latest",
     "lerna-script-tasks-idea": "latest",
-    "lerna-script-tasks-modules": "^0.4.0",
-    "lerna-script-tasks-npmfix": "^0.4.0"
-  },
-  "dependencies": {
-    "shelljs": "^0.7.8"
+    "lerna-script-tasks-modules": "latest",
+    "lerna-script-tasks-npmfix": "latest"
   }
 }
