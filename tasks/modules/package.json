@@ -4,14 +4,14 @@
   "description": "module version sync task for lerna-script",
   "author": "vilius@wix.com",
   "license": "BSD",
-  "homepage": "https://github.com/wix/lerna-script/tree/master/tasks/idea",
+  "homepage": "https://github.com/wix/lerna-script/tree/master/tasks/modules",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/lerna-script/tree/master/tasks/idea"
+    "url": "https://github.com/wix/lerna-script"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
@@ -21,13 +21,13 @@
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "lerna-script": "^0.4.0"
+    "lerna-script": ">=0.4.0"
   },
   "devDependencies": {
     "chai": "3.5.0",
     "lerna": "~2.0.0",
-    "lerna-script": "^0.4.0",
-    "lerna-script-test-utils": "^0.4.0",
+    "lerna-script": "~0.4.0",
+    "lerna-script-test-utils": "~0.4.0",
     "mocha": "3.4.1",
     "sinon": "3.2.1",
     "sinon-chai": "2.10.0"

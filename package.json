@@ -3,17 +3,21 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "prepush": "lerna-script sync",
     "clean": "lerna clean --yes",
     "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
-    "rebuild": "lerna clean --yes && lerna bootstrap && lerna run test",
-    "lerna": "lerna",
+    "ls": "lerna-script",
     "idea": "lerna-script idea"
   },
   "devDependencies": {
+    "husky": "^0.14.3",
     "lerna": "^2.0.0",
     "lerna-script": "latest",
-    "lerna-script-preset-idea": "latest"
+    "lerna-script-tasks-dependencies": "^0.4.0",
+    "lerna-script-tasks-idea": "latest",
+    "lerna-script-tasks-modules": "^0.4.0",
+    "lerna-script-tasks-npmfix": "^0.4.0"
   },
   "dependencies": {
     "shelljs": "^0.7.8"
