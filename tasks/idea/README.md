@@ -1,4 +1,4 @@
-# lerna-script-tasks-idea [![npm](https://img.shields.io/npm/v/lerna-script-tasks-idea.svg)](https://www.npmjs.com/package/lerna-script-tasks-idea)
+# lerna-script-tasks-idea
 
 [lerna-script](../../lerna-script) task to generate [WebStorm](https://www.jetbrains.com/webstorm/) project for a [Lerna](https://lernajs.io/) managed project with hardcoded conventions:
  - mark `node_modules` as ignored so [WebStorm](https://www.jetbrains.com/webstorm/) would not index those. Having >= 20 modules open with `node_modules` indexing pretty much kills it:/
@@ -42,5 +42,9 @@ npm start idea
 
 # API
 
-## ()
+## ({[packages]})(log): Promise
 Returns a function that generates [WebStorm](https://www.jetbrains.com/webstorm/) for all modules in repo.
+
+Parameters:
+ - packages - list of packages to generate idea project for or defaults to ones defined in `lerna.json`;
+ - log - `npmlog` instance.

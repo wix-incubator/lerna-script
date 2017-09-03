@@ -1,7 +1,7 @@
 const {join, relative} = require('path'),
   templates = require('./lib/templates'),
   shelljs = require('shelljs'),
-  lernaScript = require('lerna-script'),
+  {loadRootPackage, loadPackages, exec, iter} = require('lerna-script'),
   {execSync} = require('child_process');
 
 const excludeFolders = ['node_modules'];
@@ -16,25 +16,29 @@ const supportedSourceFolders = [
 ];
 
 //TODO: add options: {packages, mocha: {patterns: ''}}
-function generateIdeaProject() {
+function generateIdeaProject({packages} = {}) {
   return log => {
-    const rootPackage = lernaScript.loadRootPackage();
-    const lernaPackages = lernaScript.loadPackages();
+    const rootPackage = loadRootPackage();
+    const lernaPackages = packages || loadPackages();
     const execInRoot = cmd => {
-      log.info('idea', `executing command: ${cmd}`);
-      return lernaScript.exec.command(rootPackage)(cmd);
+      log.verbose('idea', `executing command: ${cmd}`);
+      return exec.command(rootPackage)(cmd);
     };
 
+    log.info('idea', `Generating idea projects for ${lernaPackages.length} packages`);
+    log.info('idea', `cleaning existing project files...`);
     return execInRoot('rm -rf .idea')
       .then(() => execInRoot('rm -f *.iml'))
       .then(() => execInRoot('mkdir .idea'))
+      .then(() => log.info('idea', 'writing project files'))
       .then(() => execInRoot(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`))
       .then(() => {
         createWorkspaceXml(lernaPackages, rootPackage, log);
         createModulesXml(lernaPackages, rootPackage, log);
 
-        return lernaScript.iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
-          return lernaScript.exec.command(lernaPackage)('rm -f *.iml')
+        log.info('idea', 'writing module files');
+        return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
+          return exec.command(lernaPackage)('rm -f *.iml')
             .then(() => createModuleIml(lernaPackage, log));
         });
       });
@@ -42,12 +46,12 @@ function generateIdeaProject() {
 }
 
 function createWorkspaceXml(lernaPackages, rootPackage, log) {
-  log.info('idea', 'creating .idea/workspace.xml');
+  log.verbose('idea', 'creating .idea/workspace.xml');
   const nodePath = execSync('which node').toString().replace('\n', '');
   const mochaPackage = join(relative(rootPackage.location, lernaPackages[0].location), 'node_modules', 'mocha');
-  log.info('idea', `setting node - using current system node: '${nodePath}'`);
-  log.info('idea', `setting language level to: '${languageLevel}'`);
-  log.info('idea', `setting mocha package: '${mochaPackage}'`);
+  log.verbose('idea', `setting node - using current system node: '${nodePath}'`);
+  log.verbose('idea', `setting language level to: '${languageLevel}'`);
+  log.verbose('idea', `setting mocha package: '${mochaPackage}'`);
   const config = {
     modules: lernaPackages.map(lernaPackage => ({
       name: lernaPackage.name,
@@ -62,7 +66,7 @@ function createWorkspaceXml(lernaPackages, rootPackage, log) {
 }
 
 function createModulesXml(lernaPackages, rootPackage, log) {
-  log.info('idea', 'creating .idea/modules.xml');
+  log.verbose('idea', 'creating .idea/modules.xml');
   templates.ideaModulesFile(join(rootPackage.location, '.idea', 'modules.xml'), lernaPackages.map(lernaPackage => {
     const relativePath = relative(rootPackage.location, lernaPackage.location);
     if (relativePath.indexOf('/') > -1) {

@@ -1,4 +1,5 @@
-const {empty, loggerMock, aLernaProject} = require('lerna-script-test-utils'),
+const {loggerMock, aLernaProject} = require('lerna-script-test-utils'),
+  {loadPackages} = require('lerna-script'),
   {expect} = require('chai').use(require('sinon-chai')),
   idea = require('..'),
   shelljs = require('shelljs');
@@ -11,6 +12,20 @@ describe('idea', () => {
       return idea()(log).then(() => assertIdeaFilesGenerated());
     });
   });
+
+  it('should generate idea project files for provided modules', () => {
+    const log = loggerMock();
+    return aLernaProjectWith3Modules().within(() => {
+      const packages = loadPackages().filter(p => p.name === 'a');
+      return idea({packages})(log).then(() => {
+        expect(shelljs.test('-f', 'packages/a/a.iml')).to.equal(true);
+        expect(shelljs.test('-f', 'packages/b/b.iml')).to.equal(false);
+        expect(shelljs.test('-f', 'packages/c/c.iml')).to.equal(false);
+
+      });
+    });
+  });
+
 
   it('should set language level to ES6', () => {
     const log = loggerMock();
