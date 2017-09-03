@@ -17,19 +17,19 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "deep-keys": "^0.4.0",
-    "lodash": "^4.17.4"
+    "deep-keys": "0.4.0",
+    "lodash": "4.17.4"
   },
   "peerDependencies": {
     "lerna-script": ">=0.4.1"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "lerna": "~2.0.0",
+    "chai": "4.1.0",
+    "lerna": "2.0.0",
     "lerna-script": "~0.4.1",
     "lerna-script-test-utils": "~0.4.1",
-    "mocha": "3.4.1",
+    "mocha": "3.4.2",
     "sinon": "3.2.1",
-    "sinon-chai": "2.10.0"
+    "sinon-chai": "2.12.0"
   }
 }

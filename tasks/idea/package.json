@@ -18,18 +18,18 @@
   },
   "dependencies": {
     "handlebars": "4.0.10",
-    "shelljs": "^0.7.8"
+    "shelljs": "0.7.8"
   },
   "peerDependencies": {
     "lerna-script": ">=0.4.1"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "lerna": "~2.0.0",
+    "chai": "4.1.0",
+    "lerna": "2.0.0",
     "lerna-script": "~0.4.1",
     "lerna-script-test-utils": "~0.4.1",
-    "mocha": "3.4.1",
+    "mocha": "3.4.2",
     "sinon": "3.2.1",
-    "sinon-chai": "2.10.0"
+    "sinon-chai": "2.12.0"
   }
 }

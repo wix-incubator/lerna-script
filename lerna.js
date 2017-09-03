@@ -14,5 +14,6 @@ module.exports = {
   idea: idea(),
   sync,
   'deps:unmanaged': dependencies.unmanaged(),
-  'deps:latest': dependencies.latest()
+  'deps:latest': dependencies.latest(),
+  'deps:sync': dependencies.sync()
 };

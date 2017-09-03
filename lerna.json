@@ -5,5 +5,30 @@
     "test-utils",
     "tasks/*"
   ],
-  "version": "0.4.1"
+  "version": "0.4.1",
+  "managedDependencies": {
+    "bluebird": "3.5.0",
+    "fs-extra": "4.0.1",
+    "chai": "4.1.0",
+    "mocha": "3.4.2",
+    "sinon": "3.2.1",
+    "exec-then": "1.3.1",
+    "ignore": "3.3.3",
+    "lodash": "4.17.4",
+    "npmlog": "4.1.2",
+    "shelljs": "0.7.8",
+    "intercept-stdout": "0.1.2",
+    "lerna": "2.0.0",
+    "sinon-chai": "2.12.0",
+    "deep-keys": "0.4.0",
+    "ramda": "0.23.0",
+    "semver": "5.3.0",
+    "handlebars": "4.0.10",
+    "git-remote-url": "1.0.1",
+    "hosted-git-info": "2.5.0"
+  },
+  "managedPeerDependencies": {
+    "sinon": ">3.0.0",
+    "lerna": ">=2.0.0"
+  }
 }
