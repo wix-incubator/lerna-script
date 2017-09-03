@@ -52,6 +52,7 @@ function loggerMock() {
     silly: sinon.spy(),
     info: sinon.spy(),
     pause: sinon.spy(),
+    error: sinon.spy(),
     resume: sinon.spy(),
   };
 
@@ -61,6 +62,7 @@ function loggerMock() {
     warn: sinon.spy(),
     silly: sinon.spy(),
     info: sinon.spy(),
+    error: sinon.spy(),
     newItem: sinon.stub().returns(item)
   };
 
