@@ -19,7 +19,7 @@ function npmfix({packages} = {}) {
             homepage: moduleGitUrl,
             repository: {
               type: 'git',
-              url: repoUrl
+              url: moduleGitUrl
             }
           });
           return fs.writeFile(lernaPackage, {log})('package.json', updated, j => JSON.stringify(j, null, 2));
