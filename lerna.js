@@ -1,7 +1,8 @@
 const idea = require('lerna-script-tasks-idea'),
   modules = require('lerna-script-tasks-modules'),
   npmfix = require('lerna-script-tasks-npmfix'),
-  dependencies = require('lerna-script-tasks-dependencies')
+  dependencies = require('lerna-script-tasks-dependencies'),
+  depcheck = require('lerna-script-tasks-depcheck');
 
 function sync(log) {
   return Promise.resolve()
@@ -11,8 +12,9 @@ function sync(log) {
 }
 
 module.exports = {
-  idea: idea(),
   sync,
+  idea: idea(),
+  depcheck: depcheck(),
   'deps:unmanaged': dependencies.unmanaged(),
   'deps:latest': dependencies.latest(),
   'deps:sync': dependencies.sync()

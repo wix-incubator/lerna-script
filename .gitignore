@@ -4,3 +4,4 @@ node_modules/
 *.log
 target/
 .DS_Store
+.lerna

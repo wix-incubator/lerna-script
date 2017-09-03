@@ -17,6 +17,7 @@
     "lerna-script-tasks-dependencies": "latest",
     "lerna-script-tasks-idea": "latest",
     "lerna-script-tasks-modules": "latest",
-    "lerna-script-tasks-npmfix": "latest"
+    "lerna-script-tasks-npmfix": "latest",
+    "lerna-script-tasks-depcheck": "latest"
   }
 }
