@@ -23,13 +23,13 @@
     "semver": "5.3.0"
   },
   "peerDependencies": {
-    "lerna-script": "^0.4.1"
+    "lerna-script": ">=0.4.1"
   },
   "devDependencies": {
     "chai": "3.5.0",
     "lerna": "~2.0.0",
-    "lerna-script": "^0.4.1",
-    "lerna-script-test-utils": "^0.4.1",
+    "lerna-script": "~0.4.1",
+    "lerna-script-test-utils": "~0.4.1",
     "mocha": "3.4.1",
     "sinon": "2.3.1",
     "sinon-chai": "2.10.0"
