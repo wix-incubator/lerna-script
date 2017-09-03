@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/lerna-script"
+    "url": "https://github.com/wix/lerna-script/tree/master/lerna-script"
   },
   "author": "vilius@wix.com",
   "license": "BSD",
