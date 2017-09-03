@@ -1,10 +1,10 @@
 {
-  "name": "lerna-script-tasks-dependencies",
+  "name": "lerna-script-tasks-depcheck",
   "version": "0.4.1",
-  "description": "tasks for lerna-script that adds dependency management support",
+  "description": "tasks for running depcheck for all modules",
   "author": "Vilius Lukosius",
   "license": "ISC",
-  "homepage": "https://github.com/wix/lerna-script/tree/master/tasks/dependencies",
+  "homepage": "https://github.com/wix/lerna-script/tree/master/tasks/depcheck",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -17,10 +17,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "deep-keys": "0.4.0",
-    "lodash": "4.17.4",
-    "ramda": "0.24.1",
-    "semver": "5.4.1"
+    "depcheck": "0.6.7"
   },
   "peerDependencies": {
     "lerna-script": ">=0.4.1"
