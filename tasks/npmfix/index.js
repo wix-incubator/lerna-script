@@ -6,7 +6,7 @@ const {loadPackages, iter, fs} = require('lerna-script'),
 function npmfix({packages} = {}) {
   return log => {
     const lernaPackages = packages || loadPackages();
-    log.info('npmfix', `fixing homepage, repo urls for ${lernaPackages.lenght} packages...`);
+    log.info('npmfix', `fixing homepage, repo urls for ${lernaPackages.length} packages`);
 
     return gitRemoteUrl('.', 'origin').then(gitRemoteUrl => {
       const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse();

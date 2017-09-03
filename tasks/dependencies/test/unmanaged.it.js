@@ -10,8 +10,8 @@ describe('unmanaged task', () => {
 
     return project.within(() => {
       return unmanaged()(log).then(() => {
-        expect(log.error).to.have.been.calledWith('Unmanaged dependency highdash (1.1.0, 1.2.0)');
-        expect(log.error).to.have.been.calledWith('Unmanaged peerDependency bar (> 1.0.0)');
+        expect(log.error).to.have.been.calledWith('unmanaged', 'unmanaged dependency highdash (1.1.0, 1.2.0)');
+        expect(log.error).to.have.been.calledWith('unmanaged', 'unmanaged peerDependency bar (> 1.0.0)');
       });
     });
   });
@@ -23,8 +23,8 @@ describe('unmanaged task', () => {
       const packages = loadPackages().filter(p => p.name === 'a');
 
       return unmanaged({packages})(log).then(() => {
-        expect(log.error).to.have.been.calledWith('Unmanaged dependency highdash (1.1.0)');
-        expect(log.error).to.have.been.calledWith('Unmanaged peerDependency bar (> 1.0.0)');
+        expect(log.error).to.have.been.calledWith('unmanaged', 'unmanaged dependency highdash (1.1.0)');
+        expect(log.error).to.have.been.calledWith('unmanaged', 'unmanaged peerDependency bar (> 1.0.0)');
       });
     });
   });

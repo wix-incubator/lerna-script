@@ -3,6 +3,7 @@ const {exec} = require('child_process'),
 
 function latestDependenciesTask() {
   return log => {
+    log.info('latest', `checking for latest dependencies`);
     const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/lerna.json');
     return checkForLatestDependencies(managedDependencies, managedPeerDependencies, log);
   }
@@ -15,13 +16,13 @@ function checkForLatestDependencies(managedDependencies, managedPeerDependencies
   return Promise.all([Promise.all(depsPromises), Promise.all(peerDepsPromises)]).then(([deps, peerDeps]) => {
     deps.forEach(({name, currentVersion, latestVersion}) => {
       if (!satisfies(latestVersion, validRange(currentVersion))) {
-        log.info(`Update found for dependency ${name}: ${currentVersion} -> ${latestVersion}`);
+        log.info('latest', `update found for dependency ${name}: ${currentVersion} -> ${latestVersion}`);
       }
     });
 
     peerDeps.forEach(({name, currentVersion, latestVersion}) => {
       if (!satisfies(latestVersion, validRange(currentVersion))) {
-        log.info(`Update found for peerDependency ${name}: ${currentVersion} -> ${latestVersion}`);
+        log.info('latest', `update found for peerDependency ${name}: ${currentVersion} -> ${latestVersion}`);
       }
     });
   });

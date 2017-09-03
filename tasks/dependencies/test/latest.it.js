@@ -26,21 +26,21 @@ describe('latest task', function () {
     return project.within(() => {
       return latest()(log)
         .then(() => {
-          expect(log.info).to.have.been.calledWith(`Update found for dependency ramda: 0.0.1 -> ${ramdaVersion}`);
+          expect(log.info).to.have.been.calledWith('latest', `update found for dependency ramda: 0.0.1 -> ${ramdaVersion}`);
           expect(log.info).to.not.have.been.calledWith(sinon.match('dependency lodash'));
           expect(log.info).to.not.have.been.calledWith(sinon.match('dependency shelljs'));
           expect(log.info).to.not.have.been.calledWith(sinon.match('dependency url'));
 
           expect(log.info).to.not.have.been.calledWith(sinon.match('peerDependency ramda'));
-          expect(log.info).to.have.been.calledWith(`Update found for peerDependency lodash: 0.0.1 -> ${lodashVersion}`);
+          expect(log.info).to.have.been.calledWith('latest', `update found for peerDependency lodash: 0.0.1 -> ${lodashVersion}`);
         });
     });
   });
 
   it('should not reject for missing managedDependencies, managedPeerDependencies', () => {
-    const {project} = setup();
+    const {log, project} = setup();
 
-    return project.within(latest());
+    return project.within(() => latest()(log));
   });
 
   function setup(lernaJsonOverrides = {}) {

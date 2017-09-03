@@ -5,6 +5,7 @@ const {iter, fs, loadPackages} = require('lerna-script'),
 function unmanagedDependenciesTask({packages} = {}) {
   return log => {
     const lernaPackages = packages || loadPackages();
+    log.info('unmanaged', `checking for unmanaged dependencies for ${lernaPackages.length} modules`);
     const deps = {dependencies: {}, peerDependencies: {}};
     const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/lerna.json');
     const innerModules = lernaPackages.map(p => p.name);
@@ -28,12 +29,12 @@ function logUnmanaged(deps, log) {
   const toSortedUniqKeys = R.compose(R.sort(R.ascend), R.uniq, R.values);
   Object.keys(deps.dependencies).forEach(depKey => {
     const modulesAndVersions = toSortedUniqKeys(deps.dependencies[depKey]);
-    log.error(`Unmanaged dependency ${depKey} (${modulesAndVersions.join(', ')})`);
+    log.error('unmanaged', `unmanaged dependency ${depKey} (${modulesAndVersions.join(', ')})`);
   });
 
   Object.keys(deps.peerDependencies).forEach(depKey => {
     const modulesAndVersions = toSortedUniqKeys(deps.peerDependencies[depKey]);
-    log.error(`Unmanaged peerDependency ${depKey} (${modulesAndVersions.join(', ')})`);
+    log.error('unmanaged', `unmanaged peerDependency ${depKey} (${modulesAndVersions.join(', ')})`);
   });
 }
 

@@ -12,13 +12,13 @@ describe('sync task', () => {
 
       return sync()(log).then(() => {
         expect(fs.readJson('packages/a/package.json')).to.contain.deep.property('peerDependencies.foo', '> 1.0.0');
-        expect(log.item.info).to.have.been.calledWith('a: peerDependencies.foo (1 -> > 1.0.0)');
+        expect(log.item.info).to.have.been.calledWith('sync', 'a: peerDependencies.foo (1 -> > 1.0.0)');
 
         expect(fs.readJson('packages/a/package.json')).to.contain.deep.property('devDependencies.lodash', '1.1.0');
-        expect(log.item.info).to.have.been.calledWith('a: devDependencies.lodash (nope -> 1.1.0)');
+        expect(log.item.info).to.have.been.calledWith('sync', 'a: devDependencies.lodash (nope -> 1.1.0)');
 
         expect(fs.readJson('packages/b/package.json')).to.contain.deep.property('dependencies.lodash', '1.1.0');
-        expect(log.item.info).to.have.been.calledWith('b: dependencies.lodash (~1.0.0 -> 1.1.0)');
+        expect(log.item.info).to.have.been.calledWith('sync', 'b: dependencies.lodash (~1.0.0 -> 1.1.0)');
       });
     });
   });

@@ -5,6 +5,7 @@ const {iter, fs, loadPackages} = require('lerna-script'),
 function extraneousDependenciesTask({packages} = {}) {
   return log => {
     const lernaPackages = packages || loadPackages();
+    log.info('extraneous', `checking for extraneous dependencies for ${lernaPackages.length} modules`);
     const deps = {dependencies: {}, peerDependencies: {}};
     const {managedDependencies, managedPeerDependencies} = require(process.cwd() + '/lerna.json');
     const readJson = lernaPackage => fs.readFile(lernaPackage)('package.json', JSON.parse);
@@ -28,7 +29,7 @@ function logExtraneous(deps, log, dependencyType) {
   const toSortedUniqKeys = R.compose(R.sort((a, b) => a.localeCompare(b)), R.uniq, R.keys);
   const modules = toSortedUniqKeys(managedDependencies);
   if (modules.length > 0) {
-    log.error(`Extraneous ${dependencyType}: ${modules.join(', ')}`);
+    log.error('extraneous', `${dependencyType}: ${modules.join(', ')}`);
   }
 }
 

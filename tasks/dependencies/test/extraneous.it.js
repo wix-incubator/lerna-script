@@ -10,8 +10,8 @@ describe('extraneous task', () => {
 
     return project.within(() => {
       return extraneous()(log).then(() => {
-        expect(log.error).to.have.been.calledWith('Extraneous managedDependencies: adash, highdash');
-        expect(log.error).to.have.been.calledWith('Extraneous managedPeerDependencies: bar');
+        expect(log.error).to.have.been.calledWith('extraneous', 'managedDependencies: adash, highdash');
+        expect(log.error).to.have.been.calledWith('extraneous', 'managedPeerDependencies: bar');
       });
     });
   });
@@ -23,8 +23,8 @@ describe('extraneous task', () => {
       const packages = loadPackages().filter(p => p.name === 'b');
 
       return extraneous({packages})(log).then(() => {
-        expect(log.error).to.have.been.calledWith('Extraneous managedDependencies: adash, highdash');
-        expect(log.error).to.have.been.calledWith('Extraneous managedPeerDependencies: bar, foo');
+        expect(log.error).to.have.been.calledWith('extraneous', 'managedDependencies: adash, highdash');
+        expect(log.error).to.have.been.calledWith('extraneous', 'managedPeerDependencies: bar, foo');
       });
     });
   });
