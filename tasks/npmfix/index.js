@@ -6,6 +6,7 @@ const {loadPackages, iter, fs} = require('lerna-script'),
 function npmfix({packages} = {}) {
   return log => {
     const lernaPackages = packages || loadPackages();
+    log.info('npmfix', `fixing homepage, repo urls for ${lernaPackages.lenght} packages...`);
 
     return gitRemoteUrl('.', 'origin').then(gitRemoteUrl => {
       const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse();
@@ -14,7 +15,6 @@ function npmfix({packages} = {}) {
         const moduleGitUrl = repoUrl + '/tree/master/' + relative(process.cwd(), lernaPackage.location);
 
         return fs.readFile(lernaPackage, {log})('package.json', JSON.parse).then(packageJson => {
-
           const updated = Object.assign({}, packageJson, {
             homepage: moduleGitUrl,
             repository: {
