@@ -6,7 +6,7 @@ const PackageUtilities = require('lerna/lib/PackageUtilities'),
 
 function forEach(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
-    const filteredLernaPackages = build ? removeBuilt(lernaPackages, {log})(build) : lernaPackages;
+    const filteredLernaPackages = filterBuilt(lernaPackages, log, build);
     const promisifiedTaskFn = Promise.method(taskFn);
     const forEachTracker = log.newItem('forEach', lernaPackages.length);
     npmlog.enableProgress();
@@ -24,7 +24,7 @@ function forEach(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
 
 function parallel(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
-    const filteredLernaPackages = build ? removeBuilt(lernaPackages, {log})(build) : lernaPackages;
+    const filteredLernaPackages = filterBuilt(lernaPackages, log, build);
     const promisifiedTaskFn = Promise.method(taskFn);
     const forEachTracker = log.newGroup('parallel', lernaPackages.length);
     npmlog.enableProgress();
@@ -47,7 +47,7 @@ function parallel(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
 
 function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
-    const filteredLernaPackages = build ? removeBuilt(lernaPackages, {log})(build) : lernaPackages;
+    const filteredLernaPackages = filterBuilt(lernaPackages, log, build);
     const promisifiedTaskFn = Promise.method(taskFn);
     const forEachTracker = log.newGroup('batched', lernaPackages.length);
     npmlog.enableProgress();
@@ -70,6 +70,18 @@ function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
       PackageUtilities.runParallelBatches(batchedPackages, lernaTaskFn, 4, err => err ? reject(err) : resolve());
     });
   };
+}
+
+function filterBuilt(lernaPackages, log, label) {
+  if (label) {
+    const filteredLernaPackages = removeBuilt(lernaPackages, {log})(label);
+    if (filteredLernaPackages.length !== lernaPackages.length) {
+      log.info('filter', `filtered-out ${filteredLernaPackages.length - lernaPackages.length} built packages`);
+    }
+    return filteredLernaPackages;
+  } else {
+    return lernaPackages;
+  }
 }
 
 module.exports = {
