@@ -6,7 +6,7 @@
     "prepush": "lerna-script sync",
     "clean": "lerna clean --yes",
     "bootstrap": "lerna bootstrap",
-    "test": "lerna run test",
+    "test": "lerna-script test",
     "ls": "lerna-script",
     "idea": "lerna-script idea"
   },
