@@ -15,7 +15,7 @@ describe('modules sync task', () => {
 
     return project.within(() => {
       return sync()(log).then(() => {
-        expect(log.info).to.have.been.calledWith('syncModulesTask', `syncing 4 modules`);
+        expect(log.info).to.have.been.calledWith('modules', 'syncing module versions for 4 packages');
         expect(fs.readJson('packages/b/package.json')).to.contain.nested.property('dependencies.a', '~2.0.0');
         expect(fs.readJson('packages/c/package.json')).to.contain.nested.property('devDependencies.a', '~2.0.0');
         expect(fs.readJson('packages/d/package.json')).to.contain.nested.property('peerDependencies.a', '>=2.0.0');
@@ -33,9 +33,9 @@ describe('modules sync task', () => {
     return project.within(() => {
       const lernaPackage = loadPackages().filter(p => p.name !== 'c');
       return sync({packages: lernaPackage})(log).then(() => {
+        expect(log.info).to.have.been.calledWith('modules', 'syncing module versions for 2 packages');
         expect(fs.readJson('packages/b/package.json')).to.contain.nested.property('dependencies.a', '~2.0.0');
         expect(fs.readJson('packages/c/package.json')).to.contain.nested.property('dependencies.a', '~1.0.0');
-        expect(log.info).to.have.been.calledWith('syncModulesTask', `syncing 2 modules`);
       });
     });
   });
@@ -53,7 +53,6 @@ describe('modules sync task', () => {
         expect(fs.readJson('packages/b/package.json')).to.contain.nested.property('dependencies.a', '+2.0.0');
         expect(fs.readJson('packages/c/package.json')).to.contain.nested.property('devDependencies.a', '+2.0.0');
         expect(fs.readJson('packages/d/package.json')).to.contain.nested.property('peerDependencies.a', '-2.0.0');
-        expect(log.info).to.have.been.calledWith('syncModulesTask', `syncing 4 modules`);
       });
     });
   });

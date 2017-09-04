@@ -31,7 +31,7 @@ function isPackageBuilt(lernaPackage) {
 }
 
 function targetFileSentinelFile(lernaPackage, label = 'default') {
-  return path.resolve(process.cwd(), '.lerna', `.octo-${lernaPackage.name}-${label}-sentinel`);
+  return path.resolve(process.cwd(), '.lerna', `.${lernaPackage.name}-${label}-sentinel`);
 }
 
 function modifiedAfter(baseDir, dir, ignored, timeStamp) {

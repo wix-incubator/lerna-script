@@ -1,35 +1,35 @@
 const PackageUtilities = require('lerna/lib/PackageUtilities'),
   npmlog = require('npmlog'),
   Promise = require('bluebird'),
-  {markPackageBuilt} = require('./detect-changes');
+  {markPackageBuilt} = require('./detect-changes'),
+  {removeBuilt} = require('./filters');
 
 function forEach(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
+    const filteredLernaPackages = build ? removeBuilt(lernaPackages, {log})(build) : lernaPackages;
     const promisifiedTaskFn = Promise.method(taskFn);
     const forEachTracker = log.newItem('forEach', lernaPackages.length);
     npmlog.enableProgress();
 
-    return Promise.each(lernaPackages, lernaPackage => {
+    return Promise.each(filteredLernaPackages, lernaPackage => {
       return promisifiedTaskFn(lernaPackage, forEachTracker)
-        .then(() => {
-          return build && markPackageBuilt(lernaPackage, {log: forEachTracker})(build)
+        .then(res => {
+          build && markPackageBuilt(lernaPackage, {log: forEachTracker})(build);
+          return res;
         })
-        .finally(() => {
-          forEachTracker.completeWork(1)
-        });
-    }).finally(() => {
-      forEachTracker.finish()
-    });
+        .finally(() => forEachTracker.completeWork(1));
+    }).finally(() => forEachTracker.finish());
   };
 }
 
 function parallel(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
+    const filteredLernaPackages = build ? removeBuilt(lernaPackages, {log})(build) : lernaPackages;
     const promisifiedTaskFn = Promise.method(taskFn);
     const forEachTracker = log.newGroup('parallel', lernaPackages.length);
     npmlog.enableProgress();
 
-    return Promise.map(lernaPackages, lernaPackage => {
+    return Promise.map(filteredLernaPackages, lernaPackage => {
       const promiseTracker = forEachTracker.newItem(lernaPackage.name);
       promiseTracker.pause();
       return promisifiedTaskFn(lernaPackage, promiseTracker)
@@ -47,11 +47,12 @@ function parallel(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
 
 function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
+    const filteredLernaPackages = build ? removeBuilt(lernaPackages, {log})(build) : lernaPackages;
     const promisifiedTaskFn = Promise.method(taskFn);
     const forEachTracker = log.newGroup('batched', lernaPackages.length);
     npmlog.enableProgress();
 
-    const batchedPackages = PackageUtilities.topologicallyBatchPackages(lernaPackages);
+    const batchedPackages = PackageUtilities.topologicallyBatchPackages(filteredLernaPackages);
     const lernaTaskFn = lernaPackage => done => {
       const promiseTracker = forEachTracker.newItem(lernaPackage.name);
       promiseTracker.pause();

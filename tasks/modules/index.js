@@ -7,11 +7,11 @@ function syncModulesTask({packages, transformDependencies, transformPeerDependen
     const {loadedPackages, transformDeps, transformPeerDeps} =
       providedOrDefaults({packages, transformDependencies, transformPeerDependencies});
 
-    log.info('syncModulesTask', `syncing ${loadedPackages.length} modules`);
+    log.info('modules', `syncing module versions for ${loadedPackages.length} packages`);
     const modulesAndVersions = toModulesAndVersion(loadedPackages, transformDeps);
     const modulesAndPeerVersions = toModulesAndVersion(loadedPackages, transformPeerDeps);
     return iter.parallel(loadedPackages, {log})((lernaPackage, log) => {
-      const logMerged = input => log.info(`${lernaPackage.name}: ${input.key} (${input.currentValue} -> ${input.newValue})`);
+      const logMerged = input => log.info('modules', `${lernaPackage.name}: ${input.key} (${input.currentValue} -> ${input.newValue})`);
       return fs.readFile(lernaPackage)('package.json', JSON.parse)
         .then(packageJson => merge(packageJson, {
           dependencies: modulesAndVersions,
