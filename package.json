@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "prepush": "lerna-script sync",
-    "clean": "lerna clean --yes",
+    "clean": "lerna-script clean",
     "bootstrap": "lerna bootstrap",
     "test": "lerna-script test",
     "ls": "lerna-script",

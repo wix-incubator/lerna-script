@@ -1,6 +1,6 @@
-const {loadPackages, iter, exec} = require('lerna-script'),
+const {loadRootPackage, loadPackages, iter, exec} = require('lerna-script'),
   idea = require('lerna-script-tasks-idea'),
-  modules = require('lerna-script-tasks-modules'),
+  syncModules = require('lerna-script-tasks-modules'),
   npmfix = require('lerna-script-tasks-npmfix'),
   dependencies = require('lerna-script-tasks-dependencies'),
   depcheck = require('lerna-script-tasks-depcheck');
@@ -11,9 +11,18 @@ function test(log) {
   });
 }
 
+function clean(log) {
+  return exec.command(loadRootPackage(), {log})('lerna clean --yes').then(() => {
+    return iter.parallel(loadPackages(), {log})((lernaPackage, log) => {
+      const execCmd = cmd => exec.command(lernaPackage, {log})(cmd);
+      return Promise.all(['rm -f *.log', 'rm -f *.log.*', 'rm -f yarn.lock', 'rm -rf target', 'rm -f package-lock.json', 'rm -rf .idea'].map(execCmd));
+    });
+  });
+}
+
 function sync(log) {
   return Promise.resolve()
-    .then(() => modules()(log))
+    .then(() => syncModules()(log))
     .then(() => npmfix()(log))
     .then(() => dependencies.sync()(log));
 }
@@ -23,6 +32,7 @@ module.exports = {
   sync,
   idea: idea(),
   depcheck: depcheck(),
+  clean,
   'deps:unmanaged': dependencies.unmanaged(),
   'deps:latest': dependencies.latest(),
   'deps:sync': dependencies.sync()
