@@ -15,6 +15,6 @@ npm install --save-dev lerna-script-tasks-depcheck
 Run depcheck for all modules incrementally.
 
 Parameters:
- - packages - list of packages to generate idea project for or defaults to ones defined in `lerna.json`;
+ - packages - list of packages to to run depcheck for or defaults to ones defined in `lerna.json`;
  - depcheck - options for [depcheck](https://github.com/depcheck/depcheck) task.
  - log - `npmlog` instance.
