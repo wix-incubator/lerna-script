@@ -32,7 +32,7 @@ Add `lerna-script` launcher to `package.json` scripts:
 ```json
 {
   "scripts": {
-    "start": "lerna-script"
+    "ls": "lerna-script"
   }
 }
 ```
@@ -55,7 +55,7 @@ module.exports.syncNvmRc = log => {
 And then you can run it:
 
 ```bash
-npm start syncNvmRc
+npm run ls syncNvmRc
 ```
 
 What happened here:
