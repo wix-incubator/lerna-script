@@ -13,9 +13,9 @@ function test(log) {
 
 function clean(log) {
   return exec.command(loadRootPackage(), {log})('lerna clean --yes').then(() => {
-    return iter.parallel(loadPackages(), {log})((lernaPackage, log) => {
+    return iter.forEach(loadPackages().join([loadRootPackage()]), {log})((lernaPackage, log) => {
       const execCmd = cmd => exec.command(lernaPackage, {log})(cmd);
-      return Promise.all(['rm -f *.log', 'rm -f *.log.*', 'rm -f yarn.lock', 'rm -rf target', 'rm -f package-lock.json', 'rm -rf .idea'].map(execCmd));
+      return Promise.all(['rm -f *.log', 'rm -f *.log.*', 'rm -f yarn.lock', 'rm -f package-lock.json', 'rm -rf .lerna'].map(execCmd));
     });
   });
 }
