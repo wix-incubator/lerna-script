@@ -1,6 +1,21 @@
 # lerna-script
 
-For usage documentation please see [root of repo](../README.md);
+For usage scenarios documentation please see [root of repo](../README.md);
+
+# CLI
+
+`lerna-script` exports a cli script:
+
+```bash
+lerna-script [options] <task>
+```
+
+where options:
+ - loglevel - set's loglevel, defaults to `info`;
+
+task:
+ - one of exports defined in `lerna.js` file.
+
 
 # API
 

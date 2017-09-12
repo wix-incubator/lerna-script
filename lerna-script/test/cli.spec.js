@@ -1,15 +1,24 @@
 const {expect} = require('chai'),
   {empty} = require('lerna-script-test-utils'),
-  execSync = require('child_process').execSync;
+  {spawnSync} = require('child_process');
 
 describe('cli', () => {
   const runCli = cliRunner();
 
-  it('should fail with error if lerna-tasks.js is missing', done => {
+  it('should fail with error if lerna.js is missing', done => {
+    empty()
+      .within(() => runCli('non-existing-task'))
+      .catch(err => {
+        expect(err.output).to.match(/.*Cannot find module.*lerna.js/);
+        done();
+      });
+  });
+
+  it('should fail if task is not provided', done => {
     empty()
       .within(() => runCli())
       .catch(err => {
-        expect(err.stderr).to.match(/.*Cannot find module.*lerna.js/);
+        expect(err.output).to.match(/.*Not enough non-option arguments: got 0, need at least 1/);
         done();
       });
   });
@@ -27,14 +36,43 @@ describe('cli', () => {
       .within(() => runCli('someTask'))
       .catch(e => {
         expect(e.status).to.equal(1);
-        expect(e.stderr.toString()).to.be.string('Task "someTask" failed');
-        expect(e.stderr.toString()).to.be.string('at Object.module.exports.someTask');
+        expect(e.output).to.be.string('Task "someTask" failed');
+        expect(e.output).to.be.string('at Object.module.exports.someTask');
         done();
       })
   });
 
+  it('should set loglevel', () => {
+    return empty()
+      .addFile('lerna.js', 'module.exports.someTask = log => log.verbose("verbose ok");')
+      .within(() => runCli('--loglevel verbose someTask'))
+      .then(output => {
+        expect(output).to.match(/.*verbose ok/)
+      });
+  });
+
+  it('should defaults to info loglevel', () => {
+    return empty()
+      .addFile('lerna.js', 'module.exports.someTask = log => log.info("info ok");')
+      .within(() => runCli('--loglevel verbose someTask'))
+      .then(output => {
+        expect(output).to.match(/.*info ok/)
+      });
+  });
+
+
   function cliRunner() {
     const cmd = `${process.cwd()}/bin/cli.js`;
-    return (args = '') => execSync(`${cmd} ${args}`, {stdio: [null, null, null]});
+    return (args = '') => {
+      const res = spawnSync('bash', ['-c', `${cmd} ${args}`], {cwd: process.cwd(), stdio: ['pipe', 'pipe', 'pipe']});
+      if (res.status !== 0) {
+        const toThrow = new Error(`Command failed with status ${res.status}`);
+        toThrow.output = res.stdout.toString() + res.stderr.toString();
+        toThrow.status = res.status;
+        throw toThrow;
+      } else {
+        return res.stdout.toString() + res.stderr.toString();
+      }
+    }
   }
 });
