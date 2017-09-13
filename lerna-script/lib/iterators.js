@@ -76,7 +76,7 @@ function filterBuilt(lernaPackages, log, label) {
   if (label) {
     const filteredLernaPackages = removeBuilt(lernaPackages, {log})(label);
     if (filteredLernaPackages.length !== lernaPackages.length) {
-      log.info('filter', `filtered-out ${lernaPackages.length - filteredLernaPackages.length} of ${lernaPackages.length} built packages`);
+      log.info('filter', `filtered-out ${filteredLernaPackages.length - lernaPackages.length} of ${lernaPackages.length} built packages`);
     }
     return filteredLernaPackages;
   } else {

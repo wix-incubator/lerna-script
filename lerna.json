@@ -3,7 +3,8 @@
   "packages": [
     "lerna-script",
     "test-utils",
-    "tasks/*"
+    "tasks/*",
+    "presets/*"
   ],
   "version": "0.5.0",
   "managedDependencies": {
