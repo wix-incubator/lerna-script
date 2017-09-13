@@ -54,3 +54,20 @@ Then:
  - upon install of root module all modules will be bootstrapped;
  - `prepush` task will be executed by `husky` and all sync actions will be performed;
  - `ls` - run misc preset tasks like `npm run ls deps:latest`.
+ 
+If preset *almost* works for you, you can reuse most of it but customize a selected task, like:
+
+```js
+const preset = require('lerna-script-preset-wix-npm');
+
+function clean(log) {
+  preset.clean(log).then(() => {
+    //do your thing
+  });
+}
+
+module.exports = {
+  ...preset,
+  clean
+}
+```
