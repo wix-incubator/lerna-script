@@ -11,7 +11,7 @@ describe('wix-npm preset', () => {
 
     return project.within(ctx => {
       ctx.addFile('packages/a/npm-debug.log');
-      return preset.clean(log).then(() => {
+      return preset().clean(log).then(() => {
         expect(shelljs.test('-f', 'packages/a/npm-debug.log')).to.equal(true);
       });
     });

@@ -50,7 +50,7 @@ function pullreq(log) {
   return Promise.resolve().then(bootstrapApp).then(buildAll).then(testChanged);
 }
 
-module.exports = {
+module.exports = () => ({
   clean,
   prepush,
   pullreq,
@@ -61,4 +61,4 @@ module.exports = {
   'deps:unmanaged': dependencies.unmanaged(),
   'deps:latest': dependencies.latest(),
   'deps:sync': dependencies.sync()
-};
+});

@@ -24,7 +24,7 @@ node_modules/.bin/lerna init
 
 add lerna.js to root of repo like:
 ```js
-module.exports = require('lerna-script-preset-wix-npm');
+module.exports = require('lerna-script-preset-wix-npm')();
 ```
 
 setup your package.json
@@ -58,7 +58,7 @@ Then:
 If preset *almost* works for you, you can reuse most of it but customize a selected task, like:
 
 ```js
-const preset = require('lerna-script-preset-wix-npm');
+const preset = require('lerna-script-preset-wix-npm')();
 
 function clean(log) {
   preset.clean(log).then(() => {
