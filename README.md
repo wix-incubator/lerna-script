@@ -1,9 +1,7 @@
 # lerna-script [![Build Status](https://img.shields.io/travis/wix/lerna-script/master.svg?label=build%20status)](https://travis-ci.org/wix/lerna-script)
 
-**Experimental** - it's not near ready - and can still be abandoned - use at your own risk!
-
 [Lerna](https://lernajs.io/) is a nice tool to manage JavaScript projects with multiple packages, but sometimes you need 
-more than it provides. Fret not - [lerna-script](https://www.npmjs.com/package/lerna-script) to the rescue. It allows 
+more than it provides. [lerna-script](https://www.npmjs.com/package/lerna-script) might be just the thing you need. It allows 
 you to add custom tasks/scripts to automate multiple package management routine tasks. Some use cases:
  - normalize `package.json`s of all modules (ex. fix repo url, docs url) on pre-push/pre-commit;
  - generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
@@ -95,23 +93,23 @@ For this [lerna-script](./lerna-script) provides means to both mark modules as b
 ```js
 const {loadPackages, iter, exec, changes, filters} = require('lerna-script');
 
-module.exports.test = () => {
-  // filters.removeBuilt removes packages that did not change since last run
-  const changedPackages = filters.removeBuilt(loadPackages())('test');
-  
-  return iter.forEach(changedPackages)(lernaPackage => { 
-    return exec.script(lernaPackage)('test')
-      .then(() => changes.markBuilt(lernaPackage)('test')) //mark package as built once `npm test` script passes.
+module.exports.test = log => {
+  return iter.forEach(changedPackages, {log, build: 'test'})(lernaPackage => { 
+    return exec.script(lernaPackage)('test');
   });
 }
 ```
+
+where property `build` on `forEach` marks processed package as built with label `test`. For different tasks you can have separate labels so they do not clash.
 
 ## Tasks
 
 [lerna-script](.) has some pre-assembled tasks/task-sets for solving some problem. Examples:
  - [idea](./tasks/idea) - to generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
- - TBD [npm-links](./tasks/npm-links) - to fix repo, docs, etc. links for all modules matching their git path;
- - ...
+ - [npmfix](./tasks/npmfix) - to fix repo, docs links for all modules matching their git path;
+ - [modules](./tasks/modules) - to align module versions across repo;
+ - [depcheck](./tasks/depcheck) - to run [depcheck](https://github.com/depcheck/depcheck) for all modules in repo;
+ - [dependencies](./tasks/dependencies) - group of tasks to manage/sync/update dependency versions for all modules.
 
 ## Git hooks
 
@@ -145,22 +143,7 @@ then add script to `package.json`
 and add export to `lerna.js`:
 
 ```js
-const {loadPackages, iter, exec, changes, filters} = require('lerna-script');
-const {readFileSync, writeFileSync} = require('fs');
-const {join, relative} = require('path');
+const npmfix = require('lerna-script-tasks-npmfix');
 
-module.exports['update-repo-urls'] = () => {
-  const baseUrl = 'https://github.com/module';
-
-  return iter.forEach(loadPackages())(lernaPackage => {
-    const packageJsonPath = join(lernaPackage.location, 'package.json');
-    const relativeModulePath = relative(process.cwd(), lernaPackage.location);
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-    writeFileSync(packageJsonPath, JSON.stringify(Object.assign({}, packageJson, {
-      homepage: `${baseUrl}/tree/master/${relativeModulePath}`
-    })));
-  });
-}
+module.exports['update-repo-urls'] = npmfix();
 ```
-
-**Note:** Example is a bit contrived - you should do read/write in async way, could use `parallel` instead of `forEach`, but you got the point:)
