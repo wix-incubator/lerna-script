@@ -41,13 +41,12 @@ function clean(log) {
 }
 
 function pullreq(log) {
-  const bootstrapApp = () => exec.command(loadRootPackage(), {log, silent: false})('lerna bootstrap --concurrency 8');
   const buildAll = () => iter.forEach(loadPackages(), {log})((lernaPackage, log) =>
     exec.script(lernaPackage, {log})('build'));
   const testChanged = () => iter.forEach(filters.gitSince(loadPackages(), {log})('origin/master'), {log})((lernaPackage, log) =>
     exec.script(lernaPackage, {log, silent: false})('test'));
 
-  return Promise.resolve().then(bootstrapApp).then(buildAll).then(testChanged);
+  return buildAll().then(testChanged);
 }
 
 module.exports = () => ({
