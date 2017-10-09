@@ -8,6 +8,7 @@
     "bootstrap": "lerna bootstrap",
     "test": "lerna-script test",
     "ls": "lerna-script",
+    "lerna": "lerna",
     "idea": "lerna-script idea"
   },
   "devDependencies": {
