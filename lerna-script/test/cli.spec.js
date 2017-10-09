@@ -50,6 +50,15 @@ describe('cli', () => {
       .then(res => expect(res.toString()).to.match(/.*task someTask executed/));
   });
 
+  it('should run exported script from custom script defined in lerna.json as function', () => {
+    return empty()
+      .addFile('lerna.json', {'lerna-script-tasks': './tasks.js'})
+      .addFile('tasks.js', 'module.exports = () => ({someTask: () => console.log("task someTask executed")})')
+      .within(() => runCli('someTask'))
+      .then(res => expect(res.toString()).to.match(/.*task someTask executed/));
+  });
+
+
   it('should report error and fail with exit code 1 if task rejected', done => {
     empty()
       .addFile('lerna.json', {})

@@ -33,7 +33,9 @@ function resolveTasksFile() {
   if (lernaJson['lerna-script-tasks']) {
     const tasks = lernaJson['lerna-script-tasks'];
     log.verbose('lerna-script tasks defined in lerna.json, loading', {cwd: process.cwd(), 'lerna-script-tasks': tasks});
-    return require(tasks.startsWith('./') ? join(process.cwd(), tasks) : tasks);
+    const tasksOrFunction = require(tasks.startsWith('./') ? join(process.cwd(), tasks) : tasks);
+
+    return (typeof tasksOrFunction === "function") ? tasksOrFunction() : tasksOrFunction;
   } else {
     log.verbose('lerna-script tasks not defined in lerna.json, using defaults', {
       cwd: process.cwd(),
