@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-tasks-dependencies",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "tasks for lerna-script that adds dependency management support",
   "author": "Vilius Lukosius",
   "license": "ISC",
@@ -23,13 +23,13 @@
     "semver": "5.4.1"
   },
   "peerDependencies": {
-    "lerna-script": ">=0.5.2"
+    "lerna-script": "^0.5.3"
   },
   "devDependencies": {
     "chai": "4.1.2",
     "lerna": "2.1.2",
-    "lerna-script": "~0.5.2",
-    "lerna-script-test-utils": "~0.5.2",
+    "lerna-script": "^0.5.3",
+    "lerna-script-test-utils": "^0.5.3",
     "mocha": "3.5.3",
     "sinon": "3.2.1",
     "sinon-chai": "2.13.0"
