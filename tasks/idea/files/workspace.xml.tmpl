@@ -17,17 +17,7 @@
             <extra-mocha-options />
             <test-kind>PATTERN</test-kind>
             <test-pattern>test/**/*.spec.js test/**/*.it.js test/**/*.e2e.js</test-pattern>
-            <method>
-              <option name="NpmBeforeRunTask" enabled="true">
-                <package-json value="$PROJECT_DIR$/{{relativePath}}/package.json" />
-                <command value="run" />
-                <scripts>
-                  <script value="build" />
-                </scripts>
-                <node-interpreter value="project" />
-                <envs />
-              </option>
-            </method>
+            <method />
         </configuration>
       {{/each}}
     </component>
