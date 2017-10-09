@@ -17,11 +17,11 @@ npm install --save-dev lerna-script
 ```
 
 # Usage
-
   - [Basic usage example](#basic-usage-example)
   - [Incremental builds](#incremental-builds)
   - [Tasks](#tasks)
   - [Git hooks](#git-hooks)
+  - [External presets](#external-presets)  
 
 ## Basic usage example
 
@@ -147,3 +147,22 @@ const npmfix = require('lerna-script-tasks-npmfix');
 
 module.exports['update-repo-urls'] = npmfix();
 ```
+
+## External presets
+
+You can also use presets or otherwise tasks exprted by external modules. `lerna-script` by default reads tasks from `lerna.js`,
+but you can actually write tasks in any other file(module) and define it in your `lerna.json` like:
+
+```json
+{
+  "lerna-script-tasks": "./tasks.js"
+}
+``` 
+
+So if you want to use presets from say module [lerna-script-preset-wix-npm](presets/wix-npm), you can just set it in `lerna.json` like:
+
+```json
+{
+  "lerna-script-tasks": "lerna-script-preset-wix-npm"
+}
+``` 
