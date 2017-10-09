@@ -17,20 +17,20 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "lerna-script-tasks-depcheck": "^0.5.3",
-    "lerna-script-tasks-dependencies": "^0.5.3",
-    "lerna-script-tasks-idea": "^0.5.3",
-    "lerna-script-tasks-modules": "^0.5.3",
-    "lerna-script-tasks-npmfix": "^0.5.3"
+    "lerna-script-tasks-depcheck": "~0.5.3",
+    "lerna-script-tasks-dependencies": "~0.5.3",
+    "lerna-script-tasks-idea": "~0.5.3",
+    "lerna-script-tasks-modules": "~0.5.3",
+    "lerna-script-tasks-npmfix": "~0.5.3"
   },
   "peerDependencies": {
-    "lerna-script": "^0.5.3"
+    "lerna-script": ">=0.5.3"
   },
   "devDependencies": {
     "chai": "4.1.2",
     "lerna": "2.1.2",
-    "lerna-script": "^0.5.3",
-    "lerna-script-test-utils": "^0.5.3",
+    "lerna-script": "~0.5.3",
+    "lerna-script-test-utils": "~0.5.3",
     "mocha": "3.5.3",
     "shelljs": "0.7.8"
   }
