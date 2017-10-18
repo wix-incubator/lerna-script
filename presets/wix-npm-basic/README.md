@@ -1,9 +1,8 @@
 # lerna-script-preset-wix-npm-basic
 
 A preset for wix npm-based repos that exposes following tasks:
- - clean - cleans all modules - `node_modules`, `target`, `*.log`...;
- - test - runs tests for all modules with incremental runs - does not run tests for unchanged modules;
- - pullreq - runs build for modules that have changed since `origin/master`;
+ - clean - cleans all modules - `node_modules`, `target`, `*.log`.... also cleans `yarn.lock` and `package-lock.json`
+ - test - runs `build` and `test` tasks for all modules with incremental runs - does not run tests for unchanged modules;
  - prepush - syncs `.nvmrc` from root of repo to all modules, module versions, `package.json` docs/repo links, etc.
  - idea - [idea task](../../tasks/idea);
 
@@ -12,7 +11,7 @@ A preset for wix npm-based repos that exposes following tasks:
 Given you have non-lerna project, install needed modules:
 
 ```bash
-npm install --save-dev lerna lerna-script lerna-script-preset-wix-npm husky
+npm install --save-dev lerna lerna-script lerna-script-preset-wix-npm-basic husky
 ```
 
 init lerna:

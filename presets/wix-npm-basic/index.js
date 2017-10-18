@@ -41,13 +41,4 @@ function clean(log) {
   });
 }
 
-function pullreq(log) {
-  const buildAll = () => iter.forEach(loadPackages(), {log})((lernaPackage, log) =>
-    exec.script(lernaPackage, {log})('build'));
-  const testChanged = () => iter.forEach(filters.gitSince(loadPackages(), {log})('origin/master'), {log})((lernaPackage, log) =>
-    exec.script(lernaPackage, {log, silent: false})('test'));
-
-  return buildAll().then(testChanged);
-}
-
-module.exports = () => ({clean, prepush, pullreq, test, idea: idea()});
+module.exports = () => ({clean, prepush, test, idea: idea()});
