@@ -12,12 +12,18 @@ function test(log) {
 
 function prepush(log) {
   const syncNvmRc = () => {
-    log.info('sync', 'syncing .nvmrc from root to modules');
-    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.nvmrc .`));
+    log.info('sync', 'syncing .nvmrc from root to modules (if present)');
+    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.nvmrc .;`));
+  };
+
+  const syncNpmVersion = () => {
+    log.info('sync', 'syncing .npmversion from root to modules (if present)');
+    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.npmversion .;`));
   };
 
   return Promise.resolve()
-    .then(() => syncNvmRc())
+    .then(() => syncNvmRc())  
+    .then(() => syncNpmVersion())
     .then(() => npmfix()(log));
 }
 

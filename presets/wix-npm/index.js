@@ -15,12 +15,18 @@ function test() {
 
 function prepush(log) {
   const syncNvmRc = () => {
-    log.info('sync', 'syncing .nvmrc from root to modules');
-    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.nvmrc .`));
+    log.info('sync', 'syncing .nvmrc from root to modules (if present)');
+    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.nvmrc .;`));
+  };
+
+  const syncNpmVersion = () => {
+    log.info('sync', 'syncing .npmversion from root to modules (if present)');
+    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.nvmrc .;`));
   };
 
   return Promise.resolve()
     .then(() => syncNvmRc())
+    .then(() => syncNpmVersion())
     .then(() => modules()(log))
     .then(() => npmfix()(log))
     .then(() => dependencies.sync()(log));
