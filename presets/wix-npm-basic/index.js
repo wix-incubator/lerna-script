@@ -12,12 +12,18 @@ function test(log) {
 
 function prepush(log) {
   const syncNvmRc = () => {
-    log.info('sync', 'syncing .nvmrc from root to modules');
-    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.nvmrc .`));
+    log.info('sync', 'syncing .nvmrc from root to modules (if present)');
+    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.nvmrc .;`));
+  };
+
+  const syncNpmVersion = () => {
+    log.info('sync', 'syncing .npmversion from root to modules (if present)');
+    return iter.parallel(loadPackages(), {log})(pkg => exec.command(pkg)(`cp ${process.cwd()}/.npmversion .;`));
   };
 
   return Promise.resolve()
-    .then(() => syncNvmRc())
+    .then(() => syncNvmRc())  
+    .then(() => syncNpmVersion())
     .then(() => npmfix()(log));
 }
 
@@ -35,13 +41,4 @@ function clean(log) {
   });
 }
 
-function pullreq(log) {
-  const buildAll = () => iter.forEach(loadPackages(), {log})((lernaPackage, log) =>
-    exec.script(lernaPackage, {log})('build'));
-  const testChanged = () => iter.forEach(filters.gitSince(loadPackages(), {log})('origin/master'), {log})((lernaPackage, log) =>
-    exec.script(lernaPackage, {log, silent: false})('test'));
-
-  return buildAll().then(testChanged);
-}
-
-module.exports = () => ({clean, prepush, pullreq, test, idea: idea()});
+module.exports = () => ({clean, prepush, test, idea: idea()});
