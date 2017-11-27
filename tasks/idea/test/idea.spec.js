@@ -89,7 +89,7 @@ describe('idea', () => {
     });
   });
 
-  it('generates Mocha run configurations for all modules with mocha, interpreter and env set', () => {
+  it('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
     const log = loggerMock();
     return aLernaProjectWith3Modules().within(() => {
       return idea()(log).then(() => {
@@ -101,6 +101,7 @@ describe('idea', () => {
         expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-kind>PATTERN</test-kind>');
         expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-pattern>test/**/*.spec.js test/**/*.it.js test/**/*.e2e.js</test-pattern>');
         expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`${node}</node-interpreter>`);
+        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<extra-mocha-options>--exit</extra-mocha-options>');
       });
     });
   });
