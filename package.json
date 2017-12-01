@@ -10,7 +10,7 @@
     "ls": "lerna-script",
     "lerna": "lerna",
     "idea": "lerna-script idea",
-    "release": "lerna release"
+    "release": "lerna publish"
   },
   "devDependencies": {
     "husky": "^0.14.3",
