@@ -5,10 +5,9 @@
   "scripts": {
     "prepush": "lerna-script sync",
     "clean": "lerna-script clean",
-    "bootstrap": "lerna bootstrap",
+    "postinstall": "lerna bootstrap",
     "test": "lerna-script test",
     "ls": "lerna-script",
-    "lerna": "lerna",
     "idea": "lerna-script idea",
     "release": "lerna publish"
   },
