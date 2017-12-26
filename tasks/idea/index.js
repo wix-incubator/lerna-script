@@ -4,7 +4,7 @@ const {join, relative} = require('path'),
   {loadRootPackage, loadPackages, exec, iter} = require('lerna-script'),
   {execSync} = require('child_process');
 
-const excludeFolders = ['node_modules'];
+const excludeFolders = ['node_modules', 'dist'];
 const languageLevel = 'ES6';
 
 const supportedSourceFolders = [
