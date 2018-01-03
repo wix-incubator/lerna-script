@@ -48,11 +48,12 @@ describe('idea', () => {
     });
   });
 
-  it('generates [module-name].iml with node_modules excluded so idea would not index all deps', () => {
+  it('generates [module-name].iml with node_modules, dist excluded so idea would not index all deps', () => {
     const log = loggerMock();
     return aLernaProjectWith3Modules().within(() => {
       return idea()(log).then(() => {
         expect(shelljs.cat('packages/a/a.iml').stdout).to.be.string('<excludeFolder url="file://$MODULE_DIR$/node_modules" />');
+        expect(shelljs.cat('packages/a/a.iml').stdout).to.be.string('<excludeFolder url="file://$MODULE_DIR$/dist" />');
       });
     });
   });
