@@ -1,4 +1,5 @@
 const {expect} = require('chai'),
+  {asBuilt, asGitCommited} = require('./utils'),
   sinon = require('sinon'),
   {aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
   index = require('..');
@@ -8,6 +9,22 @@ describe('iterators', () => {
   ['forEach', 'parallel', 'batched'].forEach(type => {
 
     describe(type, () => {
+
+      it('should filter-out changed packages', () => {
+        const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: type});
+        const log = loggerMock();
+        let processedPackagesCount = 0;
+
+        return project.within(() => {
+          const packages = index.loadPackages();
+          index.changes.unbuild(packages.find(p => p.name === 'b'))(type);
+
+          return index.iter[type](packages, {build: type, log})(() => processedPackagesCount++).then(() => {
+            expect(processedPackagesCount).to.equal(1);
+            expect(log.info).to.have.been.calledWithMatch('filter', 'filtered-out 1 of 2 built packages');
+          });
+        });
+      });
 
       it('should mark modules as built if "build" is provided', () => {
         return aLernaProjectWith2Modules().within(() => {
