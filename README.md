@@ -145,7 +145,7 @@ and add export to `lerna.js`:
 ```js
 const npmfix = require('lerna-script-tasks-npmfix');
 
-module.exports['update-repo-urls'] = npmfix();
+module.exports['update-repo-urls'] = npmfix;
 ```
 
 ## External presets
