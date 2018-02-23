@@ -19,7 +19,7 @@
     "npmlog": "4.1.2",
     "shelljs": "0.7.8",
     "intercept-stdout": "0.1.2",
-    "lerna": "2.2.0",
+    "lerna": "2.9.0",
     "sinon-chai": "2.13.0",
     "deep-keys": "0.4.0",
     "ramda": "0.24.1",
@@ -31,6 +31,6 @@
   },
   "managedPeerDependencies": {
     "sinon": ">3.0.0",
-    "lerna": ">=2.0.0 <=2.5.0"
+    "lerna": ">=2.9.0"
   }
 }
