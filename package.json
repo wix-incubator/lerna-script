@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "husky": "^0.14.3",
-    "lerna": "^2.0.0",
+    "lerna": "2.2.0",
     "lerna-script": "latest",
     "lerna-script-tasks-dependencies": "latest",
     "lerna-script-tasks-idea": "latest",
