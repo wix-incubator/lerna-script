@@ -30,7 +30,7 @@
     "sinon-chai": "2.13.0"
   },
   "peerDependencies": {
-    "lerna": ">=2.0.0"
+    "lerna": ">=2.0.0 <=2.5.0"
   },
   "dependencies": {
     "bluebird": "3.5.0",
