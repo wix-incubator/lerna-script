@@ -5,20 +5,26 @@
     </component>
     <component name="RunManager">
       {{#each config.modules}}
-        <configuration default="false" name="{{name}}" type="mocha-javascript-test-runner" factoryName="Mocha">
-            <node-options />
-            <node-interpreter>{{nodePath}}</node-interpreter>
-            <working-directory>$PROJECT_DIR$/{{relativePath}}</working-directory>
-            <pass-parent-env>true</pass-parent-env>
-            <envs>
-                <env name="DEBUG" value="wix:*" />
-            </envs>
-            <ui>bdd</ui>
-            <extra-mocha-options>--exit</extra-mocha-options>
-            <test-kind>PATTERN</test-kind>
-            <test-pattern>test/**/*.spec.js test/**/*.it.js test/**/*.e2e.js</test-pattern>
-            <method />
-        </configuration>
+        {{#each this.mocha}}
+            <configuration default="false" name="{{name}}" type="mocha-javascript-test-runner" factoryName="Mocha">
+                <node-options />
+                <node-interpreter>{{../nodePath}}</node-interpreter>
+                <working-directory>$PROJECT_DIR$/{{../relativePath}}</working-directory>
+                <pass-parent-env>true</pass-parent-env>
+                {{#if this.environmentVariables}}
+                    <envs>
+                    {{#each this.environmentVariables}}
+                        <env name="{{@key}}" value="{{this}}" />
+                    </envs>
+                    {{/each}}
+                    {{/if}}
+                <ui>bdd</ui>
+                <extra-mocha-options>{{this.extraOptions}}</extra-mocha-options>
+                <test-kind>{{this.testKind}}</test-kind>
+                <test-pattern>{{this.testPattern}}</test-pattern>
+                <method />
+            </configuration>
+        {{/each}}
       {{/each}}
     </component>
   <component name="PropertiesComponent">
