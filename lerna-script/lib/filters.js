@@ -18,14 +18,19 @@ function removeByGlob(lernaPackages, {log = npmlog} = {log: npmlog}) {
 //TODO: see how to make it less sucky
 function removeGitSince(lernaPackages, {log = npmlog} = {log: npmlog}) {
   return refspec => {
+    const packageGraph = new PackageGraph(lernaPackages);
     const collector = new UpdatedPackagesCollector({
       filteredPackages: lernaPackages,
       logger: log,
+      packageGraph,
       repository: {
-        packageGraph: new PackageGraph(lernaPackages),
+        packageGraph,
         rootPath: process.cwd()
       },
-      options: {since: refspec}
+      options: {since: refspec},
+      execOpts: {
+        cwd: process.cwd()
+      }
     });
 
     const filterefPackages = collector.getUpdates().map(u => u.package);
