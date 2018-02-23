@@ -31,6 +31,6 @@
   },
   "managedPeerDependencies": {
     "sinon": ">3.0.0",
-    "lerna": ">=2.9.0"
+    "lerna": "~2.9.0"
   }
 }

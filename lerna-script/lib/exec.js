@@ -25,9 +25,9 @@ function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, 
       return new Promise((resolve, reject) => {
         const callback = (err, stdout) => err ? reject(err) : resolve(stdout);
         if (silent) {
-          NpmUtilities.runScriptInDir(script, [], lernaPackage.location, callback);
+          NpmUtilities.runScriptInDir(script, {args: [], directory: lernaPackage.location, npmClient: 'npm'}, callback);
         } else {
-          NpmUtilities.runScriptInPackageStreaming(script, [], lernaPackage, callback)
+          NpmUtilities.runScriptInPackageStreaming(script, {args: [], pkg: lernaPackage, npmClient: 'npm'}, callback)
         }
       });
     } else {
