@@ -90,21 +90,75 @@ describe('idea', () => {
     });
   });
 
-  it('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
-    const log = loggerMock();
-    return aLernaProjectWith3Modules().within(() => {
-      return idea()(log).then(() => {
-        const node = shelljs.exec('which node').stdout.split('/node/')[1].replace('\n', '');
+  context('mocha configurations', () => {
 
-        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('$PROJECT_DIR$/packages/a/node_modules/mocha');
-        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<configuration default="false" name="a" type="mocha-javascript-test-runner" factoryName="Mocha">');
-        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<env name="DEBUG" value="wix:*" />');
-        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-kind>PATTERN</test-kind>');
-        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-pattern>test/**/*.spec.js test/**/*.it.js test/**/*.e2e.js</test-pattern>');
-        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`${node}</node-interpreter>`);
-        expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<extra-mocha-options>--exit</extra-mocha-options>');
+    it('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
+      const log = loggerMock();
+      return aLernaProjectWith3Modules().within(() => {
+        return idea()(log).then(() => {
+          const node = shelljs.exec('which node').stdout.split('/node/')[1].replace('\n', '');
+
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('$PROJECT_DIR$/packages/a/node_modules/mocha');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<configuration default="false" name="a" type="mocha-javascript-test-runner" factoryName="Mocha">');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<env name="DEBUG" value="wix:*" />');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-kind>PATTERN</test-kind>');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-pattern>test/**/*.spec.js test/**/*.it.js test/**/*.e2e.js</test-pattern>');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`${node}</node-interpreter>`);
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`$PROJECT_DIR$/packages/a</working-directory>`);
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<extra-mocha-options>--exit</extra-mocha-options>');
+        });
       });
     });
+
+    it('respects custom mocha config', () => {
+      const log = loggerMock();
+      const mochaConfig = packageJson => [{
+          name: packageJson.name + 'custom',
+          environmentVariables: {
+            NODEBUG: 'woop'
+          },
+          extraOptions: 'woo-extra',
+          testKind: 'PATTERN_woo',
+          testPattern: 'test-pattern-woo'
+      }];
+      return aLernaProject({a: []}).within(() => {
+        return idea({mochaConfigurations: mochaConfig})(log).then(() => {
+          const node = shelljs.exec('which node').stdout.split('/node/')[1].replace('\n', '');
+
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('$PROJECT_DIR$/packages/a/node_modules/mocha');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<configuration default="false" name="acustom" type="mocha-javascript-test-runner" factoryName="Mocha">');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<env name="NODEBUG" value="woop" />');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-kind>PATTERN_woo</test-kind>');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-pattern>test-pattern-woo</test-pattern>');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`${node}</node-interpreter>`);
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`$PROJECT_DIR$/packages/a</working-directory>`);
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<extra-mocha-options>woo-extra</extra-mocha-options>');
+        });
+      });
+    });
+
+    it('does generate multiple mocha configs per module', () => {
+      const log = loggerMock();
+      const mochaConfig = packageJson => [{name: packageJson.name + 'custom1'}, {name: packageJson.name + 'custom2'}];
+
+      return  aLernaProject({a: []}).within(() => {
+        return idea({mochaConfigurations: mochaConfig})(log).then(() => {
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<configuration default="false" name="acustom1" type="mocha-javascript-test-runner" factoryName="Mocha">');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<configuration default="false" name="acustom2" type="mocha-javascript-test-runner" factoryName="Mocha">');
+        });
+      });
+    });
+
+    it('does not generate mocha configuration if empty list is provided', () => {
+      const log = loggerMock();
+      return  aLernaProject({a: []}).within(() => {
+        return idea({mochaConfigurations: () => []})(log).then(() => {
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.not.be.string('<configuration default="false" name="a" type="mocha-javascript-test-runner" factoryName="Mocha">');
+        });
+      });
+    });
+
+
   });
 
   it('adds modules to groups if they are in subfolders', () => {

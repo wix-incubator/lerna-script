@@ -4,10 +4,10 @@ const {join, relative} = require('path'),
   {loadRootPackage, loadPackages, exec, iter} = require('lerna-script'),
   {execSync} = require('child_process');
 
-const excludeFolders = ['node_modules', 'dist'];
-const languageLevel = 'ES6';
+const EXCLUDE_FOLDERS = ['node_modules', 'dist'];
+const LANGIAGE_LEVEL = 'ES6';
 
-const supportedSourceFolders = [
+const SUPPORTED_SOURCE_LEVELS = [
   {name: 'test', isTestSource: true},
   {name: 'tests', isTestSource: true},
   {name: 'src', isTestSource: false},
@@ -15,8 +15,24 @@ const supportedSourceFolders = [
   {name: 'scripts', isTestSource: false}
 ];
 
+const DEFAULT_MOCHA_CONFIGURATIONS = packageJson => {
+  return [
+    {
+      name: packageJson.name,
+      environmentVariables: {
+        DEBUG: 'wix:*'
+      },
+      extraOptions: '--exit',
+      testKind: 'PATTERN',
+      testPattern: 'test/**/*.spec.js test/**/*.it.js test/**/*.e2e.js'
+    }
+  ]
+};
+
+
 //TODO: add options: {packages, mocha: {patterns: ''}}
-function generateIdeaProject({packages} = {}) {
+function generateIdeaProject({packages, mochaConfigurations} = {}) {
+  const mochaConfigurationsFn = mochaConfigurations || DEFAULT_MOCHA_CONFIGURATIONS;
   return log => {
     const rootPackage = loadRootPackage();
     const lernaPackages = packages || loadPackages();
@@ -33,7 +49,7 @@ function generateIdeaProject({packages} = {}) {
       .then(() => log.info('idea', 'writing project files'))
       .then(() => execInRoot(`cp ${join(__dirname, '/files/vcs.xml')} ${join(rootPackage.location, '.idea/')}`))
       .then(() => {
-        createWorkspaceXml(lernaPackages, rootPackage, log);
+        createWorkspaceXml(lernaPackages, rootPackage, mochaConfigurationsFn,log);
         createModulesXml(lernaPackages, rootPackage, log);
 
         log.info('idea', 'writing module files');
@@ -45,21 +61,22 @@ function generateIdeaProject({packages} = {}) {
   };
 }
 
-function createWorkspaceXml(lernaPackages, rootPackage, log) {
+function createWorkspaceXml(lernaPackages, rootPackage, mochaConfigurations, log) {
   log.verbose('idea', 'creating .idea/workspace.xml');
   const nodePath = execSync('which node').toString().replace('\n', '');
   const mochaPackage = join(relative(rootPackage.location, lernaPackages[0].location), 'node_modules', 'mocha');
   log.verbose('idea', `setting node - using current system node: '${nodePath}'`);
-  log.verbose('idea', `setting language level to: '${languageLevel}'`);
+  log.verbose('idea', `setting language level to: '${LANGIAGE_LEVEL}'`);
   log.verbose('idea', `setting mocha package: '${mochaPackage}'`);
   const config = {
     modules: lernaPackages.map(lernaPackage => ({
       name: lernaPackage.name,
       relativePath: relative(rootPackage.location, lernaPackage.location),
-      nodePath
+      nodePath,
+      mocha: mochaConfigurations(lernaPackage.toJSON())
     })),
     mochaPackage,
-    languageLevel
+    languageLevel: LANGIAGE_LEVEL
   };
 
   templates.ideaWorkspaceXmlFile(join(rootPackage.location, '.idea', 'workspace.xml'), config);
@@ -85,15 +102,15 @@ function createModuleIml(lernaPackage, log) {
     .filter(entry => shelljs.test('-d', join(lernaPackage.location, entry)));
 
   const sourceFolders = [];
-  supportedSourceFolders.forEach(sourceFolder => {
+  SUPPORTED_SOURCE_LEVELS.forEach(sourceFolder => {
     if (directories.indexOf(sourceFolder.name) > -1) {
       sourceFolders.push(sourceFolder);
     }
   });
 
-  log.verbose('idea', `writing module: '${lernaPackage.name}'`, {sourceFolders, excludeFolders});
+  log.verbose('idea', `writing module: '${lernaPackage.name}'`, {sourceFolders, excludeFolders: EXCLUDE_FOLDERS});
   const imlFile = join(lernaPackage.location, lernaPackage.name + '.iml');
-  templates.ideaModuleImlFile(imlFile, {excludeFolders, sourceFolders});
+  templates.ideaModuleImlFile(imlFile, {excludeFolders: EXCLUDE_FOLDERS, sourceFolders});
 }
 
 module.exports = generateIdeaProject;

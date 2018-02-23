@@ -42,9 +42,15 @@ npm start idea
 
 # API
 
-## ({[packages]})(log): Promise
+## ({[packages], mochaConfigurations: packageJson => []})(log): Promise
 Returns a function that generates [WebStorm](https://www.jetbrains.com/webstorm/) for all modules in repo.
 
 Parameters:
  - packages - list of packages to generate idea project for or defaults to ones defined in `lerna.json`;
+ - mochaConfigurations - function, that, given packageJson object of a module returns a list of mocha configurations in a format:
+    - name - configuration name
+    - environmentVariables - key/value pair of environment variables for configuration;
+    - extraOptions - extra mocha options,
+    - testKind - kind of test, ex. PATTERN,
+    - testPattern - pattern expression. 
  - log - `npmlog` instance.
