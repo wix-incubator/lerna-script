@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-preset-wix-npm",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "preset for wix npm projects",
   "author": "Vilius Lukosius",
   "license": "ISC",
@@ -17,20 +17,20 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "lerna-script-tasks-depcheck": "~0.7.0",
-    "lerna-script-tasks-dependencies": "~0.7.0",
-    "lerna-script-tasks-idea": "~0.7.0",
-    "lerna-script-tasks-modules": "~0.7.0",
-    "lerna-script-tasks-npmfix": "~0.7.0"
+    "lerna-script-tasks-depcheck": "^0.8.0",
+    "lerna-script-tasks-dependencies": "^0.8.0",
+    "lerna-script-tasks-idea": "^0.8.0",
+    "lerna-script-tasks-modules": "^0.8.0",
+    "lerna-script-tasks-npmfix": "^0.8.0"
   },
   "peerDependencies": {
-    "lerna-script": ">=0.7.0"
+    "lerna-script": "^0.8.0"
   },
   "devDependencies": {
     "chai": "4.1.2",
     "lerna": "2.9.0",
-    "lerna-script": "~0.7.0",
-    "lerna-script-test-utils": "~0.7.0",
+    "lerna-script": "^0.8.0",
+    "lerna-script-test-utils": "^0.8.0",
     "mocha": "3.5.3",
     "shelljs": "0.7.8"
   }
