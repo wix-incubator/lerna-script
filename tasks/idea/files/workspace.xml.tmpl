@@ -15,8 +15,8 @@
                     <envs>
                     {{#each this.environmentVariables}}
                         <env name="{{@key}}" value="{{this}}" />
-                    </envs>
                     {{/each}}
+                    </envs>
                     {{/if}}
                 <ui>bdd</ui>
                 <extra-mocha-options>{{this.extraOptions}}</extra-mocha-options>

@@ -115,7 +115,8 @@ describe('idea', () => {
       const mochaConfig = packageJson => [{
           name: packageJson.name + 'custom',
           environmentVariables: {
-            NODEBUG: 'woop'
+            NODEBUG: 'woop',
+            GUBEDON: 'poow'
           },
           extraOptions: 'woo-extra',
           testKind: 'PATTERN_woo',
@@ -124,10 +125,9 @@ describe('idea', () => {
       return aLernaProject({a: []}).within(() => {
         return idea({mochaConfigurations: mochaConfig})(log).then(() => {
           const node = shelljs.exec('which node').stdout.split('/node/')[1].replace('\n', '');
-
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('$PROJECT_DIR$/packages/a/node_modules/mocha');
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<configuration default="false" name="acustom" type="mocha-javascript-test-runner" factoryName="Mocha">');
-          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<env name="NODEBUG" value="woop" />');
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.match(/<envs>\s*<env name="NODEBUG" value="woop" \/>\s*<env name="GUBEDON" value="poow" \/>\s*<\/envs>/g);
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-kind>PATTERN_woo</test-kind>');
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string('<test-pattern>test-pattern-woo</test-pattern>');
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(`${node}</node-interpreter>`);
