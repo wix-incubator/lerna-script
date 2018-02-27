@@ -6,7 +6,7 @@
     "tasks/*",
     "presets/*"
   ],
-  "version": "0.8.0",
+  "version": "0.8.1",
   "managedDependencies": {
     "bluebird": "3.5.0",
     "fs-extra": "4.0.2",
