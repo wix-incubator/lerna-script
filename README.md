@@ -1,4 +1,4 @@
-# lerna-script [![Build Status](https://img.shields.io/travis/wix/lerna-script/master.svg?label=build%20status)](https://travis-ci.org/wix/lerna-script)
+# lerna-script [![Build Status](https://img.shields.io/travis/wix/lerna-script/master.svg?label=build%20status)](https://travis-ci.org/wix/lerna-script) [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 
 [Lerna](https://lernajs.io/) is a nice tool to manage JavaScript projects with multiple packages, but sometimes you need 
 more than it provides. [lerna-script](https://www.npmjs.com/package/lerna-script) might be just the thing you need. It allows 
@@ -45,7 +45,7 @@ module.exports.syncNvmRc = log => {
   log.info('syncNvmRc', 'syncing .nvmrc to all modules from root');
   
   return iter.parallel(loadPackages())(lernaPackage => {
-    exec.command(lernaPackage)(`cp ${join(process.cwd, ".nvmrc")} .`);
+    exec.command(lernaPackage)(`cp ${join(process.cwd(), ".nvmrc")} .`);
   });
 }
 ```
