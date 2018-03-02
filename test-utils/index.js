@@ -4,26 +4,26 @@ const {resolve} = require('path'),
   {join} = require('path'),
   fsExtra = require('fs-extra'),
   os = require('os'),
-  sinon = require('sinon');
+  sinon = require('sinon')
 
-const TEMP_DIR = os.tmpdir();
+const TEMP_DIR = os.tmpdir()
 
 function empty() {
-  const projectDir = resolve(TEMP_DIR, Math.ceil(Math.random() * 100000).toString());
-  afterEach(done => fsExtra.remove(projectDir, done));
-  return new ModuleBuilder(process.cwd(), projectDir, true);
+  const projectDir = resolve(TEMP_DIR, Math.ceil(Math.random() * 100000).toString())
+  afterEach(done => fsExtra.remove(projectDir, done))
+  return new ModuleBuilder(process.cwd(), projectDir, true)
 }
 
 function readJson(name, dir = process.cwd()) {
-  return JSON.parse(readFileSync(join(dir, name)).toString());
+  return JSON.parse(readFileSync(join(dir, name)).toString())
 }
 
 function readFile(name, dir = process.cwd()) {
-  return readFileSync(join(dir, name)).toString();
+  return readFileSync(join(dir, name)).toString()
 }
 
 function writeJson(name, content, dir = process.cwd()) {
-  return writeFileSync(join(dir, name), JSON.stringify(content));
+  return writeFileSync(join(dir, name), JSON.stringify(content))
 }
 
 function aLernaProjectWith2Modules() {
@@ -34,18 +34,17 @@ function aLernaProject(spec = {}) {
   const project = empty()
     .packageJson({name: 'root'})
     .lernaJson()
-    .inDir(ctx => ctx.exec('git init'));
-
+    .inDir(ctx => ctx.exec('git init'))
 
   Object.keys(spec).forEach(name => {
     project.module(`packages/${name}`, module => {
-      const dependencies = {};
-      spec[name].forEach(dep => dependencies[dep] = "1.0.0");
-      module.packageJson({version: '1.0.0', dependencies});
-    });
-  });
+      const dependencies = {}
+      spec[name].forEach(dep => (dependencies[dep] = '1.0.0'))
+      module.packageJson({version: '1.0.0', dependencies})
+    })
+  })
 
-  return project.inDir(ctx => ctx.exec('git init'));
+  return project.inDir(ctx => ctx.exec('git init'))
 }
 
 function loggerMock() {
@@ -58,8 +57,8 @@ function loggerMock() {
     info: sinon.spy(),
     pause: sinon.spy(),
     error: sinon.spy(),
-    resume: sinon.spy(),
-  };
+    resume: sinon.spy()
+  }
 
   const group = {
     finish: sinon.spy(),
@@ -69,7 +68,7 @@ function loggerMock() {
     info: sinon.spy(),
     error: sinon.spy(),
     newItem: sinon.stub().returns(item)
-  };
+  }
 
   return {
     verbose: sinon.spy(),
@@ -81,7 +80,7 @@ function loggerMock() {
     newGroup: sinon.stub().returns(group),
     item,
     group
-  };
+  }
 }
 
 module.exports = {
@@ -94,4 +93,4 @@ module.exports = {
     readFile
   },
   loggerMock
-};
+}

@@ -1,26 +1,26 @@
 const Promise = require('bluebird'),
   fs = Promise.promisifyAll(require('fs')),
-  {join} = require('path');
+  {join} = require('path')
 
 function readFile(lernaPackage) {
   return (relativePath, convert = content => content.toString()) => {
-    return fs.readFileAsync(join(lernaPackage.location, relativePath)).then(convert);
+    return fs.readFileAsync(join(lernaPackage.location, relativePath)).then(convert)
   }
 }
 
 function writeFile(lernaPackage) {
   return (relativePath, content, converter) => {
-    let toWrite = content;
+    let toWrite = content
     if (converter) {
-      toWrite = converter(content);
+      toWrite = converter(content)
     } else if (content === Object(content)) {
-      toWrite = JSON.stringify(content);
+      toWrite = JSON.stringify(content)
     }
-    return fs.writeFileAsync(join(lernaPackage.location, relativePath), toWrite);
+    return fs.writeFileAsync(join(lernaPackage.location, relativePath), toWrite)
   }
 }
 
 module.exports = {
   readFile,
   writeFile
-};
+}
