@@ -58,7 +58,7 @@ describe('modules sync task', () => {
   });
 
 
-  it.only('should beauify json on update', () => {
+  it('should beauify json on update', () => {
     const log = loggerMock();
     const project = aLernaProject()
       .module('packages/a', module => module.packageJson({version: '2.0.0'}))
