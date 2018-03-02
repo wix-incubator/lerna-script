@@ -18,7 +18,7 @@ function syncModulesTask({packages, transformDependencies, transformPeerDependen
           devDependencies: modulesAndVersions,
           peerDependencies: modulesAndPeerVersions
         }, logMerged))
-        .then(packageJson => fs.writeFile(lernaPackage)('package.json', packageJson));
+        .then(packageJson => fs.writeFile(lernaPackage)('package.json', JSON.stringify(packageJson, null, 2)));
     });
   }
 }

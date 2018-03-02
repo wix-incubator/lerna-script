@@ -56,4 +56,19 @@ describe('modules sync task', () => {
       });
     });
   });
+
+
+  it.only('should beauify json on update', () => {
+    const log = loggerMock();
+    const project = aLernaProject()
+      .module('packages/a', module => module.packageJson({version: '2.0.0'}))
+      .module('packages/b', module => module.packageJson({dependencies: {'a': '~1.0.0'}}));
+
+    return project.within(() => {
+      return sync()(log).then(() => {
+        expect(fs.readFile('packages/b/package.json').split('\n').length).to.be.gt(2);
+      });
+    });
+  });
+
 });
