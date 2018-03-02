@@ -17,6 +17,11 @@ function empty() {
 function readJson(name, dir = process.cwd()) {
   return JSON.parse(readFileSync(join(dir, name)).toString());
 }
+
+function readFile(name, dir = process.cwd()) {
+  return readFileSync(join(dir, name)).toString();
+}
+
 function writeJson(name, content, dir = process.cwd()) {
   return writeFileSync(join(dir, name), JSON.stringify(content));
 }
@@ -85,7 +90,8 @@ module.exports = {
   aLernaProject,
   fs: {
     readJson,
-    writeJson
+    writeJson,
+    readFile
   },
   loggerMock
 };
