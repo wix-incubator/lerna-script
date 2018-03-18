@@ -70,11 +70,7 @@ function createWorkspaceXml(lernaPackages, rootPackage, mochaConfigurations, log
   const nodePath = execSync('which node')
     .toString()
     .replace('\n', '')
-  const mochaPackage = join(
-    relative(rootPackage.location, lernaPackages[0].location),
-    'node_modules',
-    'mocha'
-  )
+  const mochaPackage = join('node_modules', 'mocha')
   log.verbose('idea', `setting node - using current system node: '${nodePath}'`)
   log.verbose('idea', `setting language level to: '${LANGIAGE_LEVEL}'`)
   log.verbose('idea', `setting mocha package: '${mochaPackage}'`)
