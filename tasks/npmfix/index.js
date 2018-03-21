@@ -25,9 +25,7 @@ function npmfix({packages} = {}) {
                 url: moduleGitUrl
               }
             })
-            return fs.writeFile(lernaPackage, {log})('package.json', updated, j =>
-              JSON.stringify(j, null, 2)
-            )
+            return fs.writeFile(lernaPackage, {log})('package.json', updated)
           })
       })
     })

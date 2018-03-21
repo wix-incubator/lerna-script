@@ -1,4 +1,5 @@
-const {expect} = require('chai'),
+const {EOL} = require('os'),
+  {expect} = require('chai'),
   {aLernaProjectWith2Modules} = require('lerna-script-test-utils'),
   index = require('..')
 
@@ -41,14 +42,17 @@ describe('fs', () => {
       })
     })
 
-    it('should write object', () => {
+    it('should write object with a newline at the end of file', () => {
       return aLernaProjectWith2Modules().within(() => {
         const lernaPackage = index.loadPackages().pop()
 
         return index.fs
           .writeFile(lernaPackage)('qwe.json', {key: 'bubu'})
-          .then(() => index.fs.readFile(lernaPackage)('qwe.json', JSON.parse))
-          .then(fileContent => expect(fileContent).to.deep.equal({key: 'bubu'}))
+          .then(() => index.fs.readFile(lernaPackage)('qwe.json'))
+          .then(fileContent => {
+            expect(fileContent).to.match(new RegExp(`${EOL}$`))
+            expect(JSON.parse(fileContent)).to.deep.equal({key: 'bubu'})
+          })
       })
     })
 
