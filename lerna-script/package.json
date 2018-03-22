@@ -1,6 +1,6 @@
 {
   "name": "lerna-script",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "lerna extension for custom scripts",
   "main": "index.js",
   "homepage": "https://github.com/wix/lerna-script/tree/master/lerna-script",
@@ -10,10 +10,7 @@
   "scripts": {
     "test": "mocha"
   },
-  "keywords": [
-    "lerna",
-    "script"
-  ],
+  "keywords": ["lerna", "script"],
   "repository": {
     "type": "git",
     "url": "https://github.com/wix/lerna-script/tree/master/lerna-script"
@@ -24,7 +21,7 @@
     "chai": "4.1.2",
     "intercept-stdout": "0.1.2",
     "lerna": "2.9.0",
-    "lerna-script-test-utils": "~0.8.3",
+    "lerna-script-test-utils": "^0.8.4",
     "mocha": "3.5.3",
     "sinon": "3.2.1",
     "sinon-chai": "2.13.0"
