@@ -33,7 +33,7 @@ function syncModulesTask({packages, transformDependencies, transformPeerDependen
           )
         )
         .then(packageJson =>
-          fs.writeFile(lernaPackage)('package.json', JSON.stringify(packageJson, null, 2))
+          fs.writeFile(lernaPackage)('package.json', packageJson)
         )
     })
   }

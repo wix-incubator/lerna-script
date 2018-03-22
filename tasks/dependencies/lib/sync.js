@@ -20,7 +20,7 @@ function syncDependenciesTask({packages} = {}) {
         .readFile(lernaPackage)('package.json', JSON.parse)
         .then(packageJson => {
           const synced = merge(packageJson, template, logMerged)
-          return fs.writeFile(lernaPackage)('package.json', synced, s => JSON.stringify(s, null, 2))
+          return fs.writeFile(lernaPackage)('package.json', synced)
         })
     })
   }

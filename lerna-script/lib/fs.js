@@ -1,4 +1,5 @@
-const Promise = require('bluebird'),
+const {EOL} = require('os'),
+  Promise = require('bluebird'),
   fs = Promise.promisifyAll(require('fs')),
   {join} = require('path')
 
@@ -14,7 +15,7 @@ function writeFile(lernaPackage) {
     if (converter) {
       toWrite = converter(content)
     } else if (content === Object(content)) {
-      toWrite = JSON.stringify(content)
+      toWrite = JSON.stringify(content, null, 2) + EOL
     }
     return fs.writeFileAsync(join(lernaPackage.location, relativePath), toWrite)
   }
