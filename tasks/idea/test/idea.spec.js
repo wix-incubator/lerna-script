@@ -217,6 +217,34 @@ describe('idea', () => {
         })
       })
     })
+
+    context('mocha module resolution', () => {
+      it('uses mocha from root node_modules if mocha package is present', () => {
+        const log = loggerMock()
+        return aLernaProject({a: []}).within(ctx => {
+          ctx.addFolder('node_modules/mocha')
+
+          return idea()(log).then(() => {
+            expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
+              '$PROJECT_DIR$/node_modules/mocha'
+            )
+          })
+        })
+      })
+
+      it('uses mocha from one of modules if present', () => {
+        const log = loggerMock()
+        return aLernaProject({a: [], b: []}).within(ctx => {
+          ctx.addFolder('packages/b/node_modules/mocha')
+
+          return idea()(log).then(() => {
+            expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
+              '$PROJECT_DIR$/packages/b/node_modules/mocha'
+            )
+          })
+        })
+      })
+    })
   })
 
   it('adds modules to groups if they are in subfolders', () => {
