@@ -70,11 +70,8 @@ function createWorkspaceXml(lernaPackages, rootPackage, mochaConfigurations, log
   const nodePath = execSync('which node')
     .toString()
     .replace('\n', '')
-  const mochaPackage = join(
-    relative(rootPackage.location, lernaPackages[0].location),
-    'node_modules',
-    'mocha'
-  )
+  const mochaPackage = resolveMochaPackage(rootPackage, lernaPackages, log)
+
   log.verbose('idea', `setting node - using current system node: '${nodePath}'`)
   log.verbose('idea', `setting language level to: '${LANGIAGE_LEVEL}'`)
   log.verbose('idea', `setting mocha package: '${mochaPackage}'`)
@@ -127,6 +124,31 @@ function createModuleIml(lernaPackage, log) {
   })
   const imlFile = join(lernaPackage.location, lernaPackage.name + '.iml')
   templates.ideaModuleImlFile(imlFile, {excludeFolders: EXCLUDE_FOLDERS, sourceFolders})
+}
+
+function resolveMochaPackage(rootPackage, lernaPackages, log) {
+  let mochaLocation
+
+  if (shelljs.test('-d', join(rootPackage.location, 'node_modules/mocha'))) {
+    log.info(
+      'idea',
+      `using mocha package from: '${join(rootPackage.location, 'node_modules/mocha')}'`
+    )
+    mochaLocation = 'node_modules/mocha'
+  } else {
+    lernaPackages.some(pkg => {
+      if (shelljs.test('-d', join(pkg.location, 'node_modules/mocha'))) {
+        log.info('idea', `using mocha package from: '${join(pkg.location, 'node_modules/mocha')}'`)
+        mochaLocation = join(relative(rootPackage.location, pkg.location), 'node_modules', 'mocha')
+        return true
+      }
+    })
+  }
+
+  return (
+    mochaLocation ||
+    join(relative(rootPackage.location, lernaPackages[0].location), 'node_modules', 'mocha')
+  )
 }
 
 module.exports = generateIdeaProject
