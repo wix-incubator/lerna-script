@@ -113,7 +113,7 @@ describe('idea', () => {
             .replace('\n', '')
 
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
-            '$PROJECT_DIR$/packages/a/node_modules/mocha'
+            '$PROJECT_DIR$/node_modules/mocha'
           )
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
             '<configuration default="false" name="a" type="mocha-javascript-test-runner" factoryName="Mocha">'
@@ -161,7 +161,7 @@ describe('idea', () => {
             .stdout.split('/node/')[1]
             .replace('\n', '')
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
-            '$PROJECT_DIR$/packages/a/node_modules/mocha'
+            '$PROJECT_DIR$/node_modules/mocha'
           )
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
             '<configuration default="false" name="acustom" type="mocha-javascript-test-runner" factoryName="Mocha">'
