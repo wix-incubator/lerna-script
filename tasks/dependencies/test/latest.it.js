@@ -2,9 +2,10 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   {expect} = require('chai').use(require('sinon-chai')),
   {latest} = require('..'),
   sinon = require('sinon'),
-  {execSync} = require('child_process')
+  {execSync} = require('child_process'),
+  bddStdin = require('bdd-stdin')
 
-describe('latest task', function() {
+describe.only('latest task', function() {
   this.timeout(30000)
 
   it('should list dependencies that can be updated', () => {
@@ -27,21 +28,29 @@ describe('latest task', function() {
       }
     })
 
+    const onInquire = () => bddStdin('a', '\n')
+
+    return project.within(ctx => {
+      return latest({onInquire})(log).then(() => {
+        const lernaJson = ctx.readJsonFile('lerna.json')
+
+        expect(lernaJson.managedPeerDependencies.lodash).to.equal(lodashVersion)
+        expect(lernaJson.managedDependencies.ramda).to.equal(ramdaVersion)
+        expect(lernaJson.managedPeerDependencies.ramda).to.not.equal(ramdaVersion)
+      })
+    })
+  })
+
+  it('should log and exit for no updates', () => {
+    const {log, project} = setup({
+      managedDependencies: {
+        lodash: 'latest'
+      }
+    })
+
     return project.within(() => {
       return latest()(log).then(() => {
-        expect(log.info).to.have.been.calledWith(
-          'latest',
-          `update found for dependency ramda: 0.0.1 -> ${ramdaVersion}`
-        )
-        expect(log.info).to.not.have.been.calledWith(sinon.match('dependency lodash'))
-        expect(log.info).to.not.have.been.calledWith(sinon.match('dependency shelljs'))
-        expect(log.info).to.not.have.been.calledWith(sinon.match('dependency url'))
-
-        expect(log.info).to.not.have.been.calledWith(sinon.match('peerDependency ramda'))
-        expect(log.info).to.have.been.calledWith(
-          'latest',
-          `update found for peerDependency lodash: 0.0.1 -> ${lodashVersion}`
-        )
+        expect(log.info).to.have.been.calledWith('latest', `no updates found, exiting...`)
       })
     })
   })
