@@ -1,11 +1,10 @@
 const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   {expect} = require('chai').use(require('sinon-chai')),
   {latest} = require('..'),
-  sinon = require('sinon'),
   {execSync} = require('child_process'),
   bddStdin = require('bdd-stdin')
 
-describe.only('latest task', function() {
+describe('latest task', function() {
   this.timeout(30000)
 
   it('should list dependencies that can be updated', () => {
