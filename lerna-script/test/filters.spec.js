@@ -6,6 +6,22 @@ const {expect} = require('chai'),
 describe('filters', function() {
   this.timeout(5000)
 
+  describe('includeFilteredDeps', () => {
+    it('should add dependent package', () => {
+      const log = loggerMock()
+      const project = aLernaProjectWith2Modules()
+
+      return project.within(() => {
+        const allPackages = index.loadPackages()
+        const lernaPackages = index.filters.removeByGlob(index.loadPackages(), {log})('a')
+        const filteredPackages = index.filters.includeFilteredDeps(allPackages, {log})(
+          lernaPackages
+        )
+        expect(filteredPackages.map(p => p.name)).to.have.same.members(['a', 'b'])
+      })
+    })
+  })
+
   describe('removeByGlob', () => {
     it('should filter-out packages by provided glob', () => {
       const log = loggerMock()

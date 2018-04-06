@@ -5,6 +5,13 @@ const _ = require('lodash'),
   PackageGraph = require('lerna/lib/PackageGraph').default,
   npmlog = require('npmlog')
 
+function includeFilteredDeps(allLernaPackages, {log = npmlog} = {log: npmlog}) {
+  return filteredLernaPackages => {
+    const packageGraph = new PackageGraph(allLernaPackages)
+    return PackageUtilities.addDependencies(filteredLernaPackages, packageGraph)
+  }
+}
+
 function removeByGlob(lernaPackages, {log = npmlog} = {log: npmlog}) {
   return glob => {
     const filteredPackages = PackageUtilities.filterPackages(lernaPackages, {ignore: glob})
@@ -110,5 +117,6 @@ function diffPackages(before, after) {
 module.exports = {
   removeBuilt,
   removeGitSince,
+  includeFilteredDeps,
   removeByGlob
 }

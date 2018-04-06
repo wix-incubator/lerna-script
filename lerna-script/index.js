@@ -23,7 +23,8 @@ module.exports.changes = {
 module.exports.filters = {
   removeBuilt: filters.removeBuilt,
   gitSince: filters.removeGitSince,
-  removeByGlob: filters.removeByGlob
+  removeByGlob: filters.removeByGlob,
+  includeFilteredDeps: filters.includeFilteredDeps
 }
 
 module.exports.exec = {
