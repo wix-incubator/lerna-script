@@ -8,7 +8,10 @@ const _ = require('lodash'),
 function includeFilteredDeps(allLernaPackages, {log = npmlog} = {log: npmlog}) {
   return filteredLernaPackages => {
     const packageGraph = new PackageGraph(allLernaPackages)
-    return PackageUtilities.addDependencies(filteredLernaPackages, packageGraph)
+    const withFiltered = PackageUtilities.addDependencies(filteredLernaPackages, packageGraph)
+
+    const batched = PackageUtilities.topologicallyBatchPackages(withFiltered)
+    return _.flatten(batched)
   }
 }
 
