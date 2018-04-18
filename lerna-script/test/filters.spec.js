@@ -17,7 +17,7 @@ describe('filters', function() {
         const filteredPackages = index.filters.includeFilteredDeps(allPackages, {log})(
           lernaPackages
         )
-        expect(filteredPackages.map(p => p.name)).to.have.same.members(['a', 'b'])
+        expect(filteredPackages.map(p => p.name)).to.deep.equal(['a', 'b'])
       })
     })
   })
