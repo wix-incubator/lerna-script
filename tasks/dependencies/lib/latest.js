@@ -1,16 +1,18 @@
 const {exec} = require('child_process'),
-  {satisfies, validRange} = require('semver')
+  {satisfies, validRange} = require('semver'),
+  inquire = require('./inquire'),
+  {fs, loadRootPackage} = require('lerna-script')
 
-function latestDependenciesTask() {
+function latestDependenciesTask({onInquire} = {onInquire: () => ({})}) {
   return log => {
     log.info('latest', `checking for latest dependencies`)
-    const {managedDependencies = {}, managedPeerDependencies = {}} = require(process.cwd() +
-      '/lerna.json')
-    return checkForLatestDependencies(managedDependencies, managedPeerDependencies, log)
+    return checkForLatestDependencies(require(process.cwd() + '/lerna.json'), onInquire, log)
   }
 }
 
-function checkForLatestDependencies(managedDependencies, managedPeerDependencies, log) {
+function checkForLatestDependencies(lernaJson, onInquire, log) {
+  const {managedDependencies = {}, managedPeerDependencies = {}} = lernaJson
+
   const depsPromises = Object.keys(cleanLatest(managedDependencies || {})).map(depName =>
     fetchLatestVersion(depName, managedDependencies[depName])
   )
@@ -20,23 +22,52 @@ function checkForLatestDependencies(managedDependencies, managedPeerDependencies
 
   return Promise.all([Promise.all(depsPromises), Promise.all(peerDepsPromises)]).then(
     ([deps, peerDeps]) => {
-      deps.forEach(({name, currentVersion, latestVersion}) => {
-        if (!satisfies(latestVersion, validRange(currentVersion))) {
-          log.info(
-            'latest',
-            `update found for dependency ${name}: ${currentVersion} -> ${latestVersion}`
-          )
-        }
-      })
+      const depsChoices = deps
+        .filter(
+          ({currentVersion, latestVersion}) => !satisfies(latestVersion, validRange(currentVersion))
+        )
+        .map(({name, currentVersion, latestVersion}) => {
+          return {
+            name: `${name}: ${currentVersion} -> ${latestVersion}`,
+            value: {type: 'managedDependencies', name, latestVersion}
+          }
+        })
 
-      peerDeps.forEach(({name, currentVersion, latestVersion}) => {
-        if (!satisfies(latestVersion, validRange(currentVersion))) {
-          log.info(
-            'latest',
-            `update found for peerDependency ${name}: ${currentVersion} -> ${latestVersion}`
-          )
-        }
-      })
+      const peerDepsChoices = peerDeps
+        .filter(
+          ({currentVersion, latestVersion}) => !satisfies(latestVersion, validRange(currentVersion))
+        )
+        .map(({name, currentVersion, latestVersion}) => {
+          return {
+            name: `${name}: ${currentVersion} -> ${latestVersion}`,
+            value: {type: 'managedPeerDependencies', name, latestVersion}
+          }
+        })
+
+      const choiceGroups = []
+
+      if (depsChoices.length > 0) {
+        choiceGroups.push({name: 'dependencies/devDependencies', choices: depsChoices})
+      }
+      if (peerDepsChoices.length > 0) {
+        choiceGroups.push({name: 'peerDependencies', choices: peerDepsChoices})
+      }
+
+      if (choiceGroups.length > 0) {
+        onInquire()
+        return inquire({message: 'Updates found', choiceGroups}).then(answers => {
+          if (answers.length > 0) {
+            answers.forEach(
+              ({type, name, latestVersion}) => (lernaJson[type][name] = latestVersion)
+            )
+            return fs.writeFile(loadRootPackage())('./lerna.json', lernaJson)
+          } else {
+            log.info('latest', `nothing selected, exiting...`)
+          }
+        })
+      } else {
+        log.info('latest', `no updates found, exiting...`)
+      }
     }
   )
 }
