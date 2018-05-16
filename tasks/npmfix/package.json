@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-tasks-npmfix",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "tasks for lerna-script that fixes links in package.json",
   "author": "Vilius Lukosius",
   "license": "ISC",

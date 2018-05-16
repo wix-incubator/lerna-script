@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-tasks-dependencies",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "tasks for lerna-script that adds dependency management support",
   "author": "Vilius Lukosius",
   "license": "ISC",
