@@ -17,8 +17,8 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "lerna-script-tasks-idea": "^0.8.8",
-    "lerna-script-tasks-npmfix": "^0.8.8"
+    "lerna-script-tasks-idea": "~0.8.8",
+    "lerna-script-tasks-npmfix": "~0.8.8"
   },
   "peerDependencies": {
     "lerna-script": ">=0.8.7"
