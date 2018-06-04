@@ -103,7 +103,7 @@ describe('idea', () => {
   })
 
   context('mocha configurations', () => {
-    it('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
+    it.only('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
       const log = loggerMock()
       return aLernaProjectWith3Modules().within(() => {
         return idea()(log).then(() => {
@@ -113,7 +113,10 @@ describe('idea', () => {
             .replace('\n', '')
 
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
-            '$PROJECT_DIR$/packages/a/node_modules/mocha'
+            `<data>$PROJECT_DIR$/packages/a/node_modules/mocha</data>`
+          )
+          expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
+            `<property name="nodejs.mocha.mocha_node_package_dir" value="$PROJECT_DIR$/packages/a/node_modules/mocha" />`
           )
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
             '<configuration default="false" name="a" type="mocha-javascript-test-runner" factoryName="Mocha">'
