@@ -103,7 +103,7 @@ describe('idea', () => {
   })
 
   context('mocha configurations', () => {
-    it.only('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
+    it('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
       const log = loggerMock()
       return aLernaProjectWith3Modules().within(() => {
         return idea()(log).then(() => {
