@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-tasks-depcheck",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "tasks for running depcheck for all modules",
   "author": "Vilius Lukosius",
   "license": "ISC",
