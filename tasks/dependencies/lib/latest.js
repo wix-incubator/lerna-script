@@ -3,14 +3,19 @@ const {exec} = require('child_process'),
   inquire = require('./inquire'),
   {fs, loadRootPackage} = require('lerna-script')
 
-function latestDependenciesTask({onInquire} = {onInquire: () => ({})}) {
+function latestDependenciesTask({onInquire = () => ({}), addRange = ''} = {}) {
   return log => {
     log.info('latest', `checking for latest dependencies`)
-    return checkForLatestDependencies(require(process.cwd() + '/lerna.json'), onInquire, log)
+    return checkForLatestDependencies(
+      require(process.cwd() + '/lerna.json'),
+      onInquire,
+      addRange,
+      log
+    )
   }
 }
 
-function checkForLatestDependencies(lernaJson, onInquire, log) {
+function checkForLatestDependencies(lernaJson, onInquire, addRange, log) {
   const {managedDependencies = {}, managedPeerDependencies = {}} = lernaJson
 
   const depsPromises = Object.keys(cleanLatest(managedDependencies || {})).map(depName =>
@@ -58,7 +63,8 @@ function checkForLatestDependencies(lernaJson, onInquire, log) {
         return inquire({message: 'Updates found', choiceGroups}).then(answers => {
           if (answers.length > 0) {
             answers.forEach(
-              ({type, name, latestVersion}) => (lernaJson[type][name] = latestVersion)
+              ({type, name, latestVersion}) =>
+                (lernaJson[type][name] = `${addRange}${latestVersion}`)
             )
             return fs.writeFile(loadRootPackage())('./lerna.json', lernaJson)
           } else {
