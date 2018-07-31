@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "husky": "0.14.3",
-    "lerna": "2.9.0",
+    "lerna": "2.11.0",
     "lerna-script": "0.8.5",
     "lerna-script-tasks-depcheck": "0.8.5",
     "lerna-script-tasks-dependencies": "0.8.5",
