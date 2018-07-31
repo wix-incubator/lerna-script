@@ -27,7 +27,7 @@
     "lerna-script": ">=0.9.0"
   },
   "devDependencies": {
-    "bdd-stdin": "^0.2.0",
+    "bdd-stdin": "0.2.0",
     "chai": "4.1.2",
     "lerna": "2.9.0",
     "lerna-script": "~0.9.0",
