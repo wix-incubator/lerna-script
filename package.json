@@ -18,7 +18,7 @@
     "lerna-script": "0.9.0",
     "lerna-script-tasks-depcheck": "0.9.1",
     "lerna-script-tasks-dependencies": "0.9.2",
-    "lerna-script-tasks-idea": "0.8.5",
+    "lerna-script-tasks-idea": "0.9.2",
     "lerna-script-tasks-modules": "0.9.1",
     "lerna-script-tasks-npmfix": "0.8.5",
     "prettier": "1.14.0",
