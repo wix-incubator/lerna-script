@@ -20,7 +20,7 @@
     "deep-keys": "0.5.0",
     "inquirer": "^5.2.0",
     "lodash": "4.17.10",
-    "ramda": "0.24.1",
+    "ramda": "0.25.0",
     "semver": "5.5.0"
   },
   "peerDependencies": {
