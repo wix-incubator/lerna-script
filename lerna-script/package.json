@@ -25,7 +25,7 @@
     "intercept-stdout": "0.1.2",
     "lerna": "2.11.0",
     "lerna-script-test-utils": "~0.8.4",
-    "mocha": "3.5.3",
+    "mocha": "5.2.0",
     "sinon": "6.1.4",
     "sinon-chai": "2.13.0"
   },
