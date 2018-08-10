@@ -4,9 +4,11 @@ const {loadPackages, iter, fs} = require('lerna-script'),
   {relative} = require('path')
 
 function sortByKey(obj) {
-  return Object.keys(obj)
+  const sorted = {}
+  Object.keys(obj)
     .sort()
-    .reduce((acc, key) => ({...acc, [key]: obj[key]}), {})
+    .forEach(key => (sorted[key] = obj[key]))
+  return sorted
 }
 
 function sortDependencies(deps) {

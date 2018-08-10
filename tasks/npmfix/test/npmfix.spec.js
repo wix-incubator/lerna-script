@@ -61,7 +61,9 @@ describe('npmfix task', () => {
 
   it('should sort dependencies', () => {
     function makeDependencies(...names) {
-      return names.reduce((acc, key) => ({...acc, [key]: '1.0'}), {})
+      const deps = {}
+      names.forEach(key => (deps[key] = '1.0'))
+      return deps
     }
 
     const project = aLernaProject(
