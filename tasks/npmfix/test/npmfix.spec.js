@@ -1,4 +1,9 @@
-const {aLernaProjectWith2Modules, loggerMock, fs} = require('lerna-script-test-utils'),
+const {
+    aLernaProjectWith2Modules,
+    aLernaProject,
+    loggerMock,
+    fs
+  } = require('lerna-script-test-utils'),
   {loadPackages} = require('lerna-script'),
   {expect} = require('chai').use(require('sinon-chai')),
   npmfix = require('..')
@@ -50,6 +55,34 @@ describe('npmfix task', () => {
           'https://github.com/git/qwe/tree/master/packages/a'
         )
         expect(fs.readJson('./packages/b/package.json')).to.not.contain.property('homepage')
+      })
+    })
+  })
+
+  it('should sort dependencies', () => {
+    function makeDependencies(...names) {
+      return names.reduce((acc, key) => ({...acc, [key]: '1.0'}), {})
+    }
+
+    const project = aLernaProject(
+      {a: []},
+      {
+        dependencies: makeDependencies('z', 'c', 'b'),
+        devDependencies: makeDependencies('e', 'd'),
+        peerDependencies: makeDependencies('g', 'f')
+      }
+    )
+
+    const log = loggerMock()
+    return project.within(ctx => {
+      ctx.exec('git remote add origin git@github.com:git/qwe.git')
+
+      const packages = loadPackages().filter(p => p.name === 'a')
+      return npmfix({packages})(log).then(() => {
+        const fixedPackage = fs.readJson('./packages/a/package.json')
+        expect(Object.keys(fixedPackage.dependencies)).to.deep.equal(['b', 'c', 'z'])
+        expect(Object.keys(fixedPackage.devDependencies)).to.deep.equal(['d', 'e'])
+        expect(Object.keys(fixedPackage.peerDependencies)).to.deep.equal(['f', 'g'])
       })
     })
   })
