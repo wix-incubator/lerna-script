@@ -3,6 +3,20 @@ const {loadPackages, iter, fs} = require('lerna-script'),
   gitInfo = require('hosted-git-info'),
   {relative} = require('path')
 
+function sortByKey(obj) {
+  const sorted = {}
+  Object.keys(obj)
+    .sort()
+    .forEach(key => (sorted[key] = obj[key]))
+  return sorted
+}
+
+function sortDependencies(deps) {
+  if (deps) {
+    return sortByKey(deps)
+  }
+}
+
 function npmfix({packages} = {}) {
   return log => {
     const lernaPackages = packages || loadPackages()
@@ -20,6 +34,9 @@ function npmfix({packages} = {}) {
           .then(packageJson => {
             const updated = Object.assign({}, packageJson, {
               homepage: moduleGitUrl,
+              dependencies: sortDependencies(packageJson.dependencies),
+              devDependencies: sortDependencies(packageJson.devDependencies),
+              peerDependencies: sortDependencies(packageJson.peerDependencies),
               repository: {
                 type: 'git',
                 url: moduleGitUrl

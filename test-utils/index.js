@@ -30,7 +30,7 @@ function aLernaProjectWith2Modules() {
   return aLernaProject({a: [], b: ['a']})
 }
 
-function aLernaProject(spec = {}) {
+function aLernaProject(spec = {}, overrides = {}) {
   const project = empty()
     .packageJson({name: 'root'})
     .lernaJson()
@@ -40,7 +40,7 @@ function aLernaProject(spec = {}) {
     project.module(`packages/${name}`, module => {
       const dependencies = {}
       spec[name].forEach(dep => (dependencies[dep] = '1.0.0'))
-      module.packageJson({version: '1.0.0', dependencies})
+      module.packageJson(Object.assign({version: '1.0.0', dependencies}, overrides))
     })
   })
 
