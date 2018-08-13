@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-tasks-modules",
-  "version": "0.9.1",
+  "version": "0.9.3",
   "description": "module version sync task for lerna-script",
   "author": "vilius@wix.com",
   "license": "BSD",
@@ -26,8 +26,8 @@
   "devDependencies": {
     "chai": "4.1.2",
     "lerna": "2.11.0",
-    "lerna-script": "~0.9.0",
-    "lerna-script-test-utils": "~0.8.4",
+    "lerna-script": "^0.9.3",
+    "lerna-script-test-utils": "^0.9.3",
     "mocha": "5.2.0",
     "sinon": "6.1.5",
     "sinon-chai": "3.2.0"
