@@ -6,93 +6,96 @@ const {expect} = require('chai').use(require('sinon-chai')),
   {writeFileSync} = require('fs'),
   sinon = require('sinon')
 
-describe('detect-changes', () => {
-  it('should not detect any changes for already marked modules', () => {
-    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()))
+describe('detect-changes', async () => {
+  it('should not detect any changes for already marked modules', async () => {
+    const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()))
 
-    return project.within(() => {
-      const lernaPackages = index.loadPackages()
+    await project.within(async () => {
+      const lernaPackages = await index.loadPackages()
       lernaPackages.forEach(lernaPackage =>
         expect(index.changes.isBuilt(lernaPackage)()).to.equal(true)
       )
     })
   })
 
-  it('should detect changes recursively', () => {
-    const project = asBuilt(
+  it('should detect changes recursively', async () => {
+    const modules = await aLernaProjectWith2Modules();
+    const project = await asBuilt(
       asGitCommited(
-        aLernaProjectWith2Modules().inDir(ctx => {
-          ctx.addFile('packages/a/test/test.js', '')
-        })
+        modules.inDir(ctx => ctx.addFile('packages/a/test/test.js', ''))
       )
     )
 
-    return project.within(ctx => {
+    return project.within(async ctx => {
       ctx.addFile('packages/a/test/test2.js', '')
-      const lernaPackage = index.loadPackages().find(p => p.name === 'a')
+      const lernaPackages = await index.loadPackages()
+      const lernaPackage = lernaPackages.find(p => p.name === 'a')
 
       expect(index.changes.isBuilt(lernaPackage)()).to.equal(false)
     })
   })
 
-  it('should detect uncommitted modules as changed', () => {
-    const project = aLernaProjectWith2Modules()
+  it('should detect uncommitted modules as changed', async () => {
+    const project = await aLernaProjectWith2Modules()
 
-    return project.within(() => {
-      const lernaPackages = index.loadPackages()
+    return project.within(async () => {
+      const lernaPackages = await index.loadPackages()
       lernaPackages.forEach(lernaPackage =>
         expect(index.changes.isBuilt(lernaPackage)()).to.equal(false)
       )
     })
   })
 
-  it('should detect change in module', () => {
-    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()))
+  it('should detect change in module', async () => {
+    const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()))
 
-    return project.within(() => {
-      const aLernaPackage = index.loadPackages().pop()
+    return project.within(async () => {
+      const [aLernaPackage] = await index.loadPackages()
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe')
 
       expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false)
     })
   })
 
-  it('should respect .gitignore in root', () => {
-    const projectWithGitIgnore = aLernaProjectWith2Modules().inDir(ctx => {
-      ctx.addFile('.gitignore', 'some.txt\n')
-    })
+  it('should respect .gitignore in root', async () => {
+    const projectWithGitIgnore = await aLernaProjectWith2Modules()
+    const project = await asBuilt(
+      asGitCommited(
+        projectWithGitIgnore.inDir(ctx => ctx.addFile('.gitignore', 'some.txt\n')
+        )
+      )
+    )
 
-    const project = asBuilt(asGitCommited(projectWithGitIgnore))
-
-    return project.within(() => {
-      const aLernaPackage = index.loadPackages().pop()
+    return project.within(async () => {
+      const [aLernaPackage] = await index.loadPackages()
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe')
 
       expect(index.changes.isBuilt(aLernaPackage)()).to.equal(true)
     })
   })
 
-  it('should respect .gitignore in module dir', () => {
-    const projectWithGitIgnore = aLernaProjectWith2Modules().inDir(ctx => {
-      ctx.addFile('packages/a/.gitignore', 'some.txt\n')
-    })
+  it('should respect .gitignore in module dir', async () => {
+    const projectWithGitIgnore = await aLernaProjectWith2Modules()
 
-    const project = asBuilt(asGitCommited(projectWithGitIgnore))
+    const project = await asBuilt(asGitCommited(
+      projectWithGitIgnore.inDir(ctx => ctx.addFile('packages/a/.gitignore', 'some.txt\n'))
+    ))
 
-    return project.within(() => {
-      const aLernaPackage = index.loadPackages().find(lernaPackage => lernaPackage.name === 'a')
+    return project.within(async () => {
+      const packages = await index.loadPackages()
+      const aLernaPackage = packages.find(lernaPackage => lernaPackage.name === 'a')
       writeFileSync(join(aLernaPackage.location, 'some.txt'), 'qwe')
 
       expect(index.changes.isBuilt(aLernaPackage)()).to.equal(true)
     })
   })
 
-  it('should unbuild a module', () => {
+  it('should unbuild a module', async () => {
     const log = loggerMock()
-    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()))
+    const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()))
 
-    return project.within(() => {
-      const aLernaPackage = index.loadPackages().pop()
+    return project.within(async () => {
+      const [aLernaPackage] = await index.loadPackages()
       index.changes.unbuild(aLernaPackage, {log})()
 
       expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false)
@@ -104,12 +107,12 @@ describe('detect-changes', () => {
     })
   })
 
-  it('should build a module', () => {
+  it('should build a module', async () => {
     const log = loggerMock()
-    const project = asGitCommited(aLernaProjectWith2Modules())
+    const project = await asGitCommited(aLernaProjectWith2Modules())
 
-    return project.within(() => {
-      const aLernaPackage = index.loadPackages().pop()
+    return project.within(async () => {
+      const [aLernaPackage] = await index.loadPackages()
 
       expect(index.changes.isBuilt(aLernaPackage)()).to.equal(false)
       index.changes.build(aLernaPackage, {log})()
@@ -122,11 +125,11 @@ describe('detect-changes', () => {
     })
   })
 
-  it('should respect label for makePackageBuilt', () => {
-    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'})
+  it('should respect label for makePackageBuilt', async () => {
+    const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'})
 
-    return project.within(() => {
-      const lernaPackages = index.loadPackages()
+    return project.within(async () => {
+      const lernaPackages = await index.loadPackages()
       lernaPackages.forEach(lernaPackage =>
         expect(index.changes.isBuilt(lernaPackage)()).to.equal(false)
       )
@@ -136,11 +139,11 @@ describe('detect-changes', () => {
     })
   })
 
-  it('should respect label for makePackageUnbuilt', () => {
-    const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'})
+  it('should respect label for makePackageUnbuilt', async () => {
+    const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'})
 
-    return project.within(() => {
-      const aLernaPackage = index.loadPackages().pop()
+    return project.within(async () => {
+      const [aLernaPackage] = await index.loadPackages()
       index.changes.unbuild(aLernaPackage)()
       expect(index.changes.isBuilt(aLernaPackage)('woop')).to.equal(true)
 

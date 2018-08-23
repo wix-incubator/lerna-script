@@ -1,8 +1,10 @@
-const PackageUtilities = require('lerna/lib/PackageUtilities'),
-  npmlog = require('npmlog'),
+const npmlog = require('npmlog'),
   Promise = require('bluebird'),
   {markPackageBuilt} = require('./detect-changes'),
-  {removeBuilt} = require('./filters')
+  {removeBuilt} = require('./filters'),
+  batchPackages = require('@lerna/batch-packages'),
+  runParallelBatches = require('@lerna/run-parallel-batches')
+
 
 function forEach(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
@@ -52,7 +54,7 @@ function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
     const forEachTracker = log.newGroup('batched', lernaPackages.length)
     npmlog.enableProgress()
 
-    const batchedPackages = PackageUtilities.topologicallyBatchPackages(filteredLernaPackages)
+    const batchedPackages = batchPackages(filteredLernaPackages, true)// PackageUtilities.topologicallyBatchPackages(filteredLernaPackages)
     const lernaTaskFn = lernaPackage => done => {
       const promiseTracker = forEachTracker.newItem(lernaPackage.name)
       promiseTracker.pause()
@@ -66,14 +68,11 @@ function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
         })
     }
 
-    return new Promise((resolve, reject) => {
-      PackageUtilities.runParallelBatches(
-        batchedPackages,
-        lernaTaskFn,
-        4,
-        err => (err ? reject(err) : resolve())
-      )
-    })
+    return runParallelBatches(
+      batchedPackages,
+      4,
+      lernaTaskFn
+    )
   }
 }
 

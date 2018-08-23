@@ -30,8 +30,8 @@ function aLernaProjectWith2Modules() {
   return aLernaProject({a: [], b: ['a']})
 }
 
-function aLernaProject(spec = {}, overrides = {}) {
-  const project = empty()
+async function aLernaProject(spec = {}, overrides = {}) {
+  const project = await empty()
     .packageJson({name: 'root'})
     .lernaJson()
     .inDir(ctx => ctx.exec('git init'))

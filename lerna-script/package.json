@@ -33,6 +33,14 @@
     "lerna": "3.1.4"
   },
   "dependencies": {
+    "@lerna/batch-packages": "^3.1.2",
+    "@lerna/child-process": "^3.0.0",
+    "@lerna/collect-updates": "^3.1.0",
+    "@lerna/npm-run-script": "^3.0.0",
+    "@lerna/package": "^3.0.0",
+    "@lerna/package-graph": "^3.1.2",
+    "@lerna/project": "^3.0.0",
+    "@lerna/run-parallel-batches": "^3.0.0",
     "bluebird": "3.5.1",
     "fs-extra": "7.0.0",
     "ignore": "5.0.2",

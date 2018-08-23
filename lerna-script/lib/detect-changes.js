@@ -1,7 +1,6 @@
 const fs = require('fs'),
   fsExtra = require('fs-extra'),
   path = require('path'),
-  fsUtils = require('lerna/lib/FileSystemUtilities'),
   ignore = require('ignore'),
   shelljs = require('shelljs'),
   npmlog = require('npmlog')
@@ -32,7 +31,7 @@ function isPackageBuilt(lernaPackage) {
     const ignored = collectIgnores(lernaPackage.location)
     const targetSentinelForPackage = targetFileSentinelFile(lernaPackage, label)
     return (
-      fsUtils.existsSync(targetSentinelForPackage) &&
+      fs.existsSync(targetSentinelForPackage) &&
       !modifiedAfter(
         lernaPackage.location,
         '.',

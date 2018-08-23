@@ -5,15 +5,17 @@ const {expect} = require('chai'),
   index = require('..')
 
 describe('iterators', () => {
-  ;['forEach', 'parallel', 'batched'].forEach(type => {
+  ['forEach', 'parallel', 'batched'].forEach(type => {
+
     describe(type, () => {
-      it('should filter-out changed packages', () => {
-        const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: type})
+
+      it('should filter-out changed packages', async () => {
+        const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: type})
         const log = loggerMock()
         let processedPackagesCount = 0
 
-        return project.within(() => {
-          const packages = index.loadPackages()
+        return project.within(async () => {
+          const packages = await index.loadPackages()
           index.changes.unbuild(packages.find(p => p.name === 'b'))(type)
 
           return index.iter[type](packages, {build: type, log})(
@@ -29,8 +31,8 @@ describe('iterators', () => {
       })
 
       it('should mark modules as built if "build" is provided', () => {
-        return aLernaProjectWith2Modules().within(() => {
-          const packages = index.loadPackages()
+        return aLernaProjectWith2Modules().within(async () => {
+          const packages = await index.loadPackages()
 
           return index.iter[type](packages, {build: type})(() => Promise.resolve()).then(() => {
             packages.forEach(lernaPackage =>
@@ -41,8 +43,8 @@ describe('iterators', () => {
       })
 
       it('should not mark as build on failure', done => {
-        aLernaProjectWith2Modules().within(() => {
-          const packages = index.loadPackages()
+        aLernaProjectWith2Modules().within(async () => {
+          const packages = await index.loadPackages()
 
           return index.iter[type](packages, {build: type})(() =>
             Promise.reject(new Error('woops'))
@@ -62,8 +64,8 @@ describe('iterators', () => {
       const task = sinon.spy()
       const log = loggerMock()
 
-      return aLernaProjectWith2Modules().within(() => {
-        const packages = index.loadPackages()
+      return aLernaProjectWith2Modules().within(async () => {
+        const packages = await index.loadPackages()
 
         return index.iter
           .forEach(packages, {log})((pkg, innerLog) => task(pkg.name) || innerLog.info(pkg.name))
@@ -83,8 +85,8 @@ describe('iterators', () => {
       const task = sinon.spy()
       const log = loggerMock()
 
-      return aLernaProjectWith2Modules().within(() => {
-        const packages = index.loadPackages()
+      return aLernaProjectWith2Modules().within(async () => {
+        const packages = await index.loadPackages()
 
         return index.iter
           .parallel(packages, {log})((pkg, innerLog) => task(pkg.name) || innerLog.info(pkg.name))
@@ -104,8 +106,8 @@ describe('iterators', () => {
       const task = sinon.spy()
       const log = loggerMock()
 
-      return aLernaProjectWith2Modules().within(() => {
-        const packages = index.loadPackages()
+      return aLernaProjectWith2Modules().within(async () => {
+        const packages = await index.loadPackages()
 
         return index.iter
           .batched(packages, {log})((pkg, innerLog) => task(pkg.name) || innerLog.info(pkg.name))

@@ -5,11 +5,11 @@ const {expect} = require('chai').use(require('sinon-chai')),
 
 describe('packages', () => {
   describe('loadPackages', () => {
-    it('should return a list of packages', () => {
+    it('should return a list of packages', async () => {
       const log = loggerMock()
 
-      return aLernaProjectWith2Modules().within(() => {
-        const packages = index.loadPackages({log})
+      await aLernaProjectWith2Modules().within(async () => {
+        const packages = await index.loadPackages({log})
 
         expect(packages.length).to.equal(2)
         expect(log.verbose).to.have.been.calledWithMatch(
@@ -20,11 +20,11 @@ describe('packages', () => {
       })
     })
 
-    it('should accept custom package configs', () => {
+    it('should accept custom package configs', async () => {
       const log = loggerMock()
 
-      return aLernaProjectWith2Modules().within(() => {
-        const packages = index.loadPackages({log, packageConfigs: ['packages/a']})
+      await aLernaProjectWith2Modules().within(async () => {
+        const packages = await index.loadPackages({log, packageConfigs: ['packages/a']})
 
         expect(packages.map(p => p.name)).to.have.same.members(['a'])
         expect(log.verbose).to.have.been.calledWithMatch(
@@ -35,14 +35,14 @@ describe('packages', () => {
       })
     })
 
-    it('should return topo-sorted packages', () => {
-      return aLernaProject({
+    it('should return topo-sorted packages', async () => {
+      await aLernaProject({
         a: ['b'],
         b: ['c'],
         c: ['d'],
         d: []
-      }).within(() => {
-        const packages = index.loadPackages()
+      }).within(async () => {
+        const packages = await index.loadPackages()
         expect(packages.map(p => p.name)).to.deep.equal(['d', 'c', 'b', 'a'])
       })
     })

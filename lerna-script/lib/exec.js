@@ -1,5 +1,5 @@
-const NpmUtilities = require('lerna/lib/NpmUtilities'),
-  ChildProcessUtilities = require('lerna/lib/ChildProcessUtilities'),
+const {script: runNpmScript, stream: runNpmScriptStreaming} = require('@lerna/npm-run-script'),
+  {exec, spawnStreaming} = require('@lerna/child-process'),
   npmlog = require('npmlog')
 
 function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
@@ -8,47 +8,68 @@ function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true,
     const commandAndArgs = command.split(' ')
     const actualCommand = commandAndArgs.shift()
     const actualCommandArgs = commandAndArgs
-    return new Promise((resolve, reject) => {
-      const callback = (err, stdout) => (err ? reject(err) : resolve(stdout))
+    // return new Promise((resolve, reject) => {
+    //   const callback = (err, stdout) => (err ? reject(err) : resolve(stdout))
       if (silent) {
-        ChildProcessUtilities.exec(
+        return exec(
           actualCommand,
           [...actualCommandArgs],
-          {cwd: lernaPackage.location},
-          callback
+          {cwd: lernaPackage.location}
         )
       } else {
-        ChildProcessUtilities.spawnStreaming(
+        return spawnStreaming(
           actualCommand,
           [...actualCommandArgs],
           {cwd: lernaPackage.location},
-          lernaPackage.name,
-          callback
+          lernaPackage.name
         )
       }
-    })
+
+
+    // return new Promise((resolve, reject) => {
+    //   const callback = (err, stdout) => (err ? reject(err) : resolve(stdout))
+    //   if (silent) {
+    //     ChildProcessUtilities.exec(
+    //       actualCommand,
+    //       [...actualCommandArgs],
+    //       {cwd: lernaPackage.location},
+    //       callback
+    //     )
+    //   } else {
+    //     ChildProcessUtilities.spawnStreaming(
+    //       actualCommand,
+    //       [...actualCommandArgs],
+    //       {cwd: lernaPackage.location},
+    //       lernaPackage.name,
+    //       callback
+    //     )
+    //   }
+    // })
   }
 }
 
 function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
   return script => {
     if (lernaPackage.scripts && lernaPackage.scripts[script]) {
-      return new Promise((resolve, reject) => {
-        const callback = (err, stdout) => (err ? reject(err) : resolve(stdout))
         if (silent) {
-          NpmUtilities.runScriptInDir(
-            script,
-            {args: [], directory: lernaPackage.location, npmClient: 'npm'},
-            callback
-          )
-        } else {
-          NpmUtilities.runScriptInPackageStreaming(
+          return runNpmScript(
             script,
             {args: [], pkg: lernaPackage, npmClient: 'npm'},
             callback
           )
+
+          // NpmUtilities.runScriptInDir(
+          //   script,
+          //   {args: [], directory: lernaPackage.location, npmClient: 'npm'},
+          //   callback
+          // )
+        } else {
+          return runNpmScriptStreaming(
+            script,
+            {args: [], pkg: lernaPackage, npmClient: 'npm'}
+          )
         }
-      })
+      // })
     } else {
       log.warn('runNpmScript', 'script not found', {script, cwd: lernaPackage.location})
       return Promise.resolve('')

@@ -24,11 +24,11 @@ class ModuleBuilder {
     return this._isRoot
   }
 
-  inDir(fn) {
+  async inDir(fn) {
     process.chdir(this.dir)
 
     try {
-      fn(this)
+      await fn(this)
     } finally {
       process.chdir(this.cwd)
     }
