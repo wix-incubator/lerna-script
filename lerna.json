@@ -1,31 +1,15 @@
 {
   "lerna": "2.0.0",
+<<<<<<< HEAD
   "packages": ["lerna-script", "test-utils", "tasks/*"],
+=======
+  "packages": ["lerna-script", "test-utils", "tasks/*", "presets/*"],
+>>>>>>> up lerna version to 3
   "version": "0.9.3",
   "managedDependencies": {
-    "bluebird": "3.5.0",
-    "fs-extra": "4.0.2",
-    "chai": "4.1.2",
-    "mocha": "3.5.3",
-    "sinon": "3.2.1",
-    "exec-then": "1.3.1",
-    "ignore": "3.3.5",
-    "lodash": "4.17.4",
-    "npmlog": "4.1.2",
-    "shelljs": "0.7.8",
-    "intercept-stdout": "0.1.2",
-    "lerna": "2.9.0",
-    "sinon-chai": "2.13.0",
-    "deep-keys": "0.4.0",
-    "ramda": "0.24.1",
-    "semver": "5.4.1",
-    "handlebars": "4.0.10",
-    "git-remote-url": "1.0.1",
-    "hosted-git-info": "2.5.0",
-    "depcheck": "0.6.7"
+    "lerna": "3.1.4"
   },
   "managedPeerDependencies": {
-    "sinon": ">3.0.0",
-    "lerna": "~2.9.0"
+    "lerna": "3.1.4"
   }
 }
