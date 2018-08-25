@@ -17,7 +17,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "depcheck": "0.6.9"
+    "depcheck": "0.6.11"
   },
   "peerDependencies": {
     "lerna-script": ">=0.9.0"
