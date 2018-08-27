@@ -1,4 +1,4 @@
-const {script: runNpmScript, stream: runNpmScriptStreaming} = require('@lerna/npm-run-script'),
+const runNpmScript = require('@lerna/npm-run-script'),
   {exec, spawnStreaming} = require('@lerna/child-process'),
   npmlog = require('npmlog')
 
@@ -15,14 +15,14 @@ function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true,
           actualCommand,
           [...actualCommandArgs],
           {cwd: lernaPackage.location}
-        )
+        ).then(res => res.stdout)
       } else {
         return spawnStreaming(
           actualCommand,
           [...actualCommandArgs],
           {cwd: lernaPackage.location},
           lernaPackage.name
-        )
+        ).then(res => res.stdout)
       }
 
 
@@ -54,9 +54,8 @@ function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, 
         if (silent) {
           return runNpmScript(
             script,
-            {args: [], pkg: lernaPackage, npmClient: 'npm'},
-            callback
-          )
+            {args: [], pkg: lernaPackage, npmClient: 'npm'}
+          ).then(res => res.stdout)
 
           // NpmUtilities.runScriptInDir(
           //   script,
@@ -64,10 +63,10 @@ function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, 
           //   callback
           // )
         } else {
-          return runNpmScriptStreaming(
+          return runNpmScript.stream(
             script,
             {args: [], pkg: lernaPackage, npmClient: 'npm'}
-          )
+          ).then(res => res.stdout)
         }
       // })
     } else {
