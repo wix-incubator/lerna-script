@@ -9,8 +9,8 @@ const {
   npmfix = require('..')
 
 describe('npmfix task', () => {
-  it('should update docs, repo url in package.json', () => {
-    const project = aLernaProjectWith2Modules()
+  it('should update docs, repo url in package.json', async () => {
+    const project = await aLernaProjectWith2Modules()
     const log = loggerMock()
 
     return project.within(ctx => {
@@ -41,15 +41,16 @@ describe('npmfix task', () => {
     })
   })
 
-  it('should update only for provided modules', () => {
-    const project = aLernaProjectWith2Modules()
+  it('should update only for provided modules', async () => {
+    const project = await aLernaProjectWith2Modules()
     const log = loggerMock()
 
-    return project.within(ctx => {
+    return project.within(async ctx => {
       ctx.exec('git remote add origin git@github.com:git/qwe.git')
 
-      const packages = loadPackages().filter(p => p.name === 'a')
-      return npmfix({packages})(log).then(() => {
+      const packages = await loadPackages()
+      const filteredPackages = packages.filter(p => p.name === 'a')
+      return npmfix({packages: filteredPackages})(log).then(() => {
         expect(fs.readJson('./packages/a/package.json')).to.contain.property(
           'homepage',
           'https://github.com/git/qwe/tree/master/packages/a'
@@ -59,14 +60,14 @@ describe('npmfix task', () => {
     })
   })
 
-  it('should sort dependencies', () => {
+  it('should sort dependencies', async () => {
     function makeDependencies(...names) {
       const deps = {}
       names.forEach(key => (deps[key] = '1.0'))
       return deps
     }
 
-    const project = aLernaProject(
+    const project = await aLernaProject(
       {a: []},
       {
         dependencies: makeDependencies('z', 'c', 'b'),
@@ -76,10 +77,11 @@ describe('npmfix task', () => {
     )
 
     const log = loggerMock()
-    return project.within(ctx => {
+    return project.within(async ctx => {
       ctx.exec('git remote add origin git@github.com:git/qwe.git')
 
-      const packages = loadPackages().filter(p => p.name === 'a')
+      const packages = await loadPackages()
+      const filteredPackages = packages.filter(p => p.name === 'a')
       return npmfix({packages})(log).then(() => {
         const fixedPackage = fs.readJson('./packages/a/package.json')
         expect(Object.keys(fixedPackage.dependencies)).to.deep.equal(['b', 'c', 'z'])

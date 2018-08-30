@@ -1,10 +1,6 @@
 {
   "lerna": "2.0.0",
-<<<<<<< HEAD
   "packages": ["lerna-script", "test-utils", "tasks/*"],
-=======
-  "packages": ["lerna-script", "test-utils", "tasks/*", "presets/*"],
->>>>>>> up lerna version to 3
   "version": "0.9.3",
   "managedDependencies": {
     "lerna": "3.1.4"

@@ -18,8 +18,8 @@ function sortDependencies(deps) {
 }
 
 function npmfix({packages} = {}) {
-  return log => {
-    const lernaPackages = packages || loadPackages()
+  return async log => {
+    const lernaPackages = await (packages || loadPackages())
     log.info('npmfix', `fixing homepage, repo urls for ${lernaPackages.length} packages`)
 
     return gitRemoteUrl('.', 'origin').then(gitRemoteUrl => {
