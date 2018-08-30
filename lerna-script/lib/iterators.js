@@ -5,7 +5,6 @@ const npmlog = require('npmlog'),
   batchPackages = require('@lerna/batch-packages'),
   runParallelBatches = require('@lerna/run-parallel-batches')
 
-
 function forEach(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   return taskFn => {
     const filteredLernaPackages = filterBuilt(lernaPackages, log, build)
@@ -54,7 +53,7 @@ function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
     const forEachTracker = log.newGroup('batched', lernaPackages.length)
     npmlog.enableProgress()
 
-    const batchedPackages = batchPackages(filteredLernaPackages, true)// PackageUtilities.topologicallyBatchPackages(filteredLernaPackages)
+    const batchedPackages = batchPackages(filteredLernaPackages, true)
     const lernaTaskFn = lernaPackage => {
       const promiseTracker = forEachTracker.newItem(lernaPackage.name)
       promiseTracker.pause()
@@ -66,11 +65,7 @@ function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
         })
     }
 
-    return runParallelBatches(
-      batchedPackages,
-      4,
-      lernaTaskFn
-    )
+    return runParallelBatches(batchedPackages, 4, lernaTaskFn)
   }
 }
 

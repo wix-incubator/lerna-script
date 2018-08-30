@@ -1,8 +1,6 @@
 const _ = require('lodash'),
   detectChanges = require('./detect-changes'),
   collectUpdates = require('@lerna/collect-updates'),
-  //UpdatedPackagesCollector = require('lerna/lib/UpdatedPackagesCollector'),
-  // PackageUtilities = require('lerna/lib/PackageUtilities'),
   PackageGraph = require('@lerna/package-graph'),
   batchPackages = require('@lerna/batch-packages'),
   filterPackages = require('@lerna/filter-packages'),
@@ -12,10 +10,8 @@ function includeFilteredDeps(allLernaPackages, {log = npmlog} = {log: npmlog}) {
   return filteredLernaPackages => {
     const packageGraph = new PackageGraph(allLernaPackages)
     const withFiltered = packageGraph.addDependencies(filteredLernaPackages)
-    // const withFiltered = PackageUtilities.addDependencies(filteredLernaPackages, packageGraph)
 
     const batched = batchPackages(withFiltered)
-    // const batched = PackageUtilities.topologicallyBatchPackages(withFiltered)
 
     return _.flatten(batched)
   }
@@ -23,7 +19,6 @@ function includeFilteredDeps(allLernaPackages, {log = npmlog} = {log: npmlog}) {
 
 function removeByGlob(lernaPackages, {log = npmlog} = {log: npmlog}) {
   return glob => {
-    // const filteredPackages = PackageUtilities.filterPackages(lernaPackages, {ignore: glob})
     const filteredPackages = filterPackages(lernaPackages, [], glob)
     const removedPackageNames = diffPackages(lernaPackages, filteredPackages)
     log.verbose('removeByGlob', `removed ${removedPackageNames.length} packages`, {
@@ -38,48 +33,13 @@ function removeByGlob(lernaPackages, {log = npmlog} = {log: npmlog}) {
 function removeGitSince(lernaPackages, {log = npmlog} = {log: npmlog}) {
   return refspec => {
     const packageGraph = new PackageGraph(lernaPackages)
-    // const collectedPackages = collectUpdates({
-    //     filteredPackages: lernaPackages,
-    //     logger: log,
-    //     packageGraph,
-    //     // repository: {
-    //     //   packageGraph,
-    //     //   rootPath: process.cwd()
-    //     // },
-    //     options: {since: refspec},
-    //     execOpts: {
-    //       cwd: process.cwd()
-    //     }
-    //   })
     const collectedPackages = collectUpdates(
       lernaPackages,
-      // logger: log,
       packageGraph,
-      // repository: {
-      //   packageGraph,
-      //   rootPath: process.cwd()
-      // },
-      // options: ,
-      // {},
       {cwd: process.cwd()},
       {since: refspec}
     )
 
-    // const collector = new UpdatedPackagesCollector({
-    //   filteredPackages: lernaPackages,
-    //   logger: log,
-    //   packageGraph,
-    //   repository: {
-    //     packageGraph,
-    //     rootPath: process.cwd()
-    //   },
-    //   options: {since: refspec},
-    //   execOpts: {
-    //     cwd: process.cwd()
-    //   }
-    // })
-
-    // const filterefPackages = collectedPackages.map(u => u.package)
     const removedPackageNames = diffPackages(lernaPackages, collectedPackages)
     log.verbose('removeGitSince', `removed ${removedPackageNames.length} packages`, {
       refspec,

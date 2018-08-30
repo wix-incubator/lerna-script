@@ -10,65 +10,33 @@ function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true,
     const actualCommandArgs = commandAndArgs
     // return new Promise((resolve, reject) => {
     //   const callback = (err, stdout) => (err ? reject(err) : resolve(stdout))
-      if (silent) {
-        return exec(
-          actualCommand,
-          [...actualCommandArgs],
-          {cwd: lernaPackage.location}
-        ).then(res => res.stdout)
-      } else {
-        return spawnStreaming(
-          actualCommand,
-          [...actualCommandArgs],
-          {cwd: lernaPackage.location},
-          lernaPackage.name
-        ).then(res => res.stdout)
-      }
-
-
-    // return new Promise((resolve, reject) => {
-    //   const callback = (err, stdout) => (err ? reject(err) : resolve(stdout))
-    //   if (silent) {
-    //     ChildProcessUtilities.exec(
-    //       actualCommand,
-    //       [...actualCommandArgs],
-    //       {cwd: lernaPackage.location},
-    //       callback
-    //     )
-    //   } else {
-    //     ChildProcessUtilities.spawnStreaming(
-    //       actualCommand,
-    //       [...actualCommandArgs],
-    //       {cwd: lernaPackage.location},
-    //       lernaPackage.name,
-    //       callback
-    //     )
-    //   }
-    // })
+    if (silent) {
+      return exec(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}).then(
+        res => res.stdout
+      )
+    } else {
+      return spawnStreaming(
+        actualCommand,
+        [...actualCommandArgs],
+        {cwd: lernaPackage.location},
+        lernaPackage.name
+      ).then(res => res.stdout)
+    }
   }
 }
 
 function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
   return script => {
     if (lernaPackage.scripts && lernaPackage.scripts[script]) {
-        if (silent) {
-          return runNpmScript(
-            script,
-            {args: [], pkg: lernaPackage, npmClient: 'npm'}
-          ).then(res => res.stdout)
-
-          // NpmUtilities.runScriptInDir(
-          //   script,
-          //   {args: [], directory: lernaPackage.location, npmClient: 'npm'},
-          //   callback
-          // )
-        } else {
-          return runNpmScript.stream(
-            script,
-            {args: [], pkg: lernaPackage, npmClient: 'npm'}
-          ).then(res => res.stdout)
-        }
-      // })
+      if (silent) {
+        return runNpmScript(script, {args: [], pkg: lernaPackage, npmClient: 'npm'}).then(
+          res => res.stdout
+        )
+      } else {
+        return runNpmScript
+          .stream(script, {args: [], pkg: lernaPackage, npmClient: 'npm'})
+          .then(res => res.stdout)
+      }
     } else {
       log.warn('runNpmScript', 'script not found', {script, cwd: lernaPackage.location})
       return Promise.resolve('')

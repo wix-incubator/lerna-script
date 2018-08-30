@@ -49,7 +49,6 @@ function targetFileSentinelFile(lernaPackage, label = 'default') {
 function modifiedAfter(baseDir, dir, ignored, timeStamp) {
   let rootAbsolutePath = path.resolve(baseDir, dir)
   const entries = shelljs.ls(rootAbsolutePath)
-  //const entries = klawSync(lernaPackage.location);
 
   return entries
     .map(entry => {
