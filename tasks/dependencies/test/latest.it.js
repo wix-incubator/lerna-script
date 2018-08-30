@@ -7,14 +7,14 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
 describe('latest task', function() {
   this.timeout(30000)
 
-  it('should list dependencies that can be updated', () => {
+  it('should list dependencies that can be updated', async () => {
     const ramdaVersion = execSync('npm info ramda dist-tags.latest')
       .toString()
       .trim('\n')
     const lodashVersion = execSync('npm info lodash dist-tags.latest')
       .toString()
       .trim('\n')
-    const {log, project} = setup({
+    const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest',
         shelljs: '*',
@@ -40,14 +40,14 @@ describe('latest task', function() {
     })
   })
 
-  it('should respect range operator when provided', () => {
+  it('should respect range operator when provided', async () => {
     const ramdaVersion = execSync('npm info ramda dist-tags.latest')
       .toString()
       .trim('\n')
     const lodashVersion = execSync('npm info lodash dist-tags.latest')
       .toString()
       .trim('\n')
-    const {log, project} = setup({
+    const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest',
         shelljs: '*',
@@ -73,8 +73,8 @@ describe('latest task', function() {
     })
   })
 
-  it('should log and exit for no updates', () => {
-    const {log, project} = setup({
+  it('should log and exit for no updates', async () => {
+    const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest'
       }
@@ -87,15 +87,16 @@ describe('latest task', function() {
     })
   })
 
-  it('should not reject for missing managedDependencies, managedPeerDependencies', () => {
-    const {log, project} = setup()
+  it('should not reject for missing managedDependencies, managedPeerDependencies', async () => {
+    const {log, project} = await setup()
 
     return project.within(() => latest()(log))
   })
 
-  function setup(lernaJsonOverrides = {}) {
+  async function setup(lernaJsonOverrides = {}) {
     const log = loggerMock()
-    const project = aLernaProject().lernaJson(lernaJsonOverrides)
+    const project = await aLernaProject()
+    project.lernaJson(lernaJsonOverrides)
 
     return {log, project}
   }

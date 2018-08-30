@@ -4,8 +4,8 @@ const {aLernaProject, loggerMock, fs} = require('lerna-script-test-utils'),
   {sync} = require('..')
 
 describe('sync task', () => {
-  it('should sync dependencies, depDependencies, peerDependencies defined in root package.json as managed*Dependencies', () => {
-    const {log, project} = setup()
+  it('should sync dependencies, depDependencies, peerDependencies defined in root package.json as managed*Dependencies', async () => {
+    const {log, project} = await setup()
 
     return project.within(() => {
       return sync()(log).then(() => {
@@ -39,13 +39,14 @@ describe('sync task', () => {
     })
   })
 
-  it('should use packages if provided', () => {
-    const {log, project} = setup()
+  it('should use packages if provided', async () => {
+    const {log, project} = await setup()
 
-    return project.within(() => {
-      const packages = loadPackages().filter(p => p.name === 'a')
+    return project.within(async () => {
+      const packages = await loadPackages()
+      const filteredPackages = packages.filter(p => p.name === 'a')
 
-      return sync({packages})(log).then(() => {
+      return sync({packages: filteredPackages})(log).then(() => {
         expect(fs.readJson('packages/a/package.json')).to.contain.nested.property(
           'peerDependencies.foo',
           '> 1.0.0'
@@ -63,9 +64,10 @@ describe('sync task', () => {
     })
   })
 
-  function setup() {
+  async function setup() {
     const log = loggerMock()
-    const project = aLernaProject()
+    const project = await aLernaProject()
+    project
       .lernaJson({
         managedDependencies: {
           lodash: '1.1.0'
