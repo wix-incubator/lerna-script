@@ -84,8 +84,8 @@ describe('exec', () => {
         scripts: {test: 'echo tested'}
       })
 
-      return project.within(() => {
-        const lernaPackage = index.loadRootPackage()
+      return project.within(async () => {
+        const lernaPackage = await index.loadRootPackage()
 
         return index.exec
           .script(lernaPackage, {silent: false})('test')
@@ -104,8 +104,8 @@ describe('exec', () => {
         scripts: {test: 'qwe zzz'}
       })
 
-      project.within(() => {
-        const lernaPackage = index.loadRootPackage()
+      project.within(async () => {
+        const lernaPackage = await index.loadRootPackage()
 
         index.exec
           .script(lernaPackage)('test')

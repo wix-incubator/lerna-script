@@ -7,13 +7,13 @@ describe('filters', function() {
   this.timeout(5000)
 
   describe('includeFilteredDeps', () => {
-    it('should add dependent package', () => {
+    it('should add dependent package', async () => {
       const log = loggerMock()
-      const project = aLernaProjectWith2Modules()
+      const project = await aLernaProjectWith2Modules()
 
-      return project.within(() => {
-        const allPackages = index.loadPackages()
-        const lernaPackages = index.filters.removeByGlob(index.loadPackages(), {log})('a')
+      return project.within(async () => {
+        const allPackages = await index.loadPackages()
+        const lernaPackages = index.filters.removeByGlob(allPackages, {log})('a')
         const filteredPackages = index.filters.includeFilteredDeps(allPackages, {log})(
           lernaPackages
         )
@@ -23,12 +23,13 @@ describe('filters', function() {
   })
 
   describe('removeByGlob', () => {
-    it('should filter-out packages by provided glob', () => {
+    it('should filter-out packages by provided glob', async () => {
       const log = loggerMock()
-      const project = aLernaProjectWith2Modules()
+      const project = await aLernaProjectWith2Modules()
 
-      return project.within(() => {
-        const lernaPackages = index.filters.removeByGlob(index.loadPackages(), {log})('a')
+      return project.within(async () => {
+        const packages = await index.loadPackages();
+        const lernaPackages = index.filters.removeByGlob(packages, {log})('a')
         expect(lernaPackages.map(p => p.name)).to.have.same.members(['b'])
         expect(log.verbose).to.have.been.calledWithMatch('removeByGlob', 'removed 1 packages')
       })
@@ -36,21 +37,22 @@ describe('filters', function() {
   })
 
   describe('removeBuilt', () => {
-    it('should not filter-out any packages for unbuilt project', () => {
-      const project = aLernaProjectWith2Modules()
+    it('should not filter-out any packages for unbuilt project', async () => {
+      const project = await aLernaProjectWith2Modules()
 
-      return project.within(() => {
-        const unbuiltLernaPackages = index.filters.removeBuilt(index.loadPackages())()
+      return project.within(async () => {
+        const packages = await index.loadPackages();
+        const unbuiltLernaPackages = index.filters.removeBuilt(packages)()
         expect(unbuiltLernaPackages.length).to.equal(2)
       })
     })
 
-    it('should filter-out changed packages', () => {
+    it('should filter-out changed packages', async () => {
       const log = loggerMock()
-      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()))
+      const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()))
 
-      return project.within(() => {
-        const packages = index.loadPackages()
+      return project.within(async () => {
+        const packages = await index.loadPackages()
         index.changes.unbuild(packages.find(p => p.name === 'b'))()
 
         const unbuiltLernaPackages = index.filters.removeBuilt(packages, {log})()
@@ -64,11 +66,11 @@ describe('filters', function() {
       })
     })
 
-    it('should filter-out packages whose dependencies changed', () => {
-      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()))
+    it('should filter-out packages whose dependencies changed', async () => {
+      const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()))
 
-      return project.within(() => {
-        const lernaPackages = index.loadPackages()
+      return project.within(async () => {
+        const lernaPackages = await index.loadPackages()
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'b'))()
 
         const unbuiltLernaPackages = index.filters.removeBuilt(lernaPackages)()
@@ -76,11 +78,11 @@ describe('filters', function() {
       })
     })
 
-    it('should respect labels when filtering-out packages', () => {
-      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'})
+    it('should respect labels when filtering-out packages', async () => {
+      const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: 'woop'})
 
-      return project.within(() => {
-        const lernaPackages = index.loadPackages()
+      return project.within(async () => {
+        const lernaPackages = await index.loadPackages()
 
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'b'))()
         expect(index.filters.removeBuilt(lernaPackages)('woop').length).to.equal(0)
@@ -90,11 +92,11 @@ describe('filters', function() {
       })
     })
 
-    it('should unmark dependents as built', () => {
-      const project = asBuilt(asGitCommited(aLernaProjectWith2Modules()))
+    it('should unmark dependents as built', async () => {
+      const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()))
 
-      return project.within(ctx => {
-        const lernaPackages = index.loadPackages()
+      return project.within(async ctx => {
+        const lernaPackages = await index.loadPackages()
         index.changes.unbuild(lernaPackages.find(lernaPackage => lernaPackage.name === 'a'))()
 
         expect(index.filters.removeBuilt(lernaPackages)().length).to.equal(2)
@@ -107,28 +109,32 @@ describe('filters', function() {
   })
 
   describe('filters.gitSince', () => {
-    it('removes modules without changes', () => {
+    it('removes modules without changes', async () => {
       const log = loggerMock()
-      return empty()
+       const project = empty()
         .addFile('package.json', {name: 'root', version: '1.0.0'})
         .addFile('lerna.json', {lerna: '2.0.0', packages: ['packages/**'], version: '0.0.0'})
         .module('packages/a', module => module.packageJson({name: 'a', version: '2.0.0'}))
         .module('packages/ba', module =>
           module.packageJson({name: 'ba', version: '1.0.0', dependencies: {b: '~1.0.0'}})
         )
-        .inDir(ctx => {
+
+        await project.inDir(ctx => {
           ctx.exec(
             'git init && git config user.email mail@example.org && git config user.name name'
           )
           ctx.exec('git add -A && git commit -am ok')
           ctx.exec('git checkout -b test')
         })
-        .module('packages/b', module => module.packageJson({name: 'b', version: '1.0.0'}))
-        .inDir(ctx => {
+
+        project.module('packages/b', module => module.packageJson({name: 'b', version: '1.0.0'}))
+
+        await project.inDir(ctx => {
           ctx.exec('git add -A && git commit -am ok')
         })
-        .within(() => {
-          const lernaPackages = index.filters.gitSince(index.loadPackages(), {log})('master')
+        return project .within(async () => {
+          const  packages = await index.loadPackages();
+          const lernaPackages = index.filters.gitSince(packages, {log})('master')
 
           expect(lernaPackages.map(p => p.name)).to.have.same.members(['b', 'ba'])
           expect(log.verbose).to.have.been.calledWithMatch('removeGitSince', 'removed 1 packages')
