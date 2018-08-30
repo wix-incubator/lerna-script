@@ -1,11 +1,6 @@
 {
   "lerna": "2.0.0",
-  "packages": [
-    "lerna-script",
-    "test-utils",
-    "tasks/*",
-    "presets/*"
-  ],
+  "packages": ["lerna-script", "test-utils", "tasks/*"],
   "version": "0.9.3",
   "managedDependencies": {
     "bluebird": "3.5.0",

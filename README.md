@@ -4,12 +4,12 @@
 more than it provides. [lerna-script](https://www.npmjs.com/package/lerna-script) might be just the thing you need. It allows
 you to add custom tasks/scripts to automate multiple package management routine tasks. Some use cases:
 
-* normalize `package.json`s of all modules (ex. fix repo url, docs url) on pre-push/pre-commit;
-* generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
-* sync dependencies across all modules - ex. to have same version of mocha;
-* have composite tasks (install, run npm scripts) to ease maintenance for large teams/OSS projects.
-* regenerate readme's for root readme and all modules that are using ex. [markdown-magic](https://github.com/DavidWells/markdown-magic);
-* whatever else you need.
+- normalize `package.json`s of all modules (ex. fix repo url, docs url) on pre-push/pre-commit;
+- generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
+- sync dependencies across all modules - ex. to have same version of mocha;
+- have composite tasks (install, run npm scripts) to ease maintenance for large teams/OSS projects.
+- regenerate readme's for root readme and all modules that are using ex. [markdown-magic](https://github.com/DavidWells/markdown-magic);
+- whatever else you need.
 
 # Install
 
@@ -19,11 +19,11 @@ npm install --save-dev lerna-script
 
 # Usage
 
-* [Basic usage example](#basic-usage-example)
-* [Incremental builds](#incremental-builds)
-* [Tasks](#tasks)
-* [Git hooks](#git-hooks)
-* [External presets](#external-presets)
+- [Basic usage example](#basic-usage-example)
+- [Incremental builds](#incremental-builds)
+- [Tasks](#tasks)
+- [Git hooks](#git-hooks)
+- [External presets](#external-presets)
 
 ## Basic usage example
 
@@ -60,9 +60,9 @@ npm run ls syncNvmRc
 
 What happened here:
 
-* you created `lerna.js` where each export is a task referenced by export name you can execute via `lerna-script [export]`;
-* you used functions from `lerna-script` which are just thin wrappers around [lerna api](https://github.com/lerna/lerna/tree/master/src);
-* you created task to sync root `.nvmrc` to all modules so that all of them have same node version defined.
+- you created `lerna.js` where each export is a task referenced by export name you can execute via `lerna-script [export]`;
+- you used functions from `lerna-script` which are just thin wrappers around [lerna api](https://github.com/lerna/lerna/tree/master/src);
+- you created task to sync root `.nvmrc` to all modules so that all of them have same node version defined.
 
 You could also fallback to [lerna api](https://github.com/lerna/lerna/tree/master/src) and write same task as:
 
@@ -109,19 +109,19 @@ where property `build` on `forEach` marks processed package as built with label 
 
 [lerna-script](.) has some pre-assembled tasks/task-sets for solving some problem. Examples:
 
-* [idea](./tasks/idea) - to generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
-* [npmfix](./tasks/npmfix) - to fix repo, docs links for all modules matching their git path;
-* [modules](./tasks/modules) - to align module versions across repo;
-* [depcheck](./tasks/depcheck) - to run [depcheck](https://github.com/depcheck/depcheck) for all modules in repo;
-* [dependencies](./tasks/dependencies) - group of tasks to manage/sync/update dependency versions for all modules.
+- [idea](./tasks/idea) - to generate [WebStorm](https://www.jetbrains.com/webstorm/) project for all modules in repo;
+- [npmfix](./tasks/npmfix) - to fix repo, docs links for all modules matching their git path;
+- [modules](./tasks/modules) - to align module versions across repo;
+- [depcheck](./tasks/depcheck) - to run [depcheck](https://github.com/depcheck/depcheck) for all modules in repo;
+- [dependencies](./tasks/dependencies) - group of tasks to manage/sync/update dependency versions for all modules.
 
 ## Git hooks
 
 Sometimes there are things you want to make sure are done/enforced on your modules like:
 
-* linting all modules in repo;
-* making sure some meta is normalized automatically across all modules;
-* ...
+- linting all modules in repo;
+- making sure some meta is normalized automatically across all modules;
+- ...
 
 Recommendation is to combine [lerna-script](https://www.npmjs.com/package/lerna-script) with [husky](https://www.npmjs.com/package/husky) for running automatic actions on pre-push/pre-commit hooks. Then you don't have to think about it and it just happens automatically.
 
@@ -161,13 +161,5 @@ but you can actually write tasks in any other file(module) and define it in your
 ```json
 {
   "lerna-script-tasks": "./tasks.js"
-}
-```
-
-So if you want to use presets from say module [lerna-script-preset-wix-npm](presets/wix-npm), you can just set it in `lerna.json` like:
-
-```json
-{
-  "lerna-script-tasks": "lerna-script-preset-wix-npm"
 }
 ```
