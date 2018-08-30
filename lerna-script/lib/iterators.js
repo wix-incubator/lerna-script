@@ -55,13 +55,11 @@ function batched(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
     npmlog.enableProgress()
 
     const batchedPackages = batchPackages(filteredLernaPackages, true)// PackageUtilities.topologicallyBatchPackages(filteredLernaPackages)
-    const lernaTaskFn = lernaPackage => done => {
+    const lernaTaskFn = lernaPackage => {
       const promiseTracker = forEachTracker.newItem(lernaPackage.name)
       promiseTracker.pause()
-      promisifiedTaskFn(lernaPackage, promiseTracker)
+      return promisifiedTaskFn(lernaPackage, promiseTracker)
         .then(() => build && markPackageBuilt(lernaPackage, {log: forEachTracker})(build))
-        .then(done)
-        .catch(done)
         .finally(() => {
           promiseTracker.resume()
           promiseTracker.completeWork(1)

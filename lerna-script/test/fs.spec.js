@@ -4,10 +4,12 @@ const {EOL} = require('os'),
   index = require('..')
 
 describe('fs', () => {
+
   describe('readFile', () => {
-    it('should read a file in module dir and return content as string', () => {
-      return aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+    it('should read a file in module dir and return content as string', async () => {
+      const project = await aLernaProjectWith2Modules();
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
 
         return index.fs
           .readFile(lernaPackage)('package.json')
@@ -17,9 +19,10 @@ describe('fs', () => {
       })
     })
 
-    it('should read a file as json by providing custom converter', () => {
-      return aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+    it('should read a file as json by providing custom converter', async () => {
+      const project = await aLernaProjectWith2Modules();
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
 
         return index.fs
           .readFile(lernaPackage)('package.json', JSON.parse)
@@ -31,9 +34,10 @@ describe('fs', () => {
   })
 
   describe('writeFile', () => {
-    it('should write string to file', () => {
-      return aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+    it('should write string to file', async () => {
+      const project = await aLernaProjectWith2Modules();
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
 
         return index.fs
           .writeFile(lernaPackage)('qwe.txt', 'bubu')
@@ -42,9 +46,10 @@ describe('fs', () => {
       })
     })
 
-    it('should write object with a newline at the end of file', () => {
-      return aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+    it('should write object with a newline at the end of file', async () => {
+      const project = await aLernaProjectWith2Modules();
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
 
         return index.fs
           .writeFile(lernaPackage)('qwe.json', {key: 'bubu'})
@@ -56,9 +61,10 @@ describe('fs', () => {
       })
     })
 
-    it('should accept custom serializer', () => {
-      return aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+    it('should accept custom serializer', async () => {
+      const project = await aLernaProjectWith2Modules();
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
 
         return index.fs
           .writeFile(lernaPackage)('qwe.txt', 'bubu', c => 'a' + c)
