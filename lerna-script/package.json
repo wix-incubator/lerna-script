@@ -33,7 +33,7 @@
     "lerna": "~2.9.0 || ~2.11.0"
   },
   "dependencies": {
-    "bluebird": "3.5.1",
+    "bluebird": "3.5.2",
     "fs-extra": "7.0.0",
     "ignore": "5.0.2",
     "lodash": "4.17.10",
