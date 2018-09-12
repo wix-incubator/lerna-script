@@ -36,7 +36,7 @@
     "bluebird": "3.5.2",
     "fs-extra": "7.0.0",
     "ignore": "5.0.2",
-    "lodash": "4.17.10",
+    "lodash": "4.17.11",
     "npmlog": "4.1.2",
     "shelljs": "0.8.2",
     "yargs": "^12.0.0"
