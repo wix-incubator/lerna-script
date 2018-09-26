@@ -21,7 +21,7 @@
   "author": "vilius@wix.com",
   "license": "BSD",
   "devDependencies": {
-    "chai": "4.1.2",
+    "chai": "4.2.0",
     "intercept-stdout": "0.1.2",
     "lerna": "2.11.0",
     "lerna-script-test-utils": "^0.9.3",
