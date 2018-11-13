@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "handlebars": "4.0.12",
-    "shelljs": "0.8.2"
+    "shelljs": "0.8.3"
   },
   "peerDependencies": {
     "lerna-script": ">=0.9.0"
