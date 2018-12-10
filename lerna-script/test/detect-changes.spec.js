@@ -18,6 +18,10 @@ describe('detect-changes', () => {
     })
   })
 
+  it('should support scoped module names', () => {
+    expect(() => asBuilt(asGitCommited(aLernaProjectWith2Modules('@foo/a')))).to.not.throw()
+  })
+
   it('should detect changes recursively', () => {
     const project = asBuilt(
       asGitCommited(
