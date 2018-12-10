@@ -4,7 +4,8 @@ const {resolve} = require('path'),
   {join} = require('path'),
   fsExtra = require('fs-extra'),
   os = require('os'),
-  sinon = require('sinon')
+  sinon = require('sinon'),
+  sanitize = require('sanitize-filename')
 
 const TEMP_DIR = os.tmpdir()
 
@@ -37,7 +38,7 @@ function aLernaProject(spec = {}, overrides = {}) {
     .inDir(ctx => ctx.exec('git init'))
 
   Object.keys(spec).forEach(name => {
-    project.module(`packages/${name}`, module => {
+    project.module(`packages/${sanitize(name, {replacement: '_'})}`, module => {
       const dependencies = {}
       spec[name].forEach(dep => (dependencies[dep] = '1.0.0'))
       module.packageJson(Object.assign({name, version: '1.0.0', dependencies}, overrides))
