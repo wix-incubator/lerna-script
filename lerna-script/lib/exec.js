@@ -11,9 +11,9 @@ function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true,
     // return new Promise((resolve, reject) => {
     //   const callback = (err, stdout) => (err ? reject(err) : resolve(stdout))
     if (silent) {
-      return exec(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}).then(
-        res => res.stdout
-      )
+      return Promise.resolve()
+        .then(() => exec(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}))
+        .then(res => res.stdout)
     } else {
       return spawnStreaming(
         actualCommand,

@@ -8,7 +8,6 @@ describe('exec', () => {
   const output = captureOutput()
 
   describe('command', () => {
-
     it('should execute command in package cwd and print output by default', async () => {
       const log = loggerMock()
       const project = await aLernaProjectWith2Modules()
@@ -44,20 +43,20 @@ describe('exec', () => {
       })
     })
 
-    it('should reject for a failing command', async () => {
+    it.only('should reject for a failing command', async () => {
       const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
         const [lernaPackage] = await index.loadPackages()
 
-          await invertPromise(index.exec.command(lernaPackage)('asd zzz'))
-            .then(e => expect(e.message).to.match(/spawn.*ENO/))
-        })
+        return await invertPromise(index.exec.command(lernaPackage)('asd')).then(e =>
+          expect(e.message).to.match(/spawn.*ENO/)
+        )
+      })
     })
   })
 
   describe('script', () => {
-
     it('should execute npm script for package and return output', () => {
       const project = empty().addFile('package.json', {
         name: 'root',
