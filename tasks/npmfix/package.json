@@ -18,18 +18,18 @@
   },
   "dependencies": {
     "git-remote-url": "1.0.1",
-    "hosted-git-info": "2.5.0"
+    "hosted-git-info": "2.7.1"
   },
   "peerDependencies": {
-    "lerna-script": ">=0.9.4"
+    "lerna-script": ">=0.9.0"
   },
   "devDependencies": {
-    "chai": "4.1.2",
-    "lerna": "2.9.0",
-    "lerna-script": "~0.9.4",
-    "lerna-script-test-utils": "~0.9.4",
-    "mocha": "3.5.3",
-    "sinon": "3.2.1",
-    "sinon-chai": "2.13.0"
+    "chai": "4.2.0",
+    "lerna": "2.11.0",
+    "lerna-script": "^0.9.4",
+    "lerna-script-test-utils": "^0.9.4",
+    "mocha": "5.2.0",
+    "sinon": "7.2.0",
+    "sinon-chai": "3.3.0"
   }
 }

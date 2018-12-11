@@ -17,16 +17,16 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "bluebird": "3.5.0",
-    "fs-extra": "4.0.2",
+    "bluebird": "3.5.3",
+    "fs-extra": "7.0.1",
     "sanitize-filename": "1.6.1"
   },
   "peerDependencies": {
     "sinon": ">3.0.0"
   },
   "devDependencies": {
-    "chai": "4.1.2",
-    "mocha": "3.5.3",
-    "sinon": "3.2.1"
+    "chai": "4.2.0",
+    "mocha": "5.2.0",
+    "sinon": "7.2.0"
   }
 }
