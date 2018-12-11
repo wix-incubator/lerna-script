@@ -4,7 +4,8 @@ const {resolve} = require('path'),
   {join} = require('path'),
   fsExtra = require('fs-extra'),
   os = require('os'),
-  sinon = require('sinon')
+  sinon = require('sinon'),
+  sanitize = require('sanitize-filename')
 
 const TEMP_DIR = os.tmpdir()
 
@@ -26,8 +27,8 @@ function writeJson(name, content, dir = process.cwd()) {
   return writeFileSync(join(dir, name), JSON.stringify(content))
 }
 
-function aLernaProjectWith2Modules() {
-  return aLernaProject({a: [], b: ['a']})
+function aLernaProjectWith2Modules(moduleA = 'a') {
+  return aLernaProject({[moduleA]: [], b: [moduleA]})
 }
 
 function aLernaProject(spec = {}, overrides = {}) {
@@ -37,10 +38,10 @@ function aLernaProject(spec = {}, overrides = {}) {
     .inDir(ctx => ctx.exec('git init'))
 
   Object.keys(spec).forEach(name => {
-    project.module(`packages/${name}`, module => {
+    project.module(`packages/${sanitize(name, {replacement: '_'})}`, module => {
       const dependencies = {}
       spec[name].forEach(dep => (dependencies[dep] = '1.0.0'))
-      module.packageJson(Object.assign({version: '1.0.0', dependencies}, overrides))
+      module.packageJson(Object.assign({name, version: '1.0.0', dependencies}, overrides))
     })
   })
 

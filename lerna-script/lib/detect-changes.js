@@ -4,7 +4,8 @@ const fs = require('fs'),
   fsUtils = require('lerna/lib/FileSystemUtilities'),
   ignore = require('ignore'),
   shelljs = require('shelljs'),
-  npmlog = require('npmlog')
+  npmlog = require('npmlog'),
+  sanitize = require('sanitize-filename')
 
 function makePackageBuilt(lernaPackage, {log = npmlog} = {log: npmlog}) {
   return label => {
@@ -44,7 +45,8 @@ function isPackageBuilt(lernaPackage) {
 }
 
 function targetFileSentinelFile(lernaPackage, label = 'default') {
-  return path.resolve(process.cwd(), '.lerna', `.${lernaPackage.name}-${label}-sentinel`)
+  const sanitizedName = sanitize(lernaPackage.name, {replacement: '_'})
+  return path.resolve(process.cwd(), '.lerna', `.${sanitizedName}-${label}-sentinel`)
 }
 
 function modifiedAfter(baseDir, dir, ignored, timeStamp) {

@@ -7,14 +7,14 @@ const {loggerMock, aLernaProject} = require('lerna-script-test-utils'),
 describe('idea', () => {
   it('should generate idea project files', () => {
     const log = loggerMock()
-    return aLernaProjectWith3Modules().within(() => {
+    return aLernaProjectWith4Modules().within(() => {
       return idea()(log).then(() => assertIdeaFilesGenerated())
     })
   })
 
   it('should generate idea project files for provided modules', () => {
     const log = loggerMock()
-    return aLernaProjectWith3Modules().within(() => {
+    return aLernaProjectWith4Modules().within(() => {
       const packages = loadPackages().filter(p => p.name === 'a')
       return idea({packages})(log).then(() => {
         expect(shelljs.test('-f', 'packages/a/a.iml')).to.equal(true)
@@ -26,7 +26,7 @@ describe('idea', () => {
 
   it('should set language level to ES6', () => {
     const log = loggerMock()
-    return aLernaProjectWith3Modules().within(() => {
+    return aLernaProjectWith4Modules().within(() => {
       return idea()(log).then(() => {
         expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
           '<property name="JavaScriptLanguageLevel" value="ES6" />'
@@ -37,7 +37,7 @@ describe('idea', () => {
 
   it.skip('removes existing .idea project files before generating new ones', () => {
     const log = loggerMock()
-    const project = aLernaProjectWith3Modules().addFile('.idea/some-existing-file.txt', 'qwe')
+    const project = aLernaProjectWith4Modules().addFile('.idea/some-existing-file.txt', 'qwe')
 
     return project.within(() => {
       return idea()(log).then(() => {
@@ -48,7 +48,7 @@ describe('idea', () => {
 
   it('generates [module-name].iml with node_modules, dist excluded so idea would not index all deps', () => {
     const log = loggerMock()
-    return aLernaProjectWith3Modules().within(() => {
+    return aLernaProjectWith4Modules().within(() => {
       return idea()(log).then(() => {
         expect(shelljs.cat('packages/a/a.iml').stdout).to.be.string(
           '<excludeFolder url="file://$MODULE_DIR$/node_modules" />'
@@ -62,7 +62,7 @@ describe('idea', () => {
 
   it('generates [module-name].iml and marks test/tests as test root', () => {
     const log = loggerMock()
-    const project = aLernaProjectWith3Modules()
+    const project = aLernaProjectWith4Modules()
       .addFolder('packages/a/test')
       .addFolder('packages/a/tests')
 
@@ -81,7 +81,7 @@ describe('idea', () => {
 
   it('generates [module-name].iml and marks src/lib/scripts as source roots', () => {
     const log = loggerMock()
-    const project = aLernaProjectWith3Modules()
+    const project = aLernaProjectWith4Modules()
       .addFolder('packages/a/src')
       .addFolder('packages/a/lib')
       .addFolder('packages/a/scripts')
@@ -105,7 +105,7 @@ describe('idea', () => {
   context('mocha configurations', () => {
     it('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', () => {
       const log = loggerMock()
-      return aLernaProjectWith3Modules().within(() => {
+      return aLernaProjectWith4Modules().within(() => {
         return idea()(log).then(() => {
           const node = shelljs
             .exec('which node')
@@ -252,7 +252,7 @@ describe('idea', () => {
 
   it('adds modules to groups if they are in subfolders', () => {
     const log = loggerMock()
-    return aLernaProjectWith3Modules().within(() => {
+    return aLernaProjectWith4Modules().within(() => {
       return idea()(log).then(() => {
         const modulesXml = shelljs.cat('.idea/modules.xml').stdout
 
@@ -263,9 +263,20 @@ describe('idea', () => {
     })
   })
 
+  it('adds correct iml file for a scoped and non-scoped named module to to the modules.xml file', () => {
+    const log = loggerMock()
+    return aLernaProjectWith4Modules().within(() => {
+      return idea()(log).then(() => {
+        const modulesXml = shelljs.cat('.idea/modules.xml').stdout
+        expect(modulesXml).to.include('file://$PROJECT_DIR$/packages/a/a.iml')
+        expect(modulesXml).to.include('file://$PROJECT_DIR$/packages/@wix_d/@wix_d.iml')
+      })
+    })
+  })
+
   it('creates git-based ./idea/vcs.xml', () => {
     const log = loggerMock()
-    return aLernaProjectWith3Modules().within(() => {
+    return aLernaProjectWith4Modules().within(() => {
       return idea()(log).then(() => {
         expect(shelljs.cat('.idea/vcs.xml').stdout).to.be.string(
           '<mapping directory="$PROJECT_DIR$" vcs="Git" />'
@@ -274,8 +285,8 @@ describe('idea', () => {
     })
   })
 
-  function aLernaProjectWith3Modules() {
-    return aLernaProject({a: [], b: ['a'], c: ['a']})
+  function aLernaProjectWith4Modules() {
+    return aLernaProject({a: [], b: ['a'], c: ['a', '@wix/d'], '@wix/d': ['a']})
   }
 
   function assertIdeaFilesGenerated() {
@@ -286,5 +297,6 @@ describe('idea', () => {
     expect(shelljs.test('-f', 'packages/a/a.iml')).to.equal(true)
     expect(shelljs.test('-f', 'packages/b/b.iml')).to.equal(true)
     expect(shelljs.test('-f', 'packages/c/c.iml')).to.equal(true)
+    expect(shelljs.test('-f', 'packages/@wix_d/@wix_d.iml')).to.equal(true)
   }
 })
