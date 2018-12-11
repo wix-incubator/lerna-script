@@ -17,7 +17,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "deep-keys": "0.4.0",
+    "deep-keys": "0.5.0",
     "inquirer": "^6.0.0",
     "lodash": "4.17.4",
     "ramda": "0.24.1",
