@@ -4,8 +4,7 @@ const {resolve} = require('path'),
   {join} = require('path'),
   fsExtra = require('fs-extra'),
   os = require('os'),
-  sinon = require('sinon'),
-  sanitize = require('sanitize-filename')
+  sinon = require('sinon')
 
 const TEMP_DIR = os.tmpdir()
 
@@ -38,7 +37,7 @@ function aLernaProject(spec = {}, overrides = {}) {
     .inDir(ctx => ctx.exec('git init'))
 
   Object.keys(spec).forEach(name => {
-    project.module(`packages/${sanitize(name, {replacement: '_'})}`, module => {
+    project.module(`packages/${stripScope(name)}`, module => {
       const dependencies = {}
       spec[name].forEach(dep => (dependencies[dep] = '1.0.0'))
       module.packageJson(Object.assign({name, version: '1.0.0', dependencies}, overrides))
@@ -46,6 +45,11 @@ function aLernaProject(spec = {}, overrides = {}) {
   })
 
   return project.inDir(ctx => ctx.exec('git init'))
+}
+
+function stripScope(name) {
+  const sep = name.indexOf('/')
+  return sep === -1 ? name : name.substring(sep + 1)
 }
 
 function loggerMock() {

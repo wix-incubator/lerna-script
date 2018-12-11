@@ -269,7 +269,7 @@ describe('idea', () => {
       return idea()(log).then(() => {
         const modulesXml = shelljs.cat('.idea/modules.xml').stdout
         expect(modulesXml).to.include('file://$PROJECT_DIR$/packages/a/a.iml')
-        expect(modulesXml).to.include('file://$PROJECT_DIR$/packages/@wix_d/@wix_d.iml')
+        expect(modulesXml).to.include('file://$PROJECT_DIR$/packages/d/d.iml')
       })
     })
   })
@@ -297,6 +297,6 @@ describe('idea', () => {
     expect(shelljs.test('-f', 'packages/a/a.iml')).to.equal(true)
     expect(shelljs.test('-f', 'packages/b/b.iml')).to.equal(true)
     expect(shelljs.test('-f', 'packages/c/c.iml')).to.equal(true)
-    expect(shelljs.test('-f', 'packages/@wix_d/@wix_d.iml')).to.equal(true)
+    expect(shelljs.test('-f', 'packages/d/d.iml')).to.equal(true)
   }
 })
