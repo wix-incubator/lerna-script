@@ -20,7 +20,7 @@
     "lerna-script-tasks-dependencies": "0.9.4",
     "lerna-script-tasks-idea": "0.9.3",
     "lerna-script-tasks-modules": "0.9.4",
-    "lerna-script-tasks-npmfix": "0.9.3",
+    "lerna-script-tasks-npmfix": "0.9.4",
     "prettier": "1.15.3",
     "pretty-quick": "1.8.0"
   }
