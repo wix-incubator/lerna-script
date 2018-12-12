@@ -2,8 +2,7 @@ const {join, relative} = require('path'),
   templates = require('./lib/templates'),
   shelljs = require('shelljs'),
   {loadRootPackage, loadPackages, exec, iter} = require('lerna-script'),
-  {execSync} = require('child_process'),
-  sanitize = require('sanitize-filename')
+  {execSync} = require('child_process')
 
 const EXCLUDE_FOLDERS = ['node_modules', 'dist']
 const LANGIAGE_LEVEL = 'ES6'
@@ -28,10 +27,6 @@ const DEFAULT_MOCHA_CONFIGURATIONS = packageJson => {
       testPattern: 'test/**/*.spec.js test/**/*.it.js test/**/*.e2e.js'
     }
   ]
-}
-
-function sanitizedName(name) {
-  return sanitize(name, {replacement: '_'})
 }
 
 //TODO: add options: {packages, mocha: {patterns: ''}}
@@ -100,7 +95,7 @@ function createModulesXml(lernaPackages, rootPackage, log) {
     join(rootPackage.location, '.idea', 'modules.xml'),
     lernaPackages.map(lernaPackage => {
       const relativePath = relative(rootPackage.location, lernaPackage.location)
-      const name = sanitizedName(lernaPackage.name)
+      const name = stripScope(lernaPackage.name)
       if (relativePath.indexOf('/') > -1) {
         const parts = relativePath.split('/')
         parts.pop()
@@ -128,8 +123,13 @@ function createModuleIml(lernaPackage, log) {
     sourceFolders,
     excludeFolders: EXCLUDE_FOLDERS
   })
-  const imlFile = join(lernaPackage.location, sanitizedName(lernaPackage.name) + '.iml')
+  const imlFile = join(lernaPackage.location, stripScope(lernaPackage.name) + '.iml')
   templates.ideaModuleImlFile(imlFile, {excludeFolders: EXCLUDE_FOLDERS, sourceFolders})
+}
+
+function stripScope(name) {
+  const sep = name.indexOf('/')
+  return sep === -1 ? name : name.substring(sep + 1)
 }
 
 function resolveMochaPackage(rootPackage, lernaPackages, log) {
