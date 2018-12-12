@@ -5,7 +5,7 @@
     "test-utils",
     "tasks/*"
   ],
-  "version": "0.9.4",
+  "version": "0.9.5",
   "managedDependencies": {
     "bluebird": "3.5.0",
     "fs-extra": "4.0.2",
