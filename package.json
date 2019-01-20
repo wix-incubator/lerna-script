@@ -21,7 +21,7 @@
     "lerna-script-tasks-idea": "0.9.5",
     "lerna-script-tasks-modules": "0.9.5",
     "lerna-script-tasks-npmfix": "0.9.5",
-    "prettier": "1.15.3",
+    "prettier": "1.16.0",
     "pretty-quick": "1.10.0"
   }
 }
