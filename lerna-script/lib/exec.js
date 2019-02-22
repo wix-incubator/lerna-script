@@ -14,14 +14,14 @@ function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true,
         ChildProcessUtilities.exec(
           actualCommand,
           [...actualCommandArgs],
-          {cwd: lernaPackage.location},
+          {cwd: lernaPackage.location, maxBuffer: Infinity},
           callback
         )
       } else {
         ChildProcessUtilities.spawnStreaming(
           actualCommand,
           [...actualCommandArgs],
-          {cwd: lernaPackage.location},
+          {cwd: lernaPackage.location, maxBuffer: Infinity},
           lernaPackage.name,
           callback
         )
