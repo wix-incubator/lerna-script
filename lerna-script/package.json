@@ -23,14 +23,14 @@
   "devDependencies": {
     "chai": "4.2.0",
     "intercept-stdout": "0.1.2",
-    "lerna": "2.11.0",
+    "lerna": "3.13.1",
     "lerna-script-test-utils": "^0.9.6",
     "mocha": "6.0.2",
     "sinon": "7.2.4",
     "sinon-chai": "3.3.0"
   },
   "peerDependencies": {
-    "lerna": "~2.9.0 || ~2.11.0"
+    "lerna": "~2.9.0 || ~2.11.0 || ~3.13.0"
   },
   "dependencies": {
     "bluebird": "3.5.3",
