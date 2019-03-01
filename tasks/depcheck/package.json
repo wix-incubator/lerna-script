@@ -28,7 +28,7 @@
     "lerna-script": "^0.9.6",
     "lerna-script-test-utils": "^0.9.6",
     "mocha": "6.0.2",
-    "sinon": "7.2.5",
+    "sinon": "7.2.6",
     "sinon-chai": "3.3.0"
   }
 }
