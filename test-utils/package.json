@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "bluebird": "3.5.4",
-    "fs-extra": "7.0.1"
+    "fs-extra": "8.0.0"
   },
   "peerDependencies": {
     "sinon": ">3.0.0"
