@@ -13,7 +13,7 @@
     "release": "lerna publish"
   },
   "devDependencies": {
-    "husky": "2.2.0",
+    "husky": "2.3.0",
     "lerna": "2.11.0",
     "lerna-script": "0.9.6",
     "lerna-script-tasks-depcheck": "0.9.6",
