@@ -38,7 +38,7 @@
     "ignore": "5.1.2",
     "lodash": "4.17.15",
     "npmlog": "4.1.2",
-    "sanitize-filename": "1.6.1",
+    "sanitize-filename": "1.6.2",
     "shelljs": "0.8.3",
     "yargs": "^13.0.0"
   }
