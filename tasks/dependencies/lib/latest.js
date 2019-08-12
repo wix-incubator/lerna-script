@@ -1,5 +1,5 @@
 const {exec} = require('child_process'),
-  {satisfies, validRange} = require('semver'),
+  {satisfies, validRange, diff} = require('semver'),
   inquire = require('./inquire'),
   {fs, loadRootPackage} = require('lerna-script')
 
@@ -16,25 +16,41 @@ function latestDependenciesTask({onInquire = () => ({}), addRange = ''} = {}) {
 }
 
 function checkForLatestDependencies(lernaJson, onInquire, addRange, log) {
-  const {managedDependencies = {}, managedPeerDependencies = {}} = lernaJson
+  const {
+    managedDependencies = {},
+    managedPeerDependencies = {},
+    autoselect: {versionDiff, exclude} = {versionDiff: [], exclude: []}
+  } = lernaJson
 
-  const depsPromises = Object.keys(cleanLatest(managedDependencies || {})).map(depName =>
-    fetchLatestVersion(depName, managedDependencies[depName])
+  const depsList = Object.keys(cleanLatest(managedDependencies || {}))
+  const peerDepsList = Object.keys(cleanLatest(managedPeerDependencies || {}))
+
+  const tracker = log.newItem('fetching', depsList.length + peerDepsList.length)
+
+  const depsPromises = depsList.map(depName =>
+    fetchLatestVersion(depName, managedDependencies[depName], tracker)
   )
-  const peerDepsPromises = Object.keys(cleanLatest(managedPeerDependencies || {})).map(depName =>
-    fetchLatestVersion(depName, managedPeerDependencies[depName])
+  const peerDepsPromises = peerDepsList.map(depName =>
+    fetchLatestVersion(depName, managedPeerDependencies[depName], tracker)
   )
 
   return Promise.all([Promise.all(depsPromises), Promise.all(peerDepsPromises)]).then(
     ([deps, peerDeps]) => {
+      tracker.finish()
+      log.disableProgress()
       const depsChoices = deps
         .filter(
           ({currentVersion, latestVersion}) => !satisfies(latestVersion, validRange(currentVersion))
         )
         .map(({name, currentVersion, latestVersion}) => {
           return {
-            name: `${name}: ${currentVersion} -> ${latestVersion}`,
-            value: {type: 'managedDependencies', name, latestVersion}
+            name: `${name}: ${currentVersion} -> ${latestVersion} (${diff(
+              currentVersion,
+              latestVersion
+            )})`,
+            value: {type: 'managedDependencies', name, latestVersion},
+            checked:
+              versionDiff.includes(diff(currentVersion, latestVersion)) && !exclude.includes(name)
           }
         })
 
@@ -44,8 +60,13 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log) {
         )
         .map(({name, currentVersion, latestVersion}) => {
           return {
-            name: `${name}: ${currentVersion} -> ${latestVersion}`,
-            value: {type: 'managedPeerDependencies', name, latestVersion}
+            name: `${name}: ${currentVersion} -> ${latestVersion} (${diff(
+              currentVersion,
+              latestVersion
+            )})`,
+            value: {type: 'managedPeerDependencies', name, latestVersion},
+            checked:
+              versionDiff.includes(diff(currentVersion, latestVersion)) && !exclude.includes(name)
           }
         })
 
@@ -83,9 +104,10 @@ function cleanLatest(deps) {
   return deps
 }
 
-function fetchLatestVersion(name, version) {
+function fetchLatestVersion(name, version, logItem) {
   return new Promise((resolve, reject) => {
     exec(`npm info ${name} dist-tags.latest`, (error, stdout) => {
+      logItem.completeWork(1)
       error
         ? reject(error)
         : resolve({name, currentVersion: version, latestVersion: stdout.toString().trim('\n')})
