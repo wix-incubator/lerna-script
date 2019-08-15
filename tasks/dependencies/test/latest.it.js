@@ -2,8 +2,7 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   {expect} = require('chai').use(require('sinon-chai')),
   {latest} = require('..'),
   {execSync} = require('child_process'),
-  bddStdin = require('bdd-stdin'),
-  Promise = require('bluebird')
+  bddStdin = require('bdd-stdin')
 
 describe('latest task', function() {
   this.timeout(30000)

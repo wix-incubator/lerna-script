@@ -1,7 +1,8 @@
 const {exec} = require('child_process'),
   {satisfies, validRange, diff} = require('semver'),
   inquire = require('./inquire'),
-  {fs, loadRootPackage} = require('lerna-script')
+  {fs, loadRootPackage} = require('lerna-script'),
+  Promise = require('bluebird')
 
 function latestDependenciesTask({onInquire = () => ({}), addRange = '', fetch, silent} = {}) {
   return log => {
