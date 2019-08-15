@@ -29,8 +29,8 @@ Task that syncs dependency versions (dependencies, devDependencies, peerDependen
 
 Parameters:
 
-* packages - custom package list, or defaults as defined by `lerna.json`
-* log - `npmlog` instance passed-in by `lerna-script`;
+- packages - custom package list, or defaults as defined by `lerna.json`
+- log - `npmlog` instance passed-in by `lerna-script`;
 
 Say you have `lerna.json` in root of your project like:
 
@@ -50,8 +50,8 @@ List dependencies, that are present in modules `dependencies`, `devDependencies`
 
 Parameters:
 
-* packages - custom package list, or defaults as defined by `lerna.json`
-* log - `npmlog` instance passed-in by `lerna-script`;
+- packages - custom package list, or defaults as defined by `lerna.json`
+- log - `npmlog` instance passed-in by `lerna-script`;
 
 ### extraneous({[packages]})(log): Promise
 
@@ -59,14 +59,31 @@ List dependencies, that are present in `lerna.json` as `managed*Dependencies`, b
 
 Parameters:
 
-* packages - custom package list, or defaults as defined by `lerna.json`
-* log - `npmlog` instance passed-in by `lerna-script`;
+- packages - custom package list, or defaults as defined by `lerna.json`
+- log - `npmlog` instance passed-in by `lerna-script`;
 
-### latest({[addRange]})(log): Promise
+### latest({[addRange, silent]})(log): Promise
 
 List dependencies, that are present in `lerna.json` as `managed*Dependencies` and needs updating based on latest version published in npmjs.org.
+The `lerna.json` can contain the following `autoSelect` rules which will automatically mark the relevant packages as _selected_
+
+```json
+{
+  "managedDependencies": {
+    "lodash": "~1.0.0",
+    "dontUpdateMe": "3.0.5"
+  },
+  "autoselect": {
+    "versionDiff": ["minor", "patch"],
+    "exclude": ["dontUpdateMe"]
+  }
+}
+```
+
+In the above example, if a `minor` or a `patch` update is found for one of the packages, they will be selected by default unless the package name is `dontUpdateMe`
 
 Parameters:
 
-* addRange - when updating version in `lerna.json` to add range operator ('~', '^', ...). By default it sets fixed version.
-* log - `npmlog` instance passed-in by `lerna-script`;
+- addRange - when updating version in `lerna.json` to add range operator ('~', '^', ...). By default it sets fixed version.
+- silent - does not prompt with the list of dependencies and automatically updates auto-selected packages versions in the `lerna.json` file
+- log - `npmlog` instance passed-in by `lerna-script`;
