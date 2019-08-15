@@ -81,6 +81,7 @@ function loggerMock() {
     silly: sinon.spy(),
     info: sinon.spy(),
     error: sinon.spy(),
+    disableProgress: sinon.spy(),
     newItem: sinon.stub().returns(item),
     newGroup: sinon.stub().returns(group),
     item,
