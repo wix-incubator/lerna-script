@@ -52,8 +52,11 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
 
       if (depsChoices.length + peerDepsChoices.length > 0) {
         let selections
-        if (silent) selections = findSelectedUpdates(depsChoices, peerDepsChoices)
-        else selections = inquireSelectedUpdates(depsChoices, peerDepsChoices, onInquire)
+        if (silent) {
+          selections = findSelectedUpdates(depsChoices, peerDepsChoices, log)
+        } else {
+          selections = inquireSelectedUpdates(depsChoices, peerDepsChoices, onInquire)
+        }
         return selections.then(selectedUpdates => {
           return writeSelectedUpdates(selectedUpdates, lernaJson, addRange, log)
         })
@@ -81,6 +84,7 @@ function createChoicesList(peerDeps, depType, versionDiff, exclude) {
           latestVersion
         )})`,
         value: {type: depType, name, latestVersion},
+        short: `\n${name}: ${currentVersion} -> ${latestVersion}`,
         checked:
           versionDiff.includes(diff(currentVersion, latestVersion)) && !exclude.includes(name)
       }
@@ -101,12 +105,21 @@ function inquireSelectedUpdates(depsChoices, peerDepsChoices, onInquire) {
   return inquire({message: 'Updates found', choiceGroups})
 }
 
-function findSelectedUpdates(depsChoices, peerDepsChoices) {
+function findSelectedUpdates(depsChoices, peerDepsChoices, log) {
+  let logs = []
+
   function getSelectedValues(choices) {
-    return choices.filter(c => c.checked).map(c => c.value)
+    return choices
+      .filter(c => c.checked)
+      .map(c => {
+        logs.push(c.short)
+        return c.value
+      })
   }
 
-  return Promise.resolve(getSelectedValues(depsChoices).concat(getSelectedValues(peerDepsChoices)))
+  const selected = getSelectedValues(depsChoices).concat(getSelectedValues(peerDepsChoices))
+  log.info('latest', logs.join())
+  return Promise.resolve(selected)
 }
 
 function writeSelectedUpdates(selectedUpdates, lernaJson, addRange, log) {
