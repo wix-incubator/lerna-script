@@ -1,6 +1,12 @@
-const runNpmScript = require('./lerna-forked-child-process-runscript'),
-  {exec, spawnStreaming} = require('./lerna-forked-child-process'),
+const runNpmScript = require('@lerna/npm-run-script'),
+  {exec, spawnStreaming} = require('@lerna/child-process'),
   npmlog = require('npmlog')
+
+function dirtyMaxListenersErrorHack() {
+  process.stdout.on('close', () => {})
+  process.stdout.on('close', () => {})
+  process.stdout.on('close', () => {})
+}
 
 function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
   return command => {
@@ -15,6 +21,8 @@ function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true,
         .then(() => exec(actualCommand, [...actualCommandArgs], {cwd: lernaPackage.location}))
         .then(res => res.stdout)
     } else {
+      dirtyMaxListenersErrorHack()
+
       return spawnStreaming(
         actualCommand,
         [...actualCommandArgs],
@@ -33,6 +41,8 @@ function runScript(lernaPackage, {silent = true, log = npmlog} = {silent: true, 
           res => res.stdout
         )
       } else {
+        dirtyMaxListenersErrorHack()
+
         return runNpmScript
           .stream(script, {args: [], pkg: lernaPackage, npmClient: 'npm'})
           .then(res => res.stdout)
