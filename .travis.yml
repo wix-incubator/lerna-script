@@ -1,7 +1,8 @@
 language: node_js
 branches:
   only:
-  - master
+    - master
 script:
-  - npm install
+  - npm install --ignore-scripts
+  - npx lerna bootstrap --no-ci
   - npm run test
