@@ -20,14 +20,14 @@
     "depcheck": "0.8.3"
   },
   "peerDependencies": {
-    "lerna-script": ">=0.9.6"
+    "lerna-script": ">=0.10.0"
   },
   "devDependencies": {
     "chai": "4.2.0",
     "invert-promise": "^1.0.1",
     "lerna": "~3.16.0",
-    "lerna-script": "^0.10.0",
-    "lerna-script-test-utils": "^0.10.0",
+    "lerna-script": "~0.10.0",
+    "lerna-script-test-utils": "~0.10.0",
     "mocha": "6.2.0",
     "sinon": "7.4.1",
     "sinon-chai": "3.3.0"
