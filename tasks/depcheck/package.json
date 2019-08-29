@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-tasks-depcheck",
-  "version": "1.0.0-0",
+  "version": "1.0.1-alpha.0",
   "description": "tasks for running depcheck for all modules",
   "author": "Vilius Lukosius",
   "license": "ISC",
@@ -26,7 +26,7 @@
     "chai": "4.2.0",
     "invert-promise": "^1.0.1",
     "lerna": "~3.16.0",
-    "lerna-script": "~1.0.0-0",
+    "lerna-script": "^1.0.1-alpha.0",
     "lerna-script-test-utils": "~1.0.0-0",
     "mocha": "6.2.0",
     "sinon": "7.4.1",

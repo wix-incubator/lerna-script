@@ -3,8 +3,8 @@
   "bootstrap": {
     "npmClientArgs": ["--no-package-lock", "--no-ci"]
   },
-  "packages": ["lerna-script", "test-utils", "tasks/*"],
-  "version": "1.0.0-0",
+  "packages": ["lerna-script", "tasks/*", "test-utils"],
+  "version": "1.0.1-alpha.0",
   "managedDependencies": {
     "bluebird": "3.5.5",
     "fs-extra": "8.1.0",
