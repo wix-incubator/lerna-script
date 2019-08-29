@@ -95,12 +95,13 @@ function createModulesXml(lernaPackages, rootPackage, log) {
     join(rootPackage.location, '.idea', 'modules.xml'),
     lernaPackages.map(lernaPackage => {
       const relativePath = relative(rootPackage.location, lernaPackage.location)
+      const name = stripScope(lernaPackage.name)
       if (relativePath.indexOf('/') > -1) {
         const parts = relativePath.split('/')
         parts.pop()
-        return {name: lernaPackage.name, dir: relativePath, group: parts.join('/')}
+        return {name, dir: relativePath, group: parts.join('/')}
       } else {
-        return {name: lernaPackage.name, dir: relativePath}
+        return {name, dir: relativePath}
       }
     })
   )
@@ -122,8 +123,13 @@ function createModuleIml(lernaPackage, log) {
     sourceFolders,
     excludeFolders: EXCLUDE_FOLDERS
   })
-  const imlFile = join(lernaPackage.location, lernaPackage.name + '.iml')
+  const imlFile = join(lernaPackage.location, stripScope(lernaPackage.name) + '.iml')
   templates.ideaModuleImlFile(imlFile, {excludeFolders: EXCLUDE_FOLDERS, sourceFolders})
+}
+
+function stripScope(name) {
+  const sep = name.indexOf('/')
+  return sep === -1 ? name : name.substring(sep + 1)
 }
 
 function resolveMochaPackage(rootPackage, lernaPackages, log) {

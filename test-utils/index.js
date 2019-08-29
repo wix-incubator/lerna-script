@@ -26,8 +26,8 @@ function writeJson(name, content, dir = process.cwd()) {
   return writeFileSync(join(dir, name), JSON.stringify(content))
 }
 
-function aLernaProjectWith2Modules() {
-  return aLernaProject({a: [], b: ['a']})
+function aLernaProjectWith2Modules(moduleA = 'a') {
+  return aLernaProject({[moduleA]: [], b: [moduleA]})
 }
 
 async function aLernaProject(spec = {}, overrides = {}) {
@@ -37,14 +37,19 @@ async function aLernaProject(spec = {}, overrides = {}) {
     .inDir(ctx => ctx.exec('git init'))
 
   Object.keys(spec).forEach(name => {
-    project.module(`packages/${name}`, module => {
+    project.module(`packages/${stripScope(name)}`, module => {
       const dependencies = {}
       spec[name].forEach(dep => (dependencies[dep] = '1.0.0'))
-      module.packageJson(Object.assign({version: '1.0.0', dependencies}, overrides))
+      module.packageJson(Object.assign({name, version: '1.0.0', dependencies}, overrides))
     })
   })
 
   return project.inDir(ctx => ctx.exec('git init'))
+}
+
+function stripScope(name) {
+  const sep = name.indexOf('/')
+  return sep === -1 ? name : name.substring(sep + 1)
 }
 
 function loggerMock() {
@@ -76,6 +81,7 @@ function loggerMock() {
     silly: sinon.spy(),
     info: sinon.spy(),
     error: sinon.spy(),
+    disableProgress: sinon.spy(),
     newItem: sinon.stub().returns(item),
     newGroup: sinon.stub().returns(group),
     item,

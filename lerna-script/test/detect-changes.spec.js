@@ -18,12 +18,14 @@ describe('detect-changes', async () => {
     })
   })
 
+  it('should support scoped module names', () => {
+    expect(() => asBuilt(asGitCommited(aLernaProjectWith2Modules('@foo/a')))).to.not.throw()
+  })
+
   it('should detect changes recursively', async () => {
-    const modules = await aLernaProjectWith2Modules();
+    const modules = await aLernaProjectWith2Modules()
     const project = await asBuilt(
-      asGitCommited(
-        modules.inDir(ctx => ctx.addFile('packages/a/test/test.js', ''))
-      )
+      asGitCommited(modules.inDir(ctx => ctx.addFile('packages/a/test/test.js', '')))
     )
 
     return project.within(async ctx => {
@@ -60,10 +62,7 @@ describe('detect-changes', async () => {
   it('should respect .gitignore in root', async () => {
     const projectWithGitIgnore = await aLernaProjectWith2Modules()
     const project = await asBuilt(
-      asGitCommited(
-        projectWithGitIgnore.inDir(ctx => ctx.addFile('.gitignore', 'some.txt\n')
-        )
-      )
+      asGitCommited(projectWithGitIgnore.inDir(ctx => ctx.addFile('.gitignore', 'some.txt\n')))
     )
 
     return project.within(async () => {
@@ -77,9 +76,11 @@ describe('detect-changes', async () => {
   it('should respect .gitignore in module dir', async () => {
     const projectWithGitIgnore = await aLernaProjectWith2Modules()
 
-    const project = await asBuilt(asGitCommited(
-      projectWithGitIgnore.inDir(ctx => ctx.addFile('packages/a/.gitignore', 'some.txt\n'))
-    ))
+    const project = await asBuilt(
+      asGitCommited(
+        projectWithGitIgnore.inDir(ctx => ctx.addFile('packages/a/.gitignore', 'some.txt\n'))
+      )
+    )
 
     return project.within(async () => {
       const packages = await index.loadPackages()

@@ -300,8 +300,8 @@ describe('idea', async () => {
     })
   })
 
-  function aLernaProjectWith3Modules() {
-    return aLernaProject({a: [], b: ['a'], c: ['a']})
+  function aLernaProjectWith4Modules() {
+    return aLernaProject({a: [], b: ['a'], c: ['a', '@wix/d'], '@wix/d': ['a']})
   }
 
   function assertIdeaFilesGenerated() {
@@ -312,5 +312,6 @@ describe('idea', async () => {
     expect(shelljs.test('-f', 'packages/a/a.iml')).to.equal(true)
     expect(shelljs.test('-f', 'packages/b/b.iml')).to.equal(true)
     expect(shelljs.test('-f', 'packages/c/c.iml')).to.equal(true)
+    expect(shelljs.test('-f', 'packages/d/d.iml')).to.equal(true)
   }
 })
