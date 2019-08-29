@@ -4,8 +4,6 @@
   "version": "1.0.0",
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "prepush": "lerna-script sync",
-    "precommit": "pretty-quick --staged",
     "clean": "lerna-script clean",
     "test": "lerna-script test",
     "ls": "lerna-script",
@@ -23,5 +21,11 @@
     "lerna-script-tasks-npmfix": "1.0.0-0",
     "prettier": "1.18.2",
     "pretty-quick": "1.11.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "pre-push": "lerna-script sync"
+    }
   }
 }
