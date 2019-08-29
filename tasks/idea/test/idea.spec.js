@@ -1,4 +1,4 @@
-const {loggerMock, aLernaProject} = require('lerna-script-test-utils'),
+const {loggerMock, aLernaProject, aLernaProjectWith2Modules} = require('lerna-script-test-utils'),
   {loadPackages} = require('lerna-script'),
   {expect} = require('chai').use(require('sinon-chai')),
   idea = require('..'),
@@ -119,10 +119,7 @@ describe('idea', async () => {
       const project = await aLernaProjectWith3Modules()
       return project.within(() => {
         return idea()(log).then(() => {
-          const node = shelljs
-            .exec('which node')
-            .stdout.split('/node/')[1]
-            .replace('\n', '')
+          const node = shelljs.exec('which node').stdout.replace('\n', '')
 
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
             `<data>$PROJECT_DIR$/packages/a/node_modules/mocha</data>`
@@ -174,10 +171,7 @@ describe('idea', async () => {
 
       return project.within(() => {
         return idea({mochaConfigurations: mochaConfig})(log).then(() => {
-          const node = shelljs
-            .exec('which node')
-            .stdout.split('/node/')[1]
-            .replace('\n', '')
+          const node = shelljs.exec('which node').stdout.replace('\n', '')
           expect(shelljs.cat('.idea/workspace.xml').stdout).to.be.string(
             '$PROJECT_DIR$/packages/a/node_modules/mocha'
           )
@@ -300,7 +294,7 @@ describe('idea', async () => {
     })
   })
 
-  function aLernaProjectWith4Modules() {
+  function aLernaProjectWith3Modules() {
     return aLernaProject({a: [], b: ['a'], c: ['a', '@wix/d'], '@wix/d': ['a']})
   }
 

@@ -7,14 +7,12 @@ const {exec} = require('child_process'),
 function latestDependenciesTask({onInquire = () => ({}), addRange = '', fetch, silent} = {}) {
   return log => {
     log.info('latest', `checking for latest dependencies`)
-    return checkForLatestDependencies(
-      require(process.cwd() + '/lerna.json'),
-      onInquire,
-      addRange,
-      log,
-      fetch,
-      silent
-    )
+
+    //TODO: hack
+    const lernaJson = require(process.cwd() + '/lerna.json')
+    lernaJson.location = process.cwd()
+
+    return checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, silent)
   }
 }
 
@@ -74,7 +72,6 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
         }
         return selections.then(selectedUpdates => {
           return writeSelectedUpdates(selectedUpdates, lernaJson, addRange, log)
-          // >>>>>>> origin/master
         })
       } else {
         log.info('latest', `no updates found, exiting...`)
@@ -138,12 +135,13 @@ function findSelectedUpdates(depsChoices, peerDepsChoices, log) {
   return Promise.resolve(selected)
 }
 
-function writeSelectedUpdates(selectedUpdates, lernaJson, addRange, log) {
+async function writeSelectedUpdates(selectedUpdates, lernaJson, addRange, log) {
   if (selectedUpdates.length > 0) {
     selectedUpdates.forEach(
       ({type, name, latestVersion}) => (lernaJson[type][name] = `${addRange}${latestVersion}`)
     )
-    return fs.writeFile(loadRootPackage())('./lerna.json', lernaJson)
+    const rootPackage = await loadRootPackage()
+    return fs.writeFile(rootPackage)('./lerna.json', lernaJson)
   } else {
     log.info('latest', `nothing selected, exiting...`)
   }

@@ -29,7 +29,7 @@
   "devDependencies": {
     "bdd-stdin": "0.2.0",
     "chai": "4.2.0",
-    "lerna": "2.11.0",
+    "lerna": "~3.16.0",
     "lerna-script": "^0.10.0",
     "lerna-script-test-utils": "^0.10.0",
     "mocha": "6.2.0",

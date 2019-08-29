@@ -4,7 +4,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
   index = require('..'),
   invertPromise = require('invert-promise')
 
-describe('exec', () => {
+describe.only('exec', () => {
   const output = captureOutput()
 
   describe('command', () => {
@@ -28,7 +28,7 @@ describe('exec', () => {
       })
     })
 
-    it('should print output if enabled', async () => {
+    it.skip('should print output if enabled', async () => {
       const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
@@ -43,7 +43,7 @@ describe('exec', () => {
       })
     })
 
-    it.only('should reject for a failing command', async () => {
+    it('should reject for a failing command', async () => {
       const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
@@ -76,7 +76,7 @@ describe('exec', () => {
       })
     })
 
-    it('should stream output to stdour/stderr if silent=false', () => {
+    it.skip('should stream output to stdour/stderr if silent=false', () => {
       const project = empty().addFile('package.json', {
         name: 'root',
         version: '1.0.0',
