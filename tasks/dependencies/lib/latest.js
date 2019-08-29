@@ -8,10 +8,7 @@ function latestDependenciesTask({onInquire = () => ({}), addRange = '', fetch, s
   return log => {
     log.info('latest', `checking for latest dependencies`)
 
-    //TODO: hack
     const lernaJson = require(process.cwd() + '/lerna.json')
-    lernaJson.location = process.cwd()
-
     return checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, silent)
   }
 }
