@@ -1,7 +1,7 @@
 {
   "lerna": "2.0.0",
   "bootstrap": {
-    "npmClientArgs": ["--no-package-lock"]
+    "npmClientArgs": ["--no-package-lock", "--no-ci"]
   },
   "packages": ["lerna-script", "test-utils", "tasks/*"],
   "version": "1.0.0-0",
