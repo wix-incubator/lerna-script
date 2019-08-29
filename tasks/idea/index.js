@@ -32,9 +32,9 @@ const DEFAULT_MOCHA_CONFIGURATIONS = packageJson => {
 //TODO: add options: {packages, mocha: {patterns: ''}}
 function generateIdeaProject({packages, mochaConfigurations} = {}) {
   const mochaConfigurationsFn = mochaConfigurations || DEFAULT_MOCHA_CONFIGURATIONS
-  return log => {
-    const rootPackage = loadRootPackage()
-    const lernaPackages = packages || loadPackages()
+  return async log => {
+    const rootPackage = await loadRootPackage()
+    const lernaPackages = await (packages || loadPackages())
     const execInRoot = cmd => {
       log.verbose('idea', `executing command: ${cmd}`)
       return exec.command(rootPackage)(cmd)

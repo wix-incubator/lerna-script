@@ -3,8 +3,8 @@ const {loadPackages, iter, fs} = require('lerna-script'),
   deepKeys = require('deep-keys')
 
 function syncModulesTask({packages, transformDependencies, transformPeerDependencies} = {}) {
-  return log => {
-    const {loadedPackages, transformDeps, transformPeerDeps} = providedOrDefaults({
+  return async log => {
+    const {loadedPackages, transformDeps, transformPeerDeps} = await providedOrDefaults({
       packages,
       transformDependencies,
       transformPeerDependencies
@@ -32,16 +32,18 @@ function syncModulesTask({packages, transformDependencies, transformPeerDependen
             logMerged
           )
         )
-        .then(packageJson =>
-          fs.writeFile(lernaPackage)('package.json', packageJson)
-        )
+        .then(packageJson => fs.writeFile(lernaPackage)('package.json', packageJson))
     })
   }
 }
 
-function providedOrDefaults({packages, transformDependencies, transformPeerDependencies} = {}) {
+async function providedOrDefaults({
+  packages,
+  transformDependencies,
+  transformPeerDependencies
+} = {}) {
   return {
-    loadedPackages: packages || loadPackages(),
+    loadedPackages: await (packages || loadPackages()),
     transformDeps: transformDependencies || (version => `~${version}`),
     transformPeerDeps: transformPeerDependencies || (version => `>=${version}`)
   }

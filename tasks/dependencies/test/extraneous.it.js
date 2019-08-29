@@ -4,8 +4,8 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   {extraneous} = require('..')
 
 describe('extraneous task', () => {
-  it('should list dependencies present in managed*Dependencies, but not in modules', () => {
-    const {log, project} = setup()
+  it('should list dependencies present in managed*Dependencies, but not in modules', async () => {
+    const {log, project} = await setup()
 
     return project.within(() => {
       return extraneous()(log).then(() => {
@@ -18,13 +18,14 @@ describe('extraneous task', () => {
     })
   })
 
-  it('should use packages if provided', () => {
-    const {log, project} = setup()
+  it('should use packages if provided', async () => {
+    const {log, project} = await setup()
 
-    return project.within(() => {
-      const packages = loadPackages().filter(p => p.name === 'b')
+    return project.within(async () => {
+      const packages = await loadPackages()
+      const filteredPackages = packages.filter(p => p.name === 'b')
 
-      return extraneous({packages})(log).then(() => {
+      return extraneous({packages: filteredPackages})(log).then(() => {
         expect(log.error).to.have.been.calledWith(
           'extraneous',
           'managedDependencies: adash, highdash'
@@ -34,9 +35,11 @@ describe('extraneous task', () => {
     })
   })
 
-  function setup() {
+  async function setup() {
     const log = loggerMock()
-    const project = aLernaProject()
+    const project = await aLernaProject()
+
+    project
       .lernaJson({
         managedDependencies: {lodash: '1.1.0', highdash: '1.1.0', adash: '1.1.0'},
         managedPeerDependencies: {foo: '> 1.0.0', bar: '> 1.0.0'}

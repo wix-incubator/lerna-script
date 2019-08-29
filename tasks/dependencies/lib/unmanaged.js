@@ -3,8 +3,8 @@ const {iter, fs, loadPackages} = require('lerna-script'),
 
 //TODO: logging
 function unmanagedDependenciesTask({packages} = {}) {
-  return log => {
-    const lernaPackages = packages || loadPackages()
+  return async log => {
+    const lernaPackages = await (packages || loadPackages())
     log.info('unmanaged', `checking for unmanaged dependencies for ${lernaPackages.length} modules`)
     const deps = {dependencies: {}, peerDependencies: {}}
     const {managedDependencies = {}, managedPeerDependencies = {}} = require(process.cwd() +
@@ -28,7 +28,11 @@ function executeUnmanaged(managedDependencies, managedPeerDependencies, deps, in
 }
 
 function logUnmanaged(deps, log) {
-  const toSortedUniqKeys = R.compose(R.sort(R.ascend), R.uniq, R.values)
+  const toSortedUniqKeys = R.compose(
+    R.sort(R.ascend),
+    R.uniq,
+    R.values
+  )
   Object.keys(deps.dependencies).forEach(depKey => {
     const modulesAndVersions = toSortedUniqKeys(deps.dependencies[depKey])
     log.error('unmanaged', `unmanaged dependency ${depKey} (${modulesAndVersions.join(', ')})`)

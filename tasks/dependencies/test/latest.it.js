@@ -8,14 +8,14 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
 describe('latest task', function() {
   this.timeout(30000)
 
-  it('should list dependencies that can be updated', () => {
+  it('should list dependencies that can be updated', async () => {
     const ramdaVersion = execSync('npm info ramda dist-tags.latest')
       .toString()
       .trim('\n')
     const lodashVersion = execSync('npm info lodash dist-tags.latest')
       .toString()
       .trim('\n')
-    const {log, project} = setup({
+    const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest',
         shelljs: '*',
@@ -41,14 +41,14 @@ describe('latest task', function() {
     })
   })
 
-  it('should respect range operator when provided', () => {
+  it('should respect range operator when provided', async () => {
     const ramdaVersion = execSync('npm info ramda dist-tags.latest')
       .toString()
       .trim('\n')
     const lodashVersion = execSync('npm info lodash dist-tags.latest')
       .toString()
       .trim('\n')
-    const {log, project} = setup({
+    const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest',
         shelljs: '*',
@@ -74,8 +74,8 @@ describe('latest task', function() {
     })
   })
 
-  it('should log and exit for no updates', () => {
-    const {log, project} = setup({
+  it('should log and exit for no updates', async () => {
+    const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest'
       }
@@ -88,15 +88,15 @@ describe('latest task', function() {
     })
   })
 
-  it('should not reject for missing managedDependencies, managedPeerDependencies', () => {
-    const {log, project} = setup()
+  it('should not reject for missing managedDependencies, managedPeerDependencies', async () => {
+    const {log, project} = await setup()
 
     return project.within(() => latest()(log))
   })
 
   describe('auto select', () => {
-    it('should autoselect minor and patch updates', () => {
-      const {log, project} = setup({
+    it('should autoselect minor and patch updates', async () => {
+      const {log, project} = await setup({
         managedDependencies: {
           package1: '1.0.0'
         },
@@ -125,7 +125,6 @@ describe('latest task', function() {
         return latest({onInquire, fetch})(log).then(() => {
           const lernaJson = ctx.readJsonFile('lerna.json')
 
-          console.log(lernaJson)
           expect(lernaJson.managedDependencies.package1).to.equal('1.0.1')
           expect(lernaJson.managedPeerDependencies.package2).to.equal('2.1.1')
           expect(lernaJson.managedPeerDependencies.package3).to.equal('3.0.0')
@@ -133,8 +132,8 @@ describe('latest task', function() {
       })
     })
 
-    it('should autoselect major updates but exclude speicific packages', () => {
-      const {log, project} = setup({
+    it('should autoselect major updates but exclude speicific packages', async () => {
+      const {log, project} = await setup({
         managedDependencies: {
           package1: '1.0.0'
         },
@@ -164,7 +163,6 @@ describe('latest task', function() {
         return latest({onInquire, fetch})(log).then(() => {
           const lernaJson = ctx.readJsonFile('lerna.json')
 
-          console.log(lernaJson)
           expect(lernaJson.managedDependencies.package1).to.equal('4.1.1')
           expect(lernaJson.managedPeerDependencies.package2).to.equal('2.0.0')
           expect(lernaJson.managedPeerDependencies.package3).to.equal('3.0.0')
@@ -172,8 +170,8 @@ describe('latest task', function() {
       })
     })
 
-    it('should respect silent flag', () => {
-      const {log, project} = setup({
+    it('should respect silent flag', async () => {
+      const {log, project} = await setup({
         managedDependencies: {
           package1: '1.0.0'
         },
@@ -202,7 +200,6 @@ describe('latest task', function() {
         return latest({fetch, silent: true})(log).then(() => {
           const lernaJson = ctx.readJsonFile('lerna.json')
 
-          console.log(lernaJson)
           expect(lernaJson.managedDependencies.package1).to.equal('1.0.0')
           expect(lernaJson.managedPeerDependencies.package2).to.equal('2.0.1')
           expect(lernaJson.managedPeerDependencies.package3).to.equal('3.0.0')
@@ -211,9 +208,10 @@ describe('latest task', function() {
     })
   })
 
-  function setup(lernaJsonOverrides = {}) {
+  async function setup(lernaJsonOverrides = {}) {
     const log = loggerMock()
-    const project = aLernaProject().lernaJson(lernaJsonOverrides)
+    const project = await aLernaProject()
+    project.lernaJson(lernaJsonOverrides)
 
     return {log, project}
   }

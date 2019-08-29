@@ -4,8 +4,8 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   {unmanaged} = require('..')
 
 describe('unmanaged task', () => {
-  it('should list dependencies present in modules, but not in managed*Dependencies', () => {
-    const {log, project} = setup()
+  it('should list dependencies present in modules, but not in managed*Dependencies', async () => {
+    const {log, project} = await setup()
 
     return project.within(() => {
       return unmanaged()(log).then(() => {
@@ -21,13 +21,14 @@ describe('unmanaged task', () => {
     })
   })
 
-  it('should use packages if provided', () => {
-    const {log, project} = setup()
+  it('should use packages if provided', async () => {
+    const {log, project} = await setup()
 
-    return project.within(() => {
-      const packages = loadPackages().filter(p => p.name === 'a')
+    return project.within(async () => {
+      const packages = await loadPackages()
+      const filteredPackages = packages.filter(p => p.name === 'a')
 
-      return unmanaged({packages})(log).then(() => {
+      return unmanaged({packages: filteredPackages})(log).then(() => {
         expect(log.error).to.have.been.calledWith(
           'unmanaged',
           'unmanaged dependency highdash (1.1.0)'
@@ -40,9 +41,10 @@ describe('unmanaged task', () => {
     })
   })
 
-  function setup() {
+  async function setup() {
     const log = loggerMock()
-    const project = aLernaProject()
+    const project = await aLernaProject()
+    project
       .lernaJson({
         managedDependencies: {
           lodash: '1.1.0'

@@ -20,16 +20,15 @@ task:
 
 # API
 
-### loadPackages({[log], [packageConfigs]}): LernaPackages[]
+### loadPackages({[log], [packageConfigs]}): Promise[LernaPackages[]]
 
 Returns list of packages/modules in repo - forward to lerna;
 
 Parameters:
 
 * log, optional - `npmlog` logger;
-* packageConfigs - optional list of package config. defaults to default lerna package config.
 
-### loadRootPackage({[log]}): LernaPackage[]
+### loadRootPackage({[log]}): Promise[LernaPackage[]]
 
 Returns [Package](https://github.com/lerna/lerna/blob/master/src/Package.js) of root module.
 

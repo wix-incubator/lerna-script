@@ -2,8 +2,8 @@ const {loadPackages, iter} = require('lerna-script'),
   checkDeps = require('depcheck')
 
 function depcheckTask({packages, depcheck} = {}) {
-  return log => {
-    const lernaPackages = packages || loadPackages()
+  return async log => {
+    const lernaPackages = await (packages || loadPackages())
     log.info('depcheck', `checking dependencies for ${lernaPackages.length} modules`)
 
     return iter.parallel(lernaPackages, {build: 'depcheck', log})((lernaPackage, log) => {

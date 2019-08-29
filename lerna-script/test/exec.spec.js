@@ -1,17 +1,19 @@
 const {expect} = require('chai').use(require('sinon-chai')),
   {captureOutput} = require('./utils'),
   {empty, aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
-  index = require('..')
+  index = require('..'),
+  invertPromise = require('invert-promise')
 
 describe('exec', () => {
   const output = captureOutput()
 
   describe('command', () => {
-    it('should execute command in package cwd and print output by default', () => {
+    it('should execute command in package cwd and print output by default', async () => {
       const log = loggerMock()
+      const project = await aLernaProjectWith2Modules()
 
-      return aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
 
         return index.exec
           .command(lernaPackage, {log})('pwd')
@@ -26,9 +28,11 @@ describe('exec', () => {
       })
     })
 
-    it('should print output if enabled', () => {
-      return aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+    it('should print output if enabled', async () => {
+      const project = await aLernaProjectWith2Modules()
+
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
 
         return index.exec
           .command(lernaPackage, {silent: false})('ls -lah .')
@@ -39,16 +43,15 @@ describe('exec', () => {
       })
     })
 
-    it('should reject for a failing command', done => {
-      aLernaProjectWith2Modules().within(() => {
-        const lernaPackage = index.loadPackages().pop()
+    it('should reject for a failing command', async () => {
+      const project = await aLernaProjectWith2Modules()
 
-        index.exec
-          .command(lernaPackage)('asd zzz')
-          .catch(e => {
-            expect(e.message).to.match(/spawn.*ENO/)
-            done()
-          })
+      return project.within(async () => {
+        const [lernaPackage] = await index.loadPackages()
+
+        return await invertPromise(index.exec.command(lernaPackage)('asd')).then(e =>
+          expect(e.message).to.match(/spawn.*ENO/)
+        )
       })
     })
   })
@@ -61,8 +64,8 @@ describe('exec', () => {
         scripts: {test: 'echo tested'}
       })
 
-      return project.within(() => {
-        const lernaPackage = index.loadRootPackage()
+      return project.within(async () => {
+        const lernaPackage = await index.loadRootPackage()
 
         return index.exec
           .script(lernaPackage)('test')
@@ -80,8 +83,8 @@ describe('exec', () => {
         scripts: {test: 'echo tested'}
       })
 
-      return project.within(() => {
-        const lernaPackage = index.loadRootPackage()
+      return project.within(async () => {
+        const lernaPackage = await index.loadRootPackage()
 
         return index.exec
           .script(lernaPackage, {silent: false})('test')
@@ -100,8 +103,8 @@ describe('exec', () => {
         scripts: {test: 'qwe zzz'}
       })
 
-      project.within(() => {
-        const lernaPackage = index.loadRootPackage()
+      project.within(async () => {
+        const lernaPackage = await index.loadRootPackage()
 
         index.exec
           .script(lernaPackage)('test')

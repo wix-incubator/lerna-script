@@ -4,9 +4,10 @@ const {aLernaProject, fs, loggerMock} = require('lerna-script-test-utils'),
   sync = require('..')
 
 describe('modules sync task', () => {
-  it('should sync module versions with defaults', () => {
+  it('should sync module versions with defaults', async () => {
     const log = loggerMock()
-    const project = aLernaProject()
+    const project = await aLernaProject()
+    project
       .module('packages/a', module => module.packageJson({version: '2.0.0'}))
       .module('packages/b', module => module.packageJson({dependencies: {a: '~1.0.0'}}))
       .module('packages/c', module => module.packageJson({devDependencies: {a: '~1.0.0'}}))
@@ -34,16 +35,18 @@ describe('modules sync task', () => {
     })
   })
 
-  it('should respect provided packages', () => {
+  it('should respect provided packages', async () => {
     const log = loggerMock()
-    const project = aLernaProject()
+    const project = await aLernaProject()
+    project
       .module('packages/a', module => module.packageJson({version: '2.0.0'}))
       .module('packages/b', module => module.packageJson({dependencies: {a: '~1.0.0'}}))
       .module('packages/c', module => module.packageJson({dependencies: {a: '~1.0.0'}}))
 
-    return project.within(() => {
-      const lernaPackage = loadPackages().filter(p => p.name !== 'c')
-      return sync({packages: lernaPackage})(log).then(() => {
+    return project.within(async () => {
+      const lernaPackages = await loadPackages()
+      const filteredPackages = lernaPackages.filter(p => p.name !== 'c')
+      return sync({packages: filteredPackages})(log).then(() => {
         expect(log.info).to.have.been.calledWith(
           'modules',
           'syncing module versions for 2 packages'
@@ -60,9 +63,10 @@ describe('modules sync task', () => {
     })
   })
 
-  it('should accept custom transformFunctions', () => {
+  it('should accept custom transformFunctions', async () => {
     const log = loggerMock()
-    const project = aLernaProject()
+    const project = await aLernaProject()
+    project
       .module('packages/a', module => module.packageJson({version: '2.0.0'}))
       .module('packages/b', module => module.packageJson({dependencies: {a: '~1.0.0'}}))
       .module('packages/c', module => module.packageJson({devDependencies: {a: '~1.0.0'}}))
@@ -88,9 +92,10 @@ describe('modules sync task', () => {
     })
   })
 
-  it('should beauify json on update', () => {
+  it('should beauify json on update', async () => {
     const log = loggerMock()
-    const project = aLernaProject()
+    const project = await aLernaProject()
+    project
       .module('packages/a', module => module.packageJson({version: '2.0.0'}))
       .module('packages/b', module => module.packageJson({dependencies: {a: '~1.0.0'}}))
 
