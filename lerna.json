@@ -1,10 +1,6 @@
 {
   "lerna": "2.0.0",
-  "packages": [
-    "lerna-script",
-    "test-utils",
-    "tasks/*"
-  ],
+  "packages": ["lerna-script", "test-utils", "tasks/*"],
   "version": "1.0.0-0",
   "managedDependencies": {
     "bluebird": "3.5.5",
@@ -44,6 +40,6 @@
   },
   "managedPeerDependencies": {
     "sinon": ">7.0.0",
-    "lerna": "~~3.16.0"
+    "lerna": "~3.16.0"
   }
 }

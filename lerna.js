@@ -5,17 +5,20 @@ const {loadRootPackage, loadPackages, iter, exec} = require('lerna-script'),
   dependencies = require('lerna-script-tasks-dependencies'),
   depcheck = require('lerna-script-tasks-depcheck')
 
-function test(log) {
-  return iter.forEach(loadPackages(), {log, build: 'test'})((lernaPackage, log) => {
+async function test(log) {
+  const packages = await loadPackages()
+  return iter.forEach(packages, {log, build: 'test'})((lernaPackage, log) => {
     return exec.script(lernaPackage, {log, silent: false})('test')
   })
 }
 
-function clean(log) {
+async function clean(log) {
+  const rootPackage = await loadRootPackage()
+  const packages = await loadPackages()
   return exec
-    .command(loadRootPackage(), {log})('lerna clean --yes')
+    .command(rootPackage, {log})('lerna clean --yes')
     .then(() => {
-      return iter.forEach(loadPackages().join([loadRootPackage()]), {log})((lernaPackage, log) => {
+      return iter.forEach(packages.join([loadRootPackage()]), {log})((lernaPackage, log) => {
         const execCmd = cmd => exec.command(lernaPackage, {log})(cmd)
         return Promise.all(
           [
