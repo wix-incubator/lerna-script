@@ -3,6 +3,4 @@ branches:
   only:
     - master
 script:
-  - npm install --ignore-scripts
-  - npx lerna bootstrap --no-ci
   - npm run test
