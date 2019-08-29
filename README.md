@@ -43,13 +43,16 @@ To start using, add `lerna.js` to root of your mono-repo and add initial task:
 const {loadPackages, iter, exec} = require('lerna-script'),
   {join} = require('path')
 
-module.exports.syncNvmRc = log => {
+async function syncNvmRc(log) {
   log.info('syncNvmRc', 'syncing .nvmrc to all modules from root')
+  const packages = await loadPackages()
 
-  return iter.parallel(loadPackages())(lernaPackage => {
+  return iter.parallel(packages)(lernaPackage => {
     exec.command(lernaPackage)(`cp ${join(process.cwd(), '.nvmrc')} .`)
   })
 }
+
+module.exports.syncNvmRc = syncNvmRc
 ```
 
 And then you can run it:
