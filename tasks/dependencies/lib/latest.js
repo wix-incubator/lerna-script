@@ -45,21 +45,6 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
         exclude
       )
 
-      // <<<<<<< HEAD
-      //       if (choiceGroups.length > 0) {
-      //         onInquire()
-      //         return inquire({message: 'Updates found', choiceGroups}).then(async answers => {
-      //           if (answers.length > 0) {
-      //             answers.forEach(
-      //               ({type, name, latestVersion}) =>
-      //                 (lernaJson[type][name] = `${addRange}${latestVersion}`)
-      //             )
-      //             const rootPackage = await loadRootPackage()
-      //             return fs.writeFile(rootPackage)('./lerna.json', lernaJson)
-      //           } else {
-      //             log.info('latest', `nothing selected, exiting...`)
-      //           }
-      // =======
       if (depsChoices.length + peerDepsChoices.length > 0) {
         let selections
         if (silent) {

@@ -1,5 +1,5 @@
-const runNpmScript = require('@lerna/npm-run-script'),
-  {exec, spawnStreaming} = require('@lerna/child-process'),
+const runNpmScript = require('./lerna-forked-child-process-runscript'),
+  {exec, spawnStreaming} = require('./lerna-forked-child-process'),
   npmlog = require('npmlog')
 
 function runCommand(lernaPackage, {silent = true, log = npmlog} = {silent: true, log: npmlog}) {
