@@ -3,9 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "postinstall": "lerna bootstrap",
-    "prepush": "lerna-script sync",
-    "precommit": "pretty-quick --staged",
+    "postinstall": "lerna bootstrap --no-ci",
     "clean": "lerna-script clean",
     "test": "lerna-script test",
     "ls": "lerna-script",
@@ -14,14 +12,20 @@
   },
   "devDependencies": {
     "husky": "3.0.4",
-    "lerna": "2.11.0",
-    "lerna-script": "0.9.6",
-    "lerna-script-tasks-depcheck": "0.9.6",
-    "lerna-script-tasks-dependencies": "0.9.6",
-    "lerna-script-tasks-idea": "0.9.6",
-    "lerna-script-tasks-modules": "0.9.6",
-    "lerna-script-tasks-npmfix": "0.9.6",
+    "lerna": "^3.0.0",
+    "lerna-script": "1.0.0-0",
+    "lerna-script-tasks-depcheck": "1.0.0-0",
+    "lerna-script-tasks-dependencies": "1.0.0-0",
+    "lerna-script-tasks-idea": "1.0.0-0",
+    "lerna-script-tasks-modules": "1.0.0-0",
+    "lerna-script-tasks-npmfix": "1.0.0-0",
     "prettier": "1.18.2",
     "pretty-quick": "1.11.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "pre-push": "lerna-script sync"
+    }
   }
 }

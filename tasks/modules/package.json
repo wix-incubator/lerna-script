@@ -21,13 +21,12 @@
     "lodash": "4.17.15"
   },
   "peerDependencies": {
-    "lerna-script": ">=0.10.0"
+    "lerna-script": ">=1.0.0-0"
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "lerna": "3.16.4",
-    "lerna-script": "^1.0.0-0",
-    "lerna-script-test-utils": "^1.0.0-0",
+    "lerna-script": "~1.0.0-0",
+    "lerna-script-test-utils": "~1.0.0-0",
     "mocha": "6.2.0",
     "sinon": "7.4.1",
     "sinon-chai": "3.3.0"
