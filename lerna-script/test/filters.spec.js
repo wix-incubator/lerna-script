@@ -1,5 +1,6 @@
-const {expect} = require('chai'),
+const {expect} = require('chai').use(require('sinon-chai')),
   {asBuilt, asGitCommited} = require('./utils'),
+  Package = require('@lerna/package'),
   {empty, aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
   index = require('..')
 
@@ -28,7 +29,7 @@ describe('filters', function() {
       const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
-        const packages = await index.loadPackages();
+        const packages = await index.loadPackages()
         const lernaPackages = index.filters.removeByGlob(packages, {log})('a')
         expect(lernaPackages.map(p => p.name)).to.have.same.members(['b'])
         expect(log.verbose).to.have.been.calledWithMatch('removeByGlob', 'removed 1 packages')
@@ -41,7 +42,7 @@ describe('filters', function() {
       const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
-        const packages = await index.loadPackages();
+        const packages = await index.loadPackages()
         const unbuiltLernaPackages = index.filters.removeBuilt(packages)()
         expect(unbuiltLernaPackages.length).to.equal(2)
       })
@@ -111,7 +112,7 @@ describe('filters', function() {
   describe('filters.gitSince', () => {
     it('removes modules without changes', async () => {
       const log = loggerMock()
-       const project = empty()
+      const project = empty()
         .addFile('package.json', {name: 'root', version: '1.0.0'})
         .addFile('lerna.json', {lerna: '2.0.0', packages: ['packages/**'], version: '0.0.0'})
         .module('packages/a', module => module.packageJson({name: 'a', version: '2.0.0'}))
@@ -119,26 +120,25 @@ describe('filters', function() {
           module.packageJson({name: 'ba', version: '1.0.0', dependencies: {b: '~1.0.0'}})
         )
 
-        await project.inDir(ctx => {
-          ctx.exec(
-            'git init && git config user.email mail@example.org && git config user.name name'
-          )
-          ctx.exec('git add -A && git commit -am ok')
-          ctx.exec('git checkout -b test')
-        })
+      await project.inDir(ctx => {
+        ctx.exec('git init && git config user.email mail@example.org && git config user.name name')
+        ctx.exec('git add -A && git commit -am ok')
+        ctx.exec('git checkout -b test')
+      })
 
-        project.module('packages/b', module => module.packageJson({name: 'b', version: '1.0.0'}))
+      project.module('packages/b', module => module.packageJson({name: 'b', version: '1.0.0'}))
 
-        await project.inDir(ctx => {
-          ctx.exec('git add -A && git commit -am ok')
-        })
-        return project .within(async () => {
-          const  packages = await index.loadPackages();
-          const lernaPackages = index.filters.gitSince(packages, {log})('master')
+      await project.inDir(ctx => {
+        ctx.exec('git add -A && git commit -am ok')
+      })
+      return project.within(async () => {
+        const packages = await index.loadPackages()
+        const lernaPackages = index.filters.gitSince(packages, {log})('master')
 
-          expect(lernaPackages.map(p => p.name)).to.have.same.members(['b', 'ba'])
-          expect(log.verbose).to.have.been.calledWithMatch('removeGitSince', 'removed 1 packages')
-        })
+        expect(lernaPackages[0]).to.be.instanceof(Package)
+        expect(lernaPackages.map(p => p.name)).to.have.same.members(['b', 'ba'])
+        expect(log.verbose).to.have.been.calledWithMatch('removeGitSince', 'removed 1 packages')
+      })
     })
   })
 })

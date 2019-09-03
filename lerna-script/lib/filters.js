@@ -38,7 +38,7 @@ function removeGitSince(lernaPackages, {log = npmlog} = {log: npmlog}) {
       packageGraph,
       {cwd: process.cwd()},
       {since: refspec}
-    )
+    ).map(graphNode => graphNode.pkg)
 
     const removedPackageNames = diffPackages(lernaPackages, collectedPackages)
     log.verbose('removeGitSince', `removed ${removedPackageNames.length} packages`, {
