@@ -70,6 +70,22 @@ describe('idea', async () => {
     })
   })
 
+  it('generates [module-name].iml with pattern exclusions', async () => {
+    const log = loggerMock()
+    const project = await aLernaProjectWith3Modules()
+
+    return project.within(() => {
+      return idea({excludePatterns: ['somePattern.*', 'anotherPattern.*']})(log).then(() => {
+        expect(shelljs.cat('packages/a/a.iml').stdout).to.be.string(
+          '<excludePattern pattern="somePattern.*" />'
+        )
+        expect(shelljs.cat('packages/a/a.iml').stdout).to.be.string(
+          '<excludePattern pattern="anotherPattern.*" />'
+        )
+      })
+    })
+  })
+
   it('generates [module-name].iml and marks test/tests as test root', async () => {
     const log = loggerMock()
     const project = await aLernaProjectWith3Modules()
