@@ -30,7 +30,7 @@ const DEFAULT_MOCHA_CONFIGURATIONS = packageJson => {
 }
 
 //TODO: add options: {packages, mocha: {patterns: ''}}
-function generateIdeaProject({packages, mochaConfigurations} = {}) {
+function generateIdeaProject({packages, mochaConfigurations, excludePatterns} = {}) {
   const mochaConfigurationsFn = mochaConfigurations || DEFAULT_MOCHA_CONFIGURATIONS
   return async log => {
     const rootPackage = await loadRootPackage()
@@ -59,7 +59,7 @@ function generateIdeaProject({packages, mochaConfigurations} = {}) {
         return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
           return exec
             .command(lernaPackage)('rm -f *.iml')
-            .then(() => createModuleIml(lernaPackage, log))
+            .then(() => createModuleIml(lernaPackage, log, excludePatterns))
         })
       })
   }
@@ -107,7 +107,7 @@ function createModulesXml(lernaPackages, rootPackage, log) {
   )
 }
 
-function createModuleIml(lernaPackage, log) {
+function createModuleIml(lernaPackage, log, excludePatterns) {
   const directories = shelljs
     .ls(lernaPackage.location)
     .filter(entry => shelljs.test('-d', join(lernaPackage.location, entry)))
@@ -124,7 +124,11 @@ function createModuleIml(lernaPackage, log) {
     excludeFolders: EXCLUDE_FOLDERS
   })
   const imlFile = join(lernaPackage.location, stripScope(lernaPackage.name) + '.iml')
-  templates.ideaModuleImlFile(imlFile, {excludeFolders: EXCLUDE_FOLDERS, sourceFolders})
+  templates.ideaModuleImlFile(imlFile, {
+    excludeFolders: EXCLUDE_FOLDERS,
+    sourceFolders,
+    excludePatterns
+  })
 }
 
 function stripScope(name) {

@@ -56,4 +56,5 @@ Parameters:
   * extraOptions - extra mocha options;
   * testKind - kind of test, ex. PATTERN;
   * testPattern - pattern expression.
+* excludePatterns - array of patterns that will be set as the project exclude patterns. Files\Folders matching that pattern will be marked as "excluded" in Idea
 * log - `npmlog` instance.
