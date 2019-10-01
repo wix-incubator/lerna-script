@@ -40,7 +40,7 @@
     "@lerna/package-graph": "~3.16.0",
     "@lerna/project": "~3.16.0",
     "@lerna/run-parallel-batches": "3.16.0",
-    "bluebird": "3.5.5",
+    "bluebird": "3.7.0",
     "fs-extra": "8.1.0",
     "ignore": "5.1.4",
     "lodash": "4.17.15",
