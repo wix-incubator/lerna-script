@@ -11,7 +11,7 @@
     "release": "lerna publish"
   },
   "devDependencies": {
-    "husky": "3.0.7",
+    "husky": "3.0.8",
     "lerna": "3.16.4",
     "lerna-script": "1.0.0-0",
     "lerna-script-tasks-depcheck": "1.0.0-0",
