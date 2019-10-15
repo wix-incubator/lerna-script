@@ -17,7 +17,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "bluebird": "3.7.0",
+    "bluebird": "3.7.1",
     "fs-extra": "8.1.0"
   },
   "peerDependencies": {
