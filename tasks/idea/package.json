@@ -17,7 +17,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "handlebars": "4.4.4",
+    "handlebars": "4.4.5",
     "shelljs": "0.8.3"
   },
   "peerDependencies": {
