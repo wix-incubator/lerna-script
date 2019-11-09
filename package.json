@@ -19,7 +19,7 @@
     "lerna-script-tasks-idea": "1.0.0-0",
     "lerna-script-tasks-modules": "1.0.0-0",
     "lerna-script-tasks-npmfix": "1.0.0-0",
-    "prettier": "1.19.0",
+    "prettier": "1.19.1",
     "pretty-quick": "2.0.1"
   },
   "husky": {
