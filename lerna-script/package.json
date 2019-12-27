@@ -24,7 +24,7 @@
     "chai": "4.2.0",
     "intercept-stdout": "0.1.2",
     "invert-promise": "1.0.1",
-    "lerna": "3.19.0",
+    "lerna": "3.20.0",
     "lerna-script-test-utils": "^1.1.1",
     "mocha": "6.2.2",
     "sinon": "8.0.1",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@lerna/batch-packages": "~3.16.0",
     "@lerna/child-process": "~3.16.0",
-    "@lerna/collect-updates": "~3.18.0",
+    "@lerna/collect-updates": "~3.20.0",
     "@lerna/filter-packages": "~3.18.0",
     "@lerna/npm-run-script": "~3.16.0",
     "@lerna/package": "~3.16.0",
