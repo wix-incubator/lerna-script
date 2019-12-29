@@ -24,7 +24,7 @@
     "chai": "4.2.0",
     "intercept-stdout": "0.1.2",
     "invert-promise": "1.0.1",
-    "lerna": "3.20.0",
+    "lerna": "3.20.1",
     "lerna-script-test-utils": "^1.1.1",
     "mocha": "6.2.2",
     "sinon": "8.0.1",
