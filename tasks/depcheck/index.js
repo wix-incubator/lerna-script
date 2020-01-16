@@ -21,14 +21,12 @@ function checkModule(lernaPackage, depcheckOpts = {}) {
       if (hasUnusedDeps) {
         console.log(`\nunused deps found for module ${colors.brightCyan.bold(lernaPackage.name)}`)
         if (dependencies.length > 0) {
-          console.log(colors.red('dependencies'))
-          dependencies.map(dep => console.log(dep))
+          console.log({dependencies})
         }
         if (devDependencies.length > 0) {
-          console.log(colors.yellow('devDependencies'))
-          devDependencies.map(dep => console.log(dep))
+          console.log({devDependencies})
         }
-        return Promise.reject(`unused deps found for module ${lernaPackage.name}`)
+        return Promise.reject(new Error(`unused deps found for module ${lernaPackage.name}`))
       }
       return Promise.resolve()
     })

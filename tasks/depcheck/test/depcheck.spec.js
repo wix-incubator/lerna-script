@@ -2,11 +2,14 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   {loadPackages} = require('lerna-script'),
   {expect} = require('chai').use(require('sinon-chai')),
   depcheckTask = require('..'),
-  invertPromise = require('invert-promise')
+  invertPromise = require('invert-promise'),
+  sinon = require('sinon'),
+  colors = require('colors')
 
 describe('depcheck', () => {
   it('should fail for extraneous dependency', async () => {
     const log = loggerMock()
+    console.log = sinon.spy()
     const project = await aLernaProject({a: ['lodash']})
 
     return project.within(() => {
@@ -18,11 +21,11 @@ describe('depcheck', () => {
           )
         )
       ).then(err => {
-        expect(log.item.error).to.have.been.calledWith(
-          'depcheck',
-          'module a has unused dependencies: lodash'
-        )
         expect(err.message).to.be.string('unused deps found for module a')
+        expect(console.log.firstCall).to.have.been.calledWith(
+          `\nunused deps found for module ${colors.brightCyan.bold('a')}`
+        )
+        expect(console.log).to.have.been.calledWithMatch({dependencies: ['lodash']})
       })
     })
   })
