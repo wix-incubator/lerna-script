@@ -1,6 +1,6 @@
 {
   "name": "lerna-script-test-utils",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "test utils for lerna-script modules",
   "author": "vilius@wix.com",
   "license": "BSD",
