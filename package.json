@@ -13,12 +13,12 @@
   "devDependencies": {
     "husky": "4.0.10",
     "lerna": "3.20.2",
-    "lerna-script": "1.0.0-0",
-    "lerna-script-tasks-depcheck": "1.0.0-0",
-    "lerna-script-tasks-dependencies": "1.0.0-0",
-    "lerna-script-tasks-idea": "1.0.0-0",
-    "lerna-script-tasks-modules": "1.0.0-0",
-    "lerna-script-tasks-npmfix": "1.0.0-0",
+    "lerna-script": "1.1.1",
+    "lerna-script-tasks-depcheck": "1.1.1",
+    "lerna-script-tasks-dependencies": "1.1.1",
+    "lerna-script-tasks-idea": "1.1.1",
+    "lerna-script-tasks-modules": "1.1.1",
+    "lerna-script-tasks-npmfix": "1.1.1",
     "prettier": "1.19.1",
     "pretty-quick": "2.0.1"
   },
