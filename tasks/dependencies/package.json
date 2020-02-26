@@ -31,7 +31,7 @@
     "chai": "4.2.0",
     "lerna-script": "^1.2.0",
     "lerna-script-test-utils": "^1.2.0",
-    "mocha": "7.0.1",
+    "mocha": "7.1.0",
     "sinon": "9.0.0",
     "sinon-chai": "3.5.0"
   }
