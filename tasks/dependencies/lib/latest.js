@@ -25,11 +25,16 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
 
   const tracker = log.newItem('fetching', depsList.length + peerDepsList.length)
 
-  const depsPromises = depsList.map(depName =>
-    fetchLatestVersion(depName, managedDependencies[depName], tracker, fetch)
+  const depsPromises = Promise.map(
+    depsList,
+    depName => fetchLatestVersion(depName, managedDependencies[depName], tracker, fetch),
+    {concurrency: 8}
   )
-  const peerDepsPromises = peerDepsList.map(depName =>
-    fetchLatestVersion(depName, managedPeerDependencies[depName], tracker, fetch)
+
+  const peerDepsPromises = Promise.map(
+    peerDepsList,
+    depName => fetchLatestVersion(depName, managedPeerDependencies[depName], tracker, fetch),
+    {concurrency: 8}
   )
 
   return Promise.all([Promise.all(depsPromises), Promise.all(peerDepsPromises)]).then(
