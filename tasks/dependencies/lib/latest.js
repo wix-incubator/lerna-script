@@ -2,6 +2,7 @@ const {exec} = require('child_process'),
   {satisfies, validRange, diff} = require('semver'),
   inquire = require('./inquire'),
   {fs, loadRootPackage} = require('lerna-script'),
+  os = require('os'),
   Promise = require('bluebird')
 
 function latestDependenciesTask({onInquire = () => ({}), addRange = '', fetch, silent} = {}) {
@@ -25,16 +26,18 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
 
   const tracker = log.newItem('fetching', depsList.length + peerDepsList.length)
 
+  const concurrency = os.cpus().length
+
   const depsPromises = Promise.map(
     depsList,
     depName => fetchLatestVersion(depName, managedDependencies[depName], tracker, fetch),
-    {concurrency: 8}
+    {concurrency}
   )
 
   const peerDepsPromises = Promise.map(
     peerDepsList,
     depName => fetchLatestVersion(depName, managedPeerDependencies[depName], tracker, fetch),
-    {concurrency: 8}
+    {concurrency}
   )
 
   return Promise.all([Promise.all(depsPromises), Promise.all(peerDepsPromises)]).then(
