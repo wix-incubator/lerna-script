@@ -1,6 +1,6 @@
 {
   "name": "lerna-script",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "lerna extension for custom scripts",
   "main": "index.js",
   "homepage": "https://github.com/wix/lerna-script/tree/master/lerna-script",
@@ -25,7 +25,7 @@
     "intercept-stdout": "0.1.2",
     "invert-promise": "1.0.1",
     "lerna": "3.20.2",
-    "lerna-script-test-utils": "^1.2.0",
+    "lerna-script-test-utils": "^1.2.1",
     "mocha": "7.1.1",
     "sinon": "9.0.2",
     "sinon-chai": "3.5.0"
