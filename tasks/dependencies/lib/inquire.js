@@ -14,6 +14,7 @@ module.exports = ({message, choiceGroups}) => {
         type: 'checkbox',
         message,
         name: 'boo',
+        pageSize: 20,
         choices: inquirerChoices
       }
     ])
