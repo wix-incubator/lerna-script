@@ -30,7 +30,11 @@ describe('npmfix task', () => {
         )
         expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
           'repository.url',
-          'https://github.com/git/qwe/tree/master/packages/a'
+          'git@github.com:git/qwe.git'
+        )
+        expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
+          'repository.directory',
+          '/packages/a'
         )
 
         expect(fs.readJson('./packages/b/package.json')).to.contain.property(

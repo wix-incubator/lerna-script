@@ -26,20 +26,18 @@ function npmfix({packages} = {}) {
       const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse()
 
       return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
-        const moduleGitUrl =
-          repoUrl + '/tree/master/' + relative(process.cwd(), lernaPackage.location)
-
         return fs
           .readFile(lernaPackage, {log})('package.json', JSON.parse)
           .then(packageJson => {
             const updated = Object.assign({}, packageJson, {
-              homepage: moduleGitUrl,
+              homepage: repoUrl + '/tree/master/' + relative(process.cwd(), lernaPackage.location),
               dependencies: sortDependencies(packageJson.dependencies),
               devDependencies: sortDependencies(packageJson.devDependencies),
               peerDependencies: sortDependencies(packageJson.peerDependencies),
               repository: {
                 type: 'git',
-                url: moduleGitUrl
+                url: gitRemoteUrl,
+                directory: '/' + relative(process.cwd(), lernaPackage.location)
               }
             })
             return fs.writeFile(lernaPackage, {log})('package.json', updated)
