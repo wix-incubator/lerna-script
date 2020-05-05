@@ -23,21 +23,23 @@ function npmfix({packages} = {}) {
     log.info('npmfix', `fixing homepage, repo urls for ${lernaPackages.length} packages`)
 
     return gitRemoteUrl('.', 'origin').then(gitRemoteUrl => {
-      const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse()
+      const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse();
 
       return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
+        const moduleRelativePath = relative(process.cwd(), lernaPackage.location);
+
         return fs
           .readFile(lernaPackage, {log})('package.json', JSON.parse)
           .then(packageJson => {
             const updated = Object.assign({}, packageJson, {
-              homepage: repoUrl + '/tree/master/' + relative(process.cwd(), lernaPackage.location),
+              homepage: repoUrl + '/tree/master/' + moduleRelativePath,
               dependencies: sortDependencies(packageJson.dependencies),
               devDependencies: sortDependencies(packageJson.devDependencies),
               peerDependencies: sortDependencies(packageJson.peerDependencies),
               repository: {
                 type: 'git',
                 url: gitRemoteUrl,
-                directory: '/' + relative(process.cwd(), lernaPackage.location)
+                ...(moduleRelativePath && {directory: '/' + moduleRelativePath})
               }
             })
             return fs.writeFile(lernaPackage, {log})('package.json', updated)
