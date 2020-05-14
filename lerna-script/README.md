@@ -49,7 +49,7 @@ Parameters:
 
 Returns promise with task results.
 
-### iter.parallel(lernaPackages, {[log], [build]})(task): Promise
+### iter.parallel(lernaPackages, {[log], [build], [concurrency]})(task): Promise
 
 Executed provided command for all `lernaPackages` in a parallel fashion(`Promise.all`). `taskFn` can be either sync task
 or return a `Promise`.
@@ -60,6 +60,7 @@ Parameters:
 * log - logger to be used for progress and pass-on to nested tasks;
 * build - should a module be built as in `changes.build`;
 * task - function to execute with signature `(lernaPackage, log) => Promise`.
+* concurrency - number, defaults to `Infinity`. See [bluebird#map API](http://bluebirdjs.com/docs/api/promise.map.html#map-option-concurrency)
 
 Returns promise with task results.
 
