@@ -23,7 +23,7 @@ function forEach(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   }
 }
 
-function parallel(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
+function parallel(lernaPackages, {log = npmlog, build, concurrency = Infinity} = {log: npmlog, concurrency: Infinity}) {
   return taskFn => {
     const filteredLernaPackages = filterBuilt(lernaPackages, log, build)
     const promisifiedTaskFn = Promise.method(taskFn)
@@ -42,7 +42,7 @@ function parallel(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
           promiseTracker.resume()
           promiseTracker.completeWork(1)
         })
-    }).finally(() => forEachTracker.finish())
+    }, {concurrency}).finally(() => forEachTracker.finish())
   }
 }
 

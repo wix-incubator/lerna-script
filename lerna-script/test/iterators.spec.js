@@ -1,8 +1,9 @@
 const {expect} = require('chai'),
   {asBuilt, asGitCommited} = require('./utils'),
   sinon = require('sinon'),
-  {aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
+  {aLernaProjectWith2Modules, loggerMock, aLernaProject} = require('lerna-script-test-utils'),
   index = require('..'),
+  Promise = require('bluebird'),
   invertPromise = require('invert-promise')
 
 describe('iterators', () => {
@@ -101,6 +102,22 @@ describe('iterators', () => {
 
             expect(log.newGroup().newItem().info).to.have.been.called
           })
+      })
+    })
+
+    it('should respect concurrency limit', async () => {
+      // project with 20 modules
+      const project = await aLernaProject(Array.from(Array(20).keys()).reduce((acc, idx) => ({...acc, [`package${idx}`]: []}), {}))
+      let concurrentExecutions = 0
+
+      return project.within(async () => {
+        const packages = await index.loadPackages()
+        return index.iter.parallel(packages, {concurrency: 3})(async () => {
+          concurrentExecutions++
+          expect(concurrentExecutions, 'concurrentExecutions').to.be.at.most(3)
+          await Promise.delay(5 + Math.random() * 10)
+          concurrentExecutions--
+        })
       })
     })
   })
