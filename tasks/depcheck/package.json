@@ -26,7 +26,7 @@
   "devDependencies": {
     "chai": "4.2.0",
     "invert-promise": "1.0.1",
-    "lerna": "3.20.2",
+    "lerna": "3.21.0",
     "lerna-script": "^1.2.1",
     "lerna-script-test-utils": "^1.2.1",
     "mocha": "7.1.2",
