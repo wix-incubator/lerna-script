@@ -11,24 +11,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/lerna-script/tree/master/tasks/idea"
+    "url": "git@github.com:wix/lerna-script.git",
+    "directory": "/tasks/idea"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "handlebars": "4.7.6",
-    "shelljs": "0.8.4"
+    "handlebars": "4.1.2",
+    "shelljs": "0.8.3"
   },
   "peerDependencies": {
-    "lerna-script": ">=1.0.0-0"
+    "lerna-script": ">=1.3.0"
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "lerna-script": "^1.3.0",
-    "lerna-script-test-utils": "^1.3.0",
-    "mocha": "7.1.2",
-    "sinon": "9.0.2",
-    "sinon-chai": "3.5.0"
+    "lerna-script": "~1.3.0",
+    "lerna-script-test-utils": "~1.3.0",
+    "mocha": "6.2.0",
+    "sinon": "7.4.1",
+    "sinon-chai": "3.3.0"
   }
 }

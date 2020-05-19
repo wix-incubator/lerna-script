@@ -11,13 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/lerna-script/tree/master/test-utils"
+    "url": "git@github.com:wix/lerna-script.git",
+    "directory": "/test-utils"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "bluebird": "3.7.2",
+    "bluebird": "3.5.5",
     "fs-extra": "8.1.0"
   },
   "peerDependencies": {
@@ -25,7 +26,7 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "mocha": "7.1.2",
-    "sinon": "9.0.2"
+    "mocha": "6.2.0",
+    "sinon": "7.4.1"
   }
 }
