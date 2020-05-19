@@ -4,11 +4,10 @@ const {expect} = require('chai').use(require('sinon-chai')),
   sinon = require('sinon')
 
 describe('packages', () => {
-
   describe('loadPackages', () => {
     it('should return a list of packages', async () => {
       const log = loggerMock()
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
         const packages = await index.loadPackages({log})
@@ -28,7 +27,7 @@ describe('packages', () => {
         c: ['d'],
         d: []
       })
-        return project.within(async () => {
+      return project.within(async () => {
         const packages = await index.loadPackages()
         expect(packages.map(p => p.name)).to.deep.equal(['d', 'c', 'b', 'a'])
       })
@@ -38,7 +37,7 @@ describe('packages', () => {
   describe('loadRootPackage', () => {
     it('should return a root package', async () => {
       const log = loggerMock()
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
         const rootPackage = await index.loadRootPackage({log})

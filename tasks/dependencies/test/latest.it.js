@@ -5,16 +5,12 @@ const {aLernaProject, loggerMock} = require('lerna-script-test-utils'),
   bddStdin = require('bdd-stdin'),
   Promise = require('bluebird')
 
-describe('latest task', function() {
+describe('latest task', function () {
   this.timeout(30000)
 
   it('should list dependencies that can be updated', async () => {
-    const ramdaVersion = execSync('npm info ramda dist-tags.latest')
-      .toString()
-      .trim('\n')
-    const lodashVersion = execSync('npm info lodash dist-tags.latest')
-      .toString()
-      .trim('\n')
+    const ramdaVersion = execSync('npm info ramda dist-tags.latest').toString().trim('\n')
+    const lodashVersion = execSync('npm info lodash dist-tags.latest').toString().trim('\n')
     const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest',
@@ -42,12 +38,8 @@ describe('latest task', function() {
   })
 
   it('should respect range operator when provided', async () => {
-    const ramdaVersion = execSync('npm info ramda dist-tags.latest')
-      .toString()
-      .trim('\n')
-    const lodashVersion = execSync('npm info lodash dist-tags.latest')
-      .toString()
-      .trim('\n')
+    const ramdaVersion = execSync('npm info ramda dist-tags.latest').toString().trim('\n')
+    const lodashVersion = execSync('npm info lodash dist-tags.latest').toString().trim('\n')
     const {log, project} = await setup({
       managedDependencies: {
         lodash: 'latest',

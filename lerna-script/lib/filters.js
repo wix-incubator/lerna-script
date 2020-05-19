@@ -108,7 +108,10 @@ function createDependencyEdgesFromPackages(packages) {
 }
 
 function diffPackages(before, after) {
-  return _.difference(before.map(p => p.name), after.map(p => p.name))
+  return _.difference(
+    before.map(p => p.name),
+    after.map(p => p.name)
+  )
 }
 
 module.exports = {
