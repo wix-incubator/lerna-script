@@ -1,6 +1,16 @@
 {
+  "trailingComma": "none",
+  "arrowParens": "avoid",
   "printWidth": 100,
   "semi": false,
   "singleQuote": true,
-  "bracketSpacing": false
+  "bracketSpacing": false,
+  "overrides": [
+    {
+      "files": "*.md",
+      "options": {
+        "semi": true
+      }
+    }
+  ]
 }

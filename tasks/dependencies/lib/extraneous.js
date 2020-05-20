@@ -31,7 +31,11 @@ function executeExtraneous(managedDependencies, managedPeerDependencies, deps, l
 
 function logExtraneous(deps, log, dependencyType) {
   const managedDependencies = deps[dependencyType]
-  const toSortedUniqKeys = R.compose(R.sort((a, b) => a.localeCompare(b)), R.uniq, R.keys)
+  const toSortedUniqKeys = R.compose(
+    R.sort((a, b) => a.localeCompare(b)),
+    R.uniq,
+    R.keys
+  )
   const modules = toSortedUniqKeys(managedDependencies)
   if (modules.length > 0) {
     log.error('extraneous', `${dependencyType}: ${modules.join(', ')}`)

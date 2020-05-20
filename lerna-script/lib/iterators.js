@@ -23,26 +23,33 @@ function forEach(lernaPackages, {log = npmlog, build} = {log: npmlog}) {
   }
 }
 
-function parallel(lernaPackages, {log = npmlog, build, concurrency = Infinity} = {log: npmlog, concurrency: Infinity}) {
+function parallel(
+  lernaPackages,
+  {log = npmlog, build, concurrency = Infinity} = {log: npmlog, concurrency: Infinity}
+) {
   return taskFn => {
     const filteredLernaPackages = filterBuilt(lernaPackages, log, build)
     const promisifiedTaskFn = Promise.method(taskFn)
     const forEachTracker = log.newGroup('parallel', lernaPackages.length)
     npmlog.enableProgress()
 
-    return Promise.map(filteredLernaPackages, lernaPackage => {
-      const promiseTracker = forEachTracker.newItem(lernaPackage.name)
-      promiseTracker.pause()
-      return promisifiedTaskFn(lernaPackage, promiseTracker)
-        .then(res => {
-          build && markPackageBuilt(lernaPackage, {log: forEachTracker})(build)
-          return res
-        })
-        .finally(() => {
-          promiseTracker.resume()
-          promiseTracker.completeWork(1)
-        })
-    }, {concurrency}).finally(() => forEachTracker.finish())
+    return Promise.map(
+      filteredLernaPackages,
+      lernaPackage => {
+        const promiseTracker = forEachTracker.newItem(lernaPackage.name)
+        promiseTracker.pause()
+        return promisifiedTaskFn(lernaPackage, promiseTracker)
+          .then(res => {
+            build && markPackageBuilt(lernaPackage, {log: forEachTracker})(build)
+            return res
+          })
+          .finally(() => {
+            promiseTracker.resume()
+            promiseTracker.completeWork(1)
+          })
+      },
+      {concurrency}
+    ).finally(() => forEachTracker.finish())
   }
 }
 

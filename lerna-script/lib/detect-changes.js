@@ -75,11 +75,7 @@ function collectIgnores(dir) {
   const paths = [dir]
   let current = dir
   while (current !== process.cwd()) {
-    current =
-      current
-        .split(path.sep)
-        .slice(0, -1)
-        .join(path.sep) || '/'
+    current = current.split(path.sep).slice(0, -1).join(path.sep) || '/'
     paths.push(current)
   }
 

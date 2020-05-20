@@ -108,10 +108,7 @@ describe('idea', async () => {
   it('generates [module-name].iml and marks src/lib/scripts as source roots', async () => {
     const log = loggerMock()
     const project = await aLernaProjectWith3Modules()
-    project
-      .addFolder('packages/a/src')
-      .addFolder('packages/a/lib')
-      .addFolder('packages/a/scripts')
+    project.addFolder('packages/a/src').addFolder('packages/a/lib').addFolder('packages/a/scripts')
 
     return project.within(() => {
       return idea()(log).then(() => {

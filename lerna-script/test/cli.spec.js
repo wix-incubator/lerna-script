@@ -103,8 +103,9 @@ describe('cli', () => {
       })
       if (res.status !== 0) {
         const toThrow = new Error(
-          `Command failed with status ${res.status} and output ${res.stdout.toString() +
-            res.stderr.toString()}`
+          `Command failed with status ${res.status} and output ${
+            res.stdout.toString() + res.stderr.toString()
+          }`
         )
         toThrow.output = res.stdout.toString() + res.stderr.toString()
         toThrow.status = res.status

@@ -13,18 +13,21 @@
   "devDependencies": {
     "husky": "4.2.5",
     "lerna": "3.21.0",
-    "lerna-script": "1.1.1",
-    "lerna-script-tasks-depcheck": "1.1.1",
-    "lerna-script-tasks-dependencies": "1.1.1",
-    "lerna-script-tasks-idea": "1.1.1",
-    "lerna-script-tasks-modules": "1.1.1",
-    "lerna-script-tasks-npmfix": "1.1.1",
-    "prettier": "2.0.5",
-    "pretty-quick": "2.0.1"
+    "lerna-script": "1.3.0",
+    "lerna-script-tasks-depcheck": "1.3.0",
+    "lerna-script-tasks-dependencies": "1.3.0",
+    "lerna-script-tasks-idea": "1.3.0",
+    "lerna-script-tasks-modules": "1.3.0",
+    "lerna-script-tasks-npmfix": "1.3.0",
+    "lint-staged": "10.2.4",
+    "prettier": "2.0.5"
+  },
+  "lint-staged": {
+    "*": "prettier --write"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged",
+      "pre-commit": "lint-staged",
       "pre-push": "lerna-script sync"
     }
   }

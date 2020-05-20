@@ -67,9 +67,7 @@ function generateIdeaProject({packages, mochaConfigurations, excludePatterns} = 
 
 function createWorkspaceXml(lernaPackages, rootPackage, mochaConfigurations, log) {
   log.verbose('idea', 'creating .idea/workspace.xml')
-  const nodePath = execSync('which node')
-    .toString()
-    .replace('\n', '')
+  const nodePath = execSync('which node').toString().replace('\n', '')
   const mochaPackage = resolveMochaPackage(rootPackage, lernaPackages, log)
 
   log.verbose('idea', `setting node - using current system node: '${nodePath}'`)

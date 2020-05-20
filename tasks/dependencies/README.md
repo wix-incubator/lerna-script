@@ -13,12 +13,12 @@ npm install --save-dev lerna-script-tasks-dependencies
 TBD
 
 ```js
-const {extraneous, unmanaged, sync, latest} = require('lerna-script-tasks-dependencies')
+const {extraneous, unmanaged, sync, latest} = require('lerna-script-tasks-dependencies');
 
-module.exports['deps:sync'] = sync()
-module.exports['deps:extraneous'] = extraneous()
-module.exports['deps:unmanaged'] = unmanaged()
-module.exports['deps:latest'] = latest()
+module.exports['deps:sync'] = sync();
+module.exports['deps:extraneous'] = extraneous();
+module.exports['deps:unmanaged'] = unmanaged();
+module.exports['deps:latest'] = latest();
 ```
 
 ## API

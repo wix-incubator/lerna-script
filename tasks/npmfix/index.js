@@ -23,10 +23,10 @@ function npmfix({packages} = {}) {
     log.info('npmfix', `fixing homepage, repo urls for ${lernaPackages.length} packages`)
 
     return gitRemoteUrl('.', 'origin').then(gitRemoteUrl => {
-      const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse();
+      const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse()
 
       return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
-        const moduleRelativePath = relative(process.cwd(), lernaPackage.location);
+        const moduleRelativePath = relative(process.cwd(), lernaPackage.location)
 
         return fs
           .readFile(lernaPackage, {log})('package.json', JSON.parse)

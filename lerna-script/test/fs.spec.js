@@ -4,10 +4,9 @@ const {EOL} = require('os'),
   index = require('..')
 
 describe('fs', () => {
-
   describe('readFile', () => {
     it('should read a file in module dir and return content as string', async () => {
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
       return project.within(async () => {
         const [lernaPackage] = await index.loadPackages()
 
@@ -20,7 +19,7 @@ describe('fs', () => {
     })
 
     it('should read a file as json by providing custom converter', async () => {
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
       return project.within(async () => {
         const [lernaPackage] = await index.loadPackages()
 
@@ -35,7 +34,7 @@ describe('fs', () => {
 
   describe('writeFile', () => {
     it('should write string to file', async () => {
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
       return project.within(async () => {
         const [lernaPackage] = await index.loadPackages()
 
@@ -47,7 +46,7 @@ describe('fs', () => {
     })
 
     it('should write object with a newline at the end of file', async () => {
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
       return project.within(async () => {
         const [lernaPackage] = await index.loadPackages()
 
@@ -62,7 +61,7 @@ describe('fs', () => {
     })
 
     it('should accept custom serializer', async () => {
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
       return project.within(async () => {
         const [lernaPackage] = await index.loadPackages()
 

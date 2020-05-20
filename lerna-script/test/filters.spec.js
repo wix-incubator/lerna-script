@@ -4,7 +4,7 @@ const {expect} = require('chai').use(require('sinon-chai')),
   {empty, aLernaProjectWith2Modules, loggerMock} = require('lerna-script-test-utils'),
   index = require('..')
 
-describe('filters', function() {
+describe('filters', function () {
   this.timeout(5000)
 
   describe('includeFilteredDeps', () => {

@@ -7,11 +7,8 @@ const {expect} = require('chai'),
   invertPromise = require('invert-promise')
 
 describe('iterators', () => {
-
-  ['forEach', 'parallel', 'batched'].forEach(type => {
-
+  ;['forEach', 'parallel', 'batched'].forEach(type => {
     describe(type, () => {
-
       it('should filter-out changed packages', async () => {
         const project = await asBuilt(asGitCommited(aLernaProjectWith2Modules()), {label: type})
         const log = loggerMock()
@@ -34,7 +31,7 @@ describe('iterators', () => {
       })
 
       it('should mark modules as built if "build" is provided', async () => {
-        const project = await aLernaProjectWith2Modules();
+        const project = await aLernaProjectWith2Modules()
         return project.within(async () => {
           const packages = await index.loadPackages()
 
@@ -47,13 +44,13 @@ describe('iterators', () => {
       })
 
       it('should not mark as build on failure', async () => {
-        const project = await aLernaProjectWith2Modules();
+        const project = await aLernaProjectWith2Modules()
         return project.within(async () => {
           const packages = await index.loadPackages()
 
-          return invertPromise(index.iter[type](packages, {build: type})(() =>
-            Promise.reject(new Error('woops'))
-          )).then(() => {
+          return invertPromise(
+            index.iter[type](packages, {build: type})(() => Promise.reject(new Error('woops')))
+          ).then(() => {
             packages.forEach(lernaPackage =>
               expect(index.changes.isBuilt(lernaPackage)(type)).to.equal(false)
             )
@@ -68,7 +65,7 @@ describe('iterators', () => {
       const task = sinon.spy()
       const log = loggerMock()
 
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
       return project.within(async () => {
         const packages = await index.loadPackages()
 
@@ -90,7 +87,7 @@ describe('iterators', () => {
       const task = sinon.spy()
       const log = loggerMock()
 
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
       return project.within(async () => {
         const packages = await index.loadPackages()
 
@@ -107,7 +104,9 @@ describe('iterators', () => {
 
     it('should respect concurrency limit', async () => {
       // project with 20 modules
-      const project = await aLernaProject(Array.from(Array(20).keys()).reduce((acc, idx) => ({...acc, [`package${idx}`]: []}), {}))
+      const project = await aLernaProject(
+        Array.from(Array(20).keys()).reduce((acc, idx) => ({...acc, [`package${idx}`]: []}), {})
+      )
       let concurrentExecutions = 0
 
       return project.within(async () => {
@@ -127,7 +126,7 @@ describe('iterators', () => {
     it('should iterate through available packages', async () => {
       const task = sinon.spy()
       const log = loggerMock()
-      const project = await aLernaProjectWith2Modules();
+      const project = await aLernaProjectWith2Modules()
 
       return project.within(async () => {
         const packages = await index.loadPackages()
