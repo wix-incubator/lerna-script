@@ -8,7 +8,8 @@
     "test": "lerna-script test",
     "ls": "lerna-script",
     "idea": "lerna-script idea",
-    "release": "lerna publish"
+    "release": "lerna publish",
+    "deps:latest": "lerna-script deps:latest"
   },
   "devDependencies": {
     "husky": "4.2.5",
@@ -27,7 +28,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && lerna-script sync"
+      "pre-commit": "lerna-script sync && lint-staged"
     }
   }
 }

@@ -18,15 +18,15 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "bluebird": "3.5.5",
+    "bluebird": "3.7.2",
     "fs-extra": "8.1.0"
   },
   "peerDependencies": {
-    "sinon": ">7.0.0"
+    "sinon": ">9.0.0"
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "mocha": "6.2.0",
-    "sinon": "7.4.1"
+    "mocha": "7.1.2",
+    "sinon": "9.0.2"
   }
 }
