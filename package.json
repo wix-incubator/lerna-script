@@ -27,8 +27,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "lerna-script sync"
+      "pre-commit": "lint-staged && lerna-script sync"
     }
   }
 }
