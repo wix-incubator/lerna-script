@@ -41,18 +41,18 @@ To start using, add `lerna.js` to root of your mono-repo and add initial task:
 
 ```js
 const {loadPackages, iter, exec} = require('lerna-script'),
-  {join} = require('path')
+  {join} = require('path');
 
 async function syncNvmRc(log) {
-  log.info('syncNvmRc', 'syncing .nvmrc to all modules from root')
-  const packages = await loadPackages()
+  log.info('syncNvmRc', 'syncing .nvmrc to all modules from root');
+  const packages = await loadPackages();
 
   return iter.parallel(packages)(lernaPackage => {
-    exec.command(lernaPackage)(`cp ${join(process.cwd(), '.nvmrc')} .`)
-  })
+    exec.command(lernaPackage)(`cp ${join(process.cwd(), '.nvmrc')} .`);
+  });
 }
 
-module.exports.syncNvmRc = syncNvmRc
+module.exports.syncNvmRc = syncNvmRc;
 ```
 
 And then you can run it:
@@ -73,15 +73,15 @@ You could also fallback to [lerna api](https://github.com/lerna/lerna/tree/maste
 const Repository = require('lerna/lib/Repository'),
   PackageUtilities = require('lerna/lib/PackageUtilities'),
   {join} = require('path'),
-  {execSync} = require('child_process')
+  {execSync} = require('child_process');
 
 module.exports.syncNvmRc = () => {
-  const rootNvmRcPath = join(process.cwd(), '.nvmrc')
+  const rootNvmRcPath = join(process.cwd(), '.nvmrc');
 
   return PackageUtilities.getPackages(new Repository()).forEach(lernaPackage => {
-    execSync(`cp ${rootNvmRcPath}`, {cwd: lernaPackage.location})
-  })
-}
+    execSync(`cp ${rootNvmRcPath}`, {cwd: lernaPackage.location});
+  });
+};
 ```
 
 To see available function please check-out [lerna-script](./lerna-script), for pre-cooked tasks check-out [tasks](./tasks).
@@ -97,13 +97,13 @@ graph.
 For this [lerna-script](./lerna-script) provides means to both mark modules as built and filter-out already built modules:
 
 ```js
-const {loadPackages, iter, exec, changes, filters} = require('lerna-script')
+const {loadPackages, iter, exec, changes, filters} = require('lerna-script');
 
 module.exports.test = log => {
   return iter.forEach(changedPackages, {log, build: 'test'})(lernaPackage => {
-    return exec.script(lernaPackage)('test')
-  })
-}
+    return exec.script(lernaPackage)('test');
+  });
+};
 ```
 
 where property `build` on `forEach` marks processed package as built with label `test`. For different tasks you can have separate labels so they do not clash.
@@ -151,9 +151,9 @@ then add script to `package.json`
 and add export to `lerna.js`:
 
 ```js
-const npmfix = require('lerna-script-tasks-npmfix')
+const npmfix = require('lerna-script-tasks-npmfix');
 
-module.exports['update-repo-urls'] = npmfix()
+module.exports['update-repo-urls'] = npmfix();
 ```
 
 ## External presets
