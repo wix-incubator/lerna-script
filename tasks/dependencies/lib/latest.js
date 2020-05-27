@@ -144,8 +144,8 @@ async function writeSelectedUpdates(selectedUpdates, lernaJson, addRange, log) {
 
 function fetchLatestVersionFromNpm(name, distTag) {
   return new Promise((resolve, reject) => {
-    exec(`npm info ${name} dist-tags.${distTag}`, (error, stdout) => {
-      error ? reject(error) : resolve(stdout.toString().trim('\n'))
+    exec(`npm info ${name} dist-tags --json`, (error, stdout) => {
+      error ? reject(error) : resolve(JSON.parse(stdout)[distTag])
     })
   })
 }
