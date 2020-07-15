@@ -7,7 +7,7 @@ const {readFileSync} = require('fs'),
 const argv = require('yargs')
   .usage('Usage: $0  [options] <task>')
   .option('loglevel', {
-    describe: 'choose a size',
+    describe: 'choose log level',
     choices: ['silly', 'verbose', 'info', 'warn', 'error']
   })
   .default('loglevel', 'info')
