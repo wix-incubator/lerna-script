@@ -43,7 +43,7 @@ npm start idea
 
 # API
 
-## ({[packages], mochaConfigurations: packageJson => []})(log): Promise
+## ({[packages], mochaConfigurations: packageJson => [], excludePatterns, addRoot: boolean = false})(log): Promise
 
 Returns a function that generates [WebStorm](https://www.jetbrains.com/webstorm/) for all modules in repo.
 
@@ -57,4 +57,5 @@ Parameters:
   - testKind - kind of test, ex. PATTERN;
   - testPattern - pattern expression.
 - excludePatterns - array of patterns that will be set as the project exclude patterns. Files\Folders matching that pattern will be marked as "excluded" in Idea
+- addRoot - when true, the `root.iml` file will be generated to make all non-modules visible in IDEA (_optional, defaults to false_)
 - log - `npmlog` instance.
