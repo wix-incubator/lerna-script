@@ -30,7 +30,7 @@ const DEFAULT_MOCHA_CONFIGURATIONS = packageJson => {
 }
 
 //TODO: add options: {packages, mocha: {patterns: ''}}
-function generateIdeaProject({packages, mochaConfigurations, excludePatterns} = {}) {
+function generateIdeaProject({packages, mochaConfigurations, excludePatterns, addRoot} = {}) {
   const mochaConfigurationsFn = mochaConfigurations || DEFAULT_MOCHA_CONFIGURATIONS
   return async log => {
     const rootPackage = await loadRootPackage()
@@ -53,9 +53,15 @@ function generateIdeaProject({packages, mochaConfigurations, excludePatterns} = 
       )
       .then(() => {
         createWorkspaceXml(lernaPackages, rootPackage, mochaConfigurationsFn, log)
-        createModulesXml(lernaPackages, rootPackage, log)
+        createModulesXml(lernaPackages, rootPackage, log, addRoot)
 
         log.info('idea', 'writing module files')
+
+        if (addRoot) {
+          log.info('idea', 'writing root module file')
+          templates.ideaRootModuleImlFile(join(rootPackage.location, 'root.iml'))
+        }
+
         return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
           return exec
             .command(lernaPackage)('rm -f *.iml')
@@ -87,7 +93,7 @@ function createWorkspaceXml(lernaPackages, rootPackage, mochaConfigurations, log
   templates.ideaWorkspaceXmlFile(join(rootPackage.location, '.idea', 'workspace.xml'), config)
 }
 
-function createModulesXml(lernaPackages, rootPackage, log) {
+function createModulesXml(lernaPackages, rootPackage, log, addRoot) {
   log.verbose('idea', 'creating .idea/modules.xml')
   templates.ideaModulesFile(
     join(rootPackage.location, '.idea', 'modules.xml'),
@@ -101,7 +107,8 @@ function createModulesXml(lernaPackages, rootPackage, log) {
       } else {
         return {name, dir: relativePath}
       }
-    })
+    }),
+    {addRoot}
   )
 }
 
