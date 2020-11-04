@@ -9,38 +9,43 @@ const {
   npmfix = require('..')
 
 describe('npmfix task', () => {
-  it('should update docs, repo url in package.json', async () => {
-    const project = await aLernaProjectWith2Modules()
-    const log = loggerMock()
+  describe('should update docs, repo url in package.json', async () => {
+    const origins = ['https://github.com:git/qwe.git', 'git@github.com:git/qwe.git']
+    origins.forEach(origin => {
+      it(`for origin ${origin}`, async () => {
+        const project = await aLernaProjectWith2Modules()
+        const log = loggerMock()
 
-    return project.within(ctx => {
-      ctx.exec('git remote add origin git@github.com:git/qwe.git')
-      return npmfix()(log).then(() => {
-        expect(log.info).to.have.been.calledWith(
-          'npmfix',
-          'fixing homepage, repo urls for 2 packages'
-        )
-        expect(fs.readJson('./packages/a/package.json')).to.contain.property(
-          'homepage',
-          'https://github.com/git/qwe/tree/master/packages/a'
-        )
-        expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
-          'repository.type',
-          'git'
-        )
-        expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
-          'repository.url',
-          'git@github.com:git/qwe.git'
-        )
-        expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
-          'repository.directory',
-          '/packages/a'
-        )
+        return project.within(ctx => {
+          ctx.exec(`git remote add origin ${origin}`)
+          return npmfix()(log).then(() => {
+            expect(log.info).to.have.been.calledWith(
+              'npmfix',
+              'fixing homepage, repo urls for 2 packages'
+            )
+            expect(fs.readJson('./packages/a/package.json')).to.contain.property(
+              'homepage',
+              'https://github.com/git/qwe/tree/master/packages/a'
+            )
+            expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
+              'repository.type',
+              'git'
+            )
+            expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
+              'repository.url',
+              'git@github.com:git/qwe.git'
+            )
+            expect(fs.readJson('./packages/a/package.json')).to.contain.nested.property(
+              'repository.directory',
+              '/packages/a'
+            )
 
-        expect(fs.readJson('./packages/b/package.json')).to.contain.property(
-          'homepage',
-          'https://github.com/git/qwe/tree/master/packages/b'
-        )
+            expect(fs.readJson('./packages/b/package.json')).to.contain.property(
+              'homepage',
+              'https://github.com/git/qwe/tree/master/packages/b'
+            )
+          })
+        })
       })
     })
   })

@@ -23,7 +23,9 @@ function npmfix({packages} = {}) {
     log.info('npmfix', `fixing homepage, repo urls for ${lernaPackages.length} packages`)
 
     return gitRemoteUrl('.', 'origin').then(gitRemoteUrl => {
-      const repoUrl = gitInfo.fromUrl(gitRemoteUrl).browse()
+      const info = gitInfo.fromUrl(gitRemoteUrl)
+      const browseUrl = info.browse()
+      const repoUrl = info.ssh()
 
       return iter.parallel(lernaPackages, {log})((lernaPackage, log) => {
         const moduleRelativePath = relative(process.cwd(), lernaPackage.location)
@@ -32,13 +34,13 @@ function npmfix({packages} = {}) {
           .readFile(lernaPackage, {log})('package.json', JSON.parse)
           .then(packageJson => {
             const updated = Object.assign({}, packageJson, {
-              homepage: repoUrl + '/tree/master/' + moduleRelativePath,
+              homepage: browseUrl + '/tree/master/' + moduleRelativePath,
               dependencies: sortDependencies(packageJson.dependencies),
               devDependencies: sortDependencies(packageJson.devDependencies),
               peerDependencies: sortDependencies(packageJson.peerDependencies),
               repository: {
                 type: 'git',
-                url: gitRemoteUrl,
+                url: repoUrl,
                 ...(moduleRelativePath && {directory: '/' + moduleRelativePath})
               }
             })
