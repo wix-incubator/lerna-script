@@ -126,6 +126,30 @@ describe('idea', async () => {
     })
   })
 
+  it('does not generate root.iml by default', async () => {
+    const log = loggerMock()
+    const project = await aLernaProjectWith3Modules()
+
+    return project.within(() => {
+      return idea()(log).then(() => {
+        expect(shelljs.test('-e', './root.iml')).to.be.false
+        expect(shelljs.cat('.idea/modules.xml').stdout).to.not.be.string('root.iml')
+      })
+    })
+  })
+
+  it('generates root.iml when configured to do so via "addRoot" flag', async () => {
+    const log = loggerMock()
+    const project = await aLernaProjectWith3Modules()
+
+    return project.within(() => {
+      return idea({addRoot: true})(log).then(() => {
+        expect(shelljs.test('-e', './root.iml')).to.be.true
+        expect(shelljs.cat('.idea/modules.xml').stdout).to.be.string('root.iml')
+      })
+    })
+  })
+
   context('mocha configurations', async () => {
     it('generates Mocha run configurations for all modules with mocha, extra options, interpreter and env set', async () => {
       const log = loggerMock()
