@@ -162,7 +162,7 @@ Parameters:
 
 **Note:** this filter mutates built/unbuild state, meaning that it unbuilds dependents to get reproducible runs.
 
-### filters.gitSince(lernaPackages: [], {[log]})(refspec: String): []
+### filters.gitSince(lernaPackages: [], {[log]})(refspec: String, {ignoreChanges: string[]}?): []
 
 Filters-out packages that have did not change since `refspec` - ex. master, brach, tag.
 
@@ -171,6 +171,7 @@ Parameters:
 - lernaPackages - packages to filter;
 - log, optional - `npmlog` logger;
 - refspec - git `refspec` = master, branchname, tag...
+- opts.ignoreChanges - optional array of glob expressions. files matching those globs will be ignored in the diff calculation.
 
 ### filters.removeByGlob(lernaPackages: [], {[log]})(glob: String): []
 
