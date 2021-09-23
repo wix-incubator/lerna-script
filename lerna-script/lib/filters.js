@@ -31,13 +31,13 @@ function removeByGlob(lernaPackages, {log = npmlog} = {log: npmlog}) {
 
 //TODO: see how to make it less sucky
 function removeGitSince(lernaPackages, {log = npmlog} = {log: npmlog}) {
-  return refspec => {
+  return (refspec, opts = {}) => {
     const packageGraph = new PackageGraph(lernaPackages)
     const collectedPackages = collectUpdates(
       lernaPackages,
       packageGraph,
       {cwd: process.cwd()},
-      {since: refspec}
+      {since: refspec, ...opts}
     ).map(graphNode => graphNode.pkg)
 
     const removedPackageNames = diffPackages(lernaPackages, collectedPackages)

@@ -140,5 +140,42 @@ describe('filters', function () {
         expect(log.verbose).to.have.been.calledWithMatch('removeGitSince', 'removed 1 packages')
       })
     })
+
+    it('respects ignore list', async () => {
+      const log = loggerMock()
+      const project = empty()
+        .addFile('package.json', {name: 'root', version: '1.0.0'})
+        .addFile('lerna.json', {lerna: '2.0.0', packages: ['packages/**'], version: '0.0.0'})
+        .module('packages/a', module =>
+          module
+            .packageJson({name: 'a', version: '2.0.0'})
+            .addFile('pom.xml', '<version>1</version>')
+        )
+        .module('packages/b', module =>
+          module
+            .packageJson({name: 'b', version: '1.0.0'})
+            .addFile('pom.xml', '<version>1</version>')
+        )
+
+      await project.inDir(ctx => {
+        ctx.exec('git init && git config user.email mail@example.org && git config user.name name')
+        ctx.exec('git add -A && git commit -am ok')
+        ctx.exec('git checkout -b test')
+      })
+
+      project.module('packages/b', module => module.addFile('pom.xml', '<version>2</version>'))
+
+      await project.inDir(ctx => {
+        ctx.exec('git add -A && git commit -am ok')
+      })
+
+      return project.within(async () => {
+        const packages = await index.loadPackages()
+        const lernaPackages = index.filters.gitSince(packages, {log})('master', {
+          ignoreChanges: ['pom.xml']
+        })
+        expect(lernaPackages).to.be.empty
+      })
+    })
   })
 })
