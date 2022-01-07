@@ -21,7 +21,7 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
     autoselect: {versionDiff = [], exclude = [], distTag = 'latest'} = {
       versionDiff: [],
       exclude: [],
-      distTag
+      distTag: 'latest'
     }
   } = lernaJson
 
