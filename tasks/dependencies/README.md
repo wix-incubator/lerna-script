@@ -75,12 +75,13 @@ The `lerna.json` can contain the following `autoSelect` rules which will automat
   },
   "autoselect": {
     "versionDiff": ["minor", "patch"],
-    "exclude": ["dontUpdateMe"]
+    "exclude": ["dontUpdateMe"],
+    "distTag": "latest"
   }
 }
 ```
 
-In the above example, if a `minor` or a `patch` update is found for one of the packages, they will be selected by default unless the package name is `dontUpdateMe`
+In the above example, if a `minor` or a `patch` update is found for one of the packages in the `latest` dist-tag, they will be selected by default unless the package name is `dontUpdateMe`
 
 Parameters:
 

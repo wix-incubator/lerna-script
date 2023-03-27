@@ -18,7 +18,11 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
   const {
     managedDependencies = {},
     managedPeerDependencies = {},
-    autoselect: {versionDiff = [], exclude = []} = {versionDiff: [], exclude: []}
+    autoselect: {versionDiff = [], exclude = [], distTag = 'latest'} = {
+      versionDiff: [],
+      exclude: [],
+      distTag: 'latest'
+    }
   } = lernaJson
 
   const depsList = Object.keys(cleanLatest(managedDependencies || {}))
@@ -30,13 +34,14 @@ function checkForLatestDependencies(lernaJson, onInquire, addRange, log, fetch, 
 
   const depsPromises = Promise.map(
     depsList,
-    depName => fetchLatestVersion(depName, managedDependencies[depName], tracker, fetch),
+    depName => fetchLatestVersion(depName, managedDependencies[depName], distTag, tracker, fetch),
     {concurrency}
   )
 
   const peerDepsPromises = Promise.map(
     peerDepsList,
-    depName => fetchLatestVersion(depName, managedPeerDependencies[depName], tracker, fetch),
+    depName =>
+      fetchLatestVersion(depName, managedPeerDependencies[depName], distTag, tracker, fetch),
     {concurrency}
   )
 
@@ -137,17 +142,17 @@ async function writeSelectedUpdates(selectedUpdates, lernaJson, addRange, log) {
   }
 }
 
-function fetchLatestVersionFromNpm(name) {
+function fetchLatestVersionFromNpm(name, distTag) {
   return new Promise((resolve, reject) => {
-    exec(`npm info ${name} dist-tags.latest`, (error, stdout) => {
-      error ? reject(error) : resolve(stdout.toString().trim('\n'))
+    exec(`npm info ${name} dist-tags --json`, (error, stdout) => {
+      error ? reject(error) : resolve(JSON.parse(stdout)[distTag])
     })
   })
 }
 
-function fetchLatestVersion(name, version, logItem, onFetch) {
+function fetchLatestVersion(name, version, distTag, logItem, onFetch) {
   const f = onFetch || fetchLatestVersionFromNpm
-  return f(name, version)
+  return f(name, distTag)
     .then(result => ({name, currentVersion: version, latestVersion: result}))
     .finally(() => logItem.completeWork(1))
 }
